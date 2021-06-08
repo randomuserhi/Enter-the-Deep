@@ -151,7 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DeepEngine.cpp" />
     <ClCompile Include="Enter the Deep Server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeepEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

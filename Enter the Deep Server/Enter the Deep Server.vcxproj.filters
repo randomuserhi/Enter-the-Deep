@@ -13,10 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\PhysicsEngine">
+      <UniqueIdentifier>{9c8f7f04-8577-4a71-a38b-c495af19131b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PhysicsEngine">
+      <UniqueIdentifier>{6153ff6e-aaf8-47b7-80f1-92c43bc60d5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enter the Deep Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeepEngine.cpp">
+      <Filter>Source Files\PhysicsEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeepEngine.h">
+      <Filter>Header Files\PhysicsEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
