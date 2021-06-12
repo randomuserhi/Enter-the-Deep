@@ -13,45 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\PhysicsEngine">
-      <UniqueIdentifier>{9c8f7f04-8577-4a71-a38b-c495af19131b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\PhysicsEngine">
-      <UniqueIdentifier>{6153ff6e-aaf8-47b7-80f1-92c43bc60d5c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{ad1d12b1-610e-4015-8127-ae902f82b0d0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{6ca9fd3d-305e-4078-adc5-8e33189e5601}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\PhysicsEngine\Math">
+    <Filter Include="Source Files\DeepEngine">
+      <UniqueIdentifier>{9c8f7f04-8577-4a71-a38b-c495af19131b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeepEngine\Math">
       <UniqueIdentifier>{ae1b876b-c3bf-480e-a793-ba1957f3134d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DeepEngine">
+      <UniqueIdentifier>{6153ff6e-aaf8-47b7-80f1-92c43bc60d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeepEngine\Physics">
+      <UniqueIdentifier>{25d2e137-e16d-4494-a099-8b31aafca9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeepEngine\World">
+      <UniqueIdentifier>{e0fd5cd3-25f9-4a99-a48b-9c63643ad7ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enter the Deep Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeepEngine.cpp">
-      <Filter>Source Files\PhysicsEngine</Filter>
-    </ClCompile>
     <ClCompile Include="DeepNetwork.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="DeepMath-Vector.cpp">
-      <Filter>Source Files\PhysicsEngine\Math</Filter>
+      <Filter>Source Files\DeepEngine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-PhysicsWorld.cpp">
+      <Filter>Source Files\DeepEngine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-PhysicsObject.cpp">
+      <Filter>Source Files\DeepEngine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-Transform.cpp">
+      <Filter>Source Files\DeepEngine\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeepEngine.h">
-      <Filter>Header Files\PhysicsEngine</Filter>
+      <Filter>Header Files\DeepEngine</Filter>
     </ClInclude>
     <ClInclude Include="DeepNetwork.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="DeepMath.h">
-      <Filter>Header Files\PhysicsEngine</Filter>
+      <Filter>Header Files\DeepEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

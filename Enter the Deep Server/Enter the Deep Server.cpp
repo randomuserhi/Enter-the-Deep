@@ -4,21 +4,13 @@
 
 int main()
 {
-	DeepEngine::Vector3 V1(10, 20, 10);
-	DeepEngine::Vector3 V2(3, 2, 1);
-	DeepEngine::Vector3 V3;
+	DeepEngine::Vector3 A(10, 10, 10);
+	DeepEngine::Vector3 B = A;
 
-	//V3 = V2 + V1;
+	B.X = 15;
 
-	//V1.X = 15;
-
-	V3 += V2;
-
-	V2.X += 1;
-
-	std::cout << V1.X << ',' << V1.Y << ',' << V1.Z << '\n';
-	std::cout << V2.X << ',' << V2.Y << ',' << V2.Z << '\n';
-	std::cout << V3.X << ',' << V3.Y << ',' << V3.Z << '\n';
+	std::cout << A.X << ',' << A.Y << ',' << A.Z << '\n';
+	std::cout << B.X << ',' << B.Y << ',' << B.Z << '\n';
 
 	return 0;
 }

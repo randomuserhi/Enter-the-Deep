@@ -14,13 +14,6 @@ namespace DeepEngine
 		this->Z = Z;
 	}
 
-	Vector3& Vector3::operator =(const Vector3& Other)
-	{
-		X = Other.X;
-		Y = Other.Y;
-		Z = Other.Z;
-		return *this;
-	}
 	Vector3& Vector3::operator +=(const Vector3& Other)
 	{
 		X += Other.X;

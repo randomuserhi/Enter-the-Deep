@@ -14,7 +14,6 @@ namespace DeepEngine
 		friend inline bool operator ==(const Vector3& LHS, const Vector3& RHS);
 		friend inline bool operator !=(const Vector3& LHS, const Vector3& RHS) { return !(LHS == RHS); }
 
-		Vector3& operator =(const Vector3& Other);
 		Vector3& operator +=(const Vector3& Other);
 		Vector3& operator -=(const Vector3& Other);
 		Vector3& operator *=(const float Other);
