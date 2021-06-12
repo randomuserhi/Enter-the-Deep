@@ -20,13 +20,13 @@ namespace DeepEngine
 			Vector3 Position;
 		};
 
-		class PhysicsObject
+		class PhysicObject
 		{
 		private:
 
 		public:
-			PhysicsObject();
-			PhysicsObject(Transform Transform);
+			PhysicObject();
+			PhysicObject(Transform Transform);
 
 			Transform Transform;
 			RigidBody RigidBody;
@@ -36,7 +36,8 @@ namespace DeepEngine
 		class PhysicsWorld
 		{
 		private:
-			std::vector<PhysicsObject*> ActiveObjects;
+			std::vector<PhysicObject*> ActiveObjects; //Objects that are simulated
+			std::vector<PhysicObject> Objects; //All objects in the world
 
 		public:
 			void Step(float DeltaTime);
@@ -48,6 +49,7 @@ namespace DeepEngine
 		class Entity
 		{
 		private:
+			std::vector<Physics::PhysicObject*> Objects; //PhysicObjects owned by entity, such as body parts etc...
 
 		public:
 		};

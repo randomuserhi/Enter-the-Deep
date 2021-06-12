@@ -2,7 +2,7 @@
 
 void DeepEngine::Physics::PhysicsWorld::Step(float DeltaTime)
 {
-	for (PhysicsObject* Object : ActiveObjects)
+	for (PhysicObject* Object : ActiveObjects)
 	{
 		Object->Transform.Position += Object->RigidBody.Velocity * DeltaTime;
 	}

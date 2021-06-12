@@ -1,11 +1,11 @@
 #include "DeepEngine.h"
 
-DeepEngine::Physics::PhysicsObject::PhysicsObject()
+DeepEngine::Physics::PhysicObject::PhysicObject()
 {
 
 }
 
-DeepEngine::Physics::PhysicsObject::PhysicsObject(DeepEngine::Physics::Transform Transform)
+DeepEngine::Physics::PhysicObject::PhysicObject(DeepEngine::Physics::Transform Transform)
 {
 	this->Transform = Transform;
 }
