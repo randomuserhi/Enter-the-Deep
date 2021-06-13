@@ -39,9 +39,6 @@
     <ClCompile Include="Enter the Deep Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeepNetwork.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="DeepMath-Vector.cpp">
       <Filter>Source Files\DeepEngine\Math</Filter>
     </ClCompile>
@@ -53,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="DeepEngine-Transform.cpp">
       <Filter>Source Files\DeepEngine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepNetwork-Socket.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepNetwork-Server.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

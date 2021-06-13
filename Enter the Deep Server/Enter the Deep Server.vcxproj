@@ -159,7 +159,8 @@
     <ClCompile Include="DeepEngine-PhysicsWorld.cpp" />
     <ClCompile Include="DeepEngine-Transform.cpp" />
     <ClCompile Include="DeepMath-Vector.cpp" />
-    <ClCompile Include="DeepNetwork.cpp" />
+    <ClCompile Include="DeepNetwork-Server.cpp" />
+    <ClCompile Include="DeepNetwork-Socket.cpp" />
     <ClCompile Include="Enter the Deep Server.cpp" />
   </ItemGroup>
   <ItemGroup>
