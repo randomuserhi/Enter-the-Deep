@@ -37,12 +37,12 @@ int main()
 
 	std::cout << "Server started on port: " << Server.GetPort() << ".\n";
 
-	char Data = 10;
+	int Data = 10;
 
 	while (true)
 	{
 		Server.Tick();
-		Server.Send(&Data, sizeof(Data), &DeepNetwork::Address(127, 0, 0, 1, 64633));
+		Server.Send((char*)&Data, sizeof(Data), &DeepNetwork::Address(127, 0, 0, 1, 53639));
 	}
 
 	DeepNetwork::ShutdownSockets();
