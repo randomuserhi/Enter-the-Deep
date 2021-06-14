@@ -82,6 +82,8 @@ namespace DeepNetwork
 			return DeepNetwork::Socket::Send(Data, DataSize, (sockaddr*) & (Address->Formatted));
 		}
 
+		int GetRemainingBytes();
+
 		int Receive(unsigned char* const Buffer, unsigned int MaxBufferSize, sockaddr* From);
 		inline int Receive(unsigned char* const Buffer, unsigned int MaxBufferSize, sockaddr_in* From)
 		{

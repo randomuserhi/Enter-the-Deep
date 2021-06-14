@@ -1,6 +1,9 @@
 #include "DeepNetwork.h"
 #include <iostream>
 
+//NOTE :: A lot of this code is not compatible with other platforms, WSAGetLastError (windows only), icotlsocket (icotl for linux) etc
+//		  For future reference its probably better to seperate entire code from windows platform and linux etc... rather than only splitting parts of code as shown here
+
 namespace DeepNetwork
 {
 	bool InitializeSockets()
@@ -67,6 +70,15 @@ namespace DeepNetwork
 			return false;
 		}
 		std::cout << "Socket function succeeded.\n";
+
+		//Need to be aware of https://stackoverflow.com/questions/34242622/windows-udp-sockets-recvfrom-fails-with-error-10054
+#if PLATFORM == PLATFORM_WINDOWS
+#define SIO_UDP_CONNRESET _WSAIOW(IOC_VENDOR, 12)
+		BOOL bNewBehavior = FALSE;
+		DWORD dwBytesReturned = 0;
+		WSAIoctl(SocketFD, SIO_UDP_CONNRESET, &bNewBehavior, sizeof bNewBehavior, NULL, 0, &dwBytesReturned, NULL, NULL);
+#endif
+
 		return true;
 	}
 
@@ -156,11 +168,23 @@ namespace DeepNetwork
 		int SentBytes = sendto(SocketFD, Data, DataSize, 0, Address, sizeof(sockaddr_in));
 		if (SentBytes != DataSize)
 		{
-			std::cout << "Failed to send packet with error = " << WSAGetLastError() << ".\n";
+			std::cout << "Failed to send packet to destination with error = " << WSAGetLastError() << ".\n";
 			return false;
 		}
 		//std::cout << "Packet successfully sent.\n";
 		return true;
+	}
+
+	int Socket::GetRemainingBytes()
+	{
+		unsigned long RemainingBytes;
+		int Result = ioctlsocket(SocketFD, FIONREAD, &RemainingBytes);
+		if (Result != NOERROR)
+		{
+			std::cout << "Failed to get remaining bytes with error = " << WSAGetLastError() << ".\n";
+			return -1;
+		}
+		return RemainingBytes;
 	}
 
 	int Socket::Receive(unsigned char* const Buffer, unsigned int MaxBufferSize, sockaddr* FromAddress)

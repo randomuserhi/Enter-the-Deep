@@ -32,13 +32,16 @@ namespace DeepNetwork
 
 	void Server::Tick()
 	{
-		int BytesReceived = Socket.Receive(Buffer, MaxBufferSize, &From);
-		if (BytesReceived > 0)
+		while (Socket.GetRemainingBytes() > 0)
 		{
-			unsigned int FromAddress = ntohl(From.sin_addr.s_addr);
-			unsigned int FromPort = ntohs(From.sin_port);
+			int BytesReceived = Socket.Receive(Buffer, MaxBufferSize, &From);
+			if (BytesReceived > 0)
+			{
+				unsigned int FromAddress = ntohl(From.sin_addr.s_addr);
+				unsigned int FromPort = ntohs(From.sin_port);
 
-			if (OnReceiveHandle != nullptr) OnReceiveHandle(Buffer, BytesReceived, FromAddress, FromPort);
+				if (OnReceiveHandle != nullptr) OnReceiveHandle(Buffer, BytesReceived, FromAddress, FromPort);
+			}
 		}
 	}
 
