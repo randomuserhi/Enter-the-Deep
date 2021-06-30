@@ -28,12 +28,6 @@
     <Filter Include="Header Files\DeepEngine">
       <UniqueIdentifier>{6153ff6e-aaf8-47b7-80f1-92c43bc60d5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\DeepEngine\Physics">
-      <UniqueIdentifier>{25d2e137-e16d-4494-a099-8b31aafca9fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\DeepEngine\World">
-      <UniqueIdentifier>{e0fd5cd3-25f9-4a99-a48b-9c63643ad7ca}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enter the Deep Server.cpp">
@@ -42,20 +36,14 @@
     <ClCompile Include="DeepMath-Vector.cpp">
       <Filter>Source Files\DeepEngine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="DeepEngine-PhysicsWorld.cpp">
-      <Filter>Source Files\DeepEngine\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="DeepEngine-PhysicsObject.cpp">
-      <Filter>Source Files\DeepEngine\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="DeepEngine-Transform.cpp">
-      <Filter>Source Files\DeepEngine\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="DeepNetwork-Socket.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="DeepNetwork-Server.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine.cpp">
+      <Filter>Source Files\DeepEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

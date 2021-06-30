@@ -11,9 +11,6 @@ namespace DeepEngine
 		Vector3() {};
 		Vector3(float X, float Y, float Z);
 
-		friend inline bool operator ==(const Vector3& LHS, const Vector3& RHS);
-		friend inline bool operator !=(const Vector3& LHS, const Vector3& RHS) { return !(LHS == RHS); }
-
 		Vector3& operator +=(const Vector3& Other);
 		Vector3& operator -=(const Vector3& Other);
 		Vector3& operator *=(const float Other);
@@ -24,4 +21,6 @@ namespace DeepEngine
 		Vector3 operator *(const float Other);
 		Vector3 operator /(const float Other);
 	};
+	inline bool operator ==(const Vector3& LHS, const Vector3& RHS);
+	inline bool operator !=(const Vector3& LHS, const Vector3& RHS) { return !(LHS == RHS); }
 }

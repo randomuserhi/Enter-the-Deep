@@ -1,5 +1,7 @@
 #include "DeepMath.h"
 
+//TODO:: implement ExpressionTemplates (to make code cache friendly)
+
 namespace DeepEngine
 {
 	inline bool operator ==(const Vector3& LHS, const Vector3& RHS)

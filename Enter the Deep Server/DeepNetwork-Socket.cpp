@@ -6,8 +6,12 @@
 
 namespace DeepNetwork
 {
+	bool DEEP_RUNTIME_NETWORK_DEBUG = true; // Enable debugging of connection (during use, doesn't include startup etc...)
+
 	bool InitializeSockets()
 	{
+		DEEP_RUNTIME_NETWORK_DEBUG = true;
+
 #if PLATFORM == PLATFORM_WINDOWS
 		WSADATA WsaData;
 		if (WSAStartup(MAKEWORD(2, 2), &WsaData) == NO_ERROR)
@@ -25,6 +29,8 @@ namespace DeepNetwork
 
 	void ShutdownSockets()
 	{
+		DEEP_RUNTIME_NETWORK_DEBUG = false;
+
 #if PLATFORM == PLATFORM_WINDOWS
 		int Result = WSACleanup();
 		if (Result == NOERROR)
@@ -168,7 +174,7 @@ namespace DeepNetwork
 		int SentBytes = sendto(SocketFD, Data, DataSize, 0, Address, sizeof(sockaddr_in));
 		if (SentBytes != DataSize)
 		{
-			std::cout << "Failed to send packet to destination with error = " << WSAGetLastError() << ".\n";
+			if (DEEP_RUNTIME_NETWORK_DEBUG) std::cout << "Failed to send packet to destination with error = " << WSAGetLastError() << ".\n";
 			return false;
 		}
 		//std::cout << "Packet successfully sent.\n";
@@ -181,7 +187,7 @@ namespace DeepNetwork
 		int Result = ioctlsocket(SocketFD, FIONREAD, &RemainingBytes);
 		if (Result != NOERROR)
 		{
-			std::cout << "Failed to get remaining bytes with error = " << WSAGetLastError() << ".\n";
+			if (DEEP_RUNTIME_NETWORK_DEBUG) std::cout << "Failed to get remaining bytes with error = " << WSAGetLastError() << ".\n";
 			return -1;
 		}
 		return RemainingBytes;
@@ -199,7 +205,7 @@ namespace DeepNetwork
 			int Error = WSAGetLastError();
 			if (Error != WSAEWOULDBLOCK) //https://stackoverflow.com/questions/17064069/recvfrom-error-10035-using-non-blocking-sockets
 			{
-				std::cout << "Failed to receive packet with error = " << Error << ".\n";
+				if (DEEP_RUNTIME_NETWORK_DEBUG) std::cout << "Failed to receive packet with error = " << Error << ".\n";
 				return BytesReceived;
 			}
 			else

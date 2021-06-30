@@ -3,10 +3,8 @@
 #include "DeepEngine.h"
 #include "DeepNetwork.h"
 
-#include <chrono>
-#include <thread>
-
 #include <windows.h>
+#include <bitset> //Remove later, this is just here for debugging
 
 void Cleanup()
 {
@@ -30,6 +28,14 @@ int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
+	//Initialize DeepEngine
+	DeepEngine::DeepECS DeepHandle{}; //https://stackoverflow.com/questions/31496810/parameterless-constructor
+	DeepHandle.DebugEntityIndex();
+
+	std::cout << "DeepEngine Initialized.\n";
+
+	//Initialize Server
+
 	std::cout << "IsBigEndian: " << DeepNetwork::IsBigEndian() << ".\n";
 
 	DeepNetwork::InitializeSockets();
@@ -45,8 +51,7 @@ int main()
 	while (true)
 	{
 		Server.Tick();
-		Server.Send((char*)&Data, sizeof(Data), &DeepNetwork::Address(127, 0, 0, 1, 58655));
-		//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+		//Server.Send((char*)&Data, sizeof(Data), &DeepNetwork::Address(127, 0, 0, 1, 58655));
 	}
 
 	DeepNetwork::ShutdownSockets();
