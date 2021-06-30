@@ -2,13 +2,36 @@
 
 namespace DeepEngine
 {
+	Archetype RootArchetype;
+	ECSType DefaultComponentArchetype{ DEEP_ECS_COMPONENT, DEEP_ECS_ID };
+
+	int TypeHash(ECSType* Type)
+	{
+		int Seed = Type->size();
+		for (auto& i : *Type) 
+		{
+			Seed ^= i + 0x9e3779b9 + (Seed << 6) + (Seed >> 2);
+		}
+		return Seed;
+	}
+
 	inline Archetype* DeepECS::CreateArchetype(Archetype* Root, ECSHandle Type)
 	{
-		Archetype* NewArchetype = new Archetype;
-		NewArchetype->Type = Root->Type;
-		NewArchetype->Type.push_back(Type);
-		std::sort(NewArchetype->Type.begin(), NewArchetype->Type.end());
-		return NewArchetype;
+		ECSType NewType = Root->Type;
+		NewType.push_back(Type);
+		std::sort(NewType.begin(), NewType.end());
+
+		int ArchetypeHash = TypeHash(&NewType);
+		
+		if (AllocatedArchetypes.find(ArchetypeHash) == AllocatedArchetypes.end())
+		{
+			Archetype* NewArchetype = new Archetype;
+			NewArchetype->Type = NewType;
+
+			AllocatedArchetypes[ArchetypeHash] = NewArchetype;
+		}
+
+		return AllocatedArchetypes[ArchetypeHash];
 	}
 
 	Archetype* DeepECS::AddArchetype(Archetype* Root, ECSHandle Type)
@@ -49,6 +72,7 @@ namespace DeepEngine
 		Components->push_back(TempComponent);
 
 		TempList.Elements = Components;
+		AllocatedComponents.push_back((void*)Components);
 		DeepEcsComponent->Components.push_back(TempList);
 
 		DeepIdentifier TempIdentifier;
@@ -62,19 +86,36 @@ namespace DeepEngine
 		Identifiers->push_back(TempIdentifier);
 
 		TempList.Elements = Identifiers;
+		AllocatedComponents.push_back((void*)Identifiers);
 		DeepEcsComponent->Components.push_back(TempList);
 
 		Hierarchy[DEEP_ECS_COMPONENT].Archetype = DeepEcsComponent;
 		Hierarchy[DEEP_ECS_COMPONENT].Index = 0;
 		Hierarchy[DEEP_ECS_ID].Archetype = DeepEcsComponent;
 		Hierarchy[DEEP_ECS_ID].Index = 1;
+
+		std::cout << AllocatedArchetypes.size() << '\n';
 	}
 
 	DeepECS::~DeepECS()
 	{
 		//TODO:: After writing proper code for storing Archetypes in memory free them here
+		for (void* Pointer : AllocatedComponents)
+		{
+			free(Pointer);
+		}
+		for (std::pair<ArchetypeHash, Archetype*> KeyPair : AllocatedArchetypes)
+		{
+			free(KeyPair.second);
+		}
 	}
 	
+	//NOTE:: this returns a pointer to a vector element, this means that once the the vector (Components[i].Elements) expands and is reallocated, the pointer returned is no longer valid.
+	//		 This is fine as long as the component is used and the vector remains untouched whilst doing so.
+	//	     A fix to this would be to make it return a Handle that is managed (but this can cuck performance).
+	//		 The prefered fix would be to return all components (return the vector*) and use the index to access the element.
+	//		 This results in less clean code, but it is pointer safe, however, when the storage method of the Archetypes and its Components are changed
+	//	     it may no longer be true that the pointer to the vector is always valid as it is now due to a similar reallocation problem.
 	template<typename T>
 	T* GetComponent(ECSHandle Type, ECSReference Reference)
 	{

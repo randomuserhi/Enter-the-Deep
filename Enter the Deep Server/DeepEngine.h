@@ -23,6 +23,7 @@
 
 namespace DeepEngine
 {
+	typedef int ArchetypeHash;
 	typedef uint64_t ECSHandle;
 	typedef std::vector<ECSHandle> ECSType;
 
@@ -66,6 +67,8 @@ namespace DeepEngine
 	struct DeepECS
 	{
 		std::unordered_map<ECSHandle, ECSReference> Hierarchy; //Contains a hierarchy table of existing entities and their archetype
+		std::vector<void*> AllocatedComponents; //Contains a list of component pointers to free
+		std::unordered_map<ArchetypeHash, Archetype*> AllocatedArchetypes; //Contains a list of archetypes
 
 		DeepECS();
 		~DeepECS();
@@ -76,6 +79,6 @@ namespace DeepEngine
 		Archetype* AddArchetype(Archetype* Root, ECSType& Type);
 	};
 
-	static Archetype RootArchetype;
-	static ECSType DefaultComponentArchetype { DEEP_ECS_COMPONENT, DEEP_ECS_ID };
+	extern Archetype RootArchetype;
+	extern ECSType DefaultComponentArchetype;
 }
