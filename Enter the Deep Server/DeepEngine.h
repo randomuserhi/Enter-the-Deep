@@ -23,13 +23,33 @@
 
 namespace DeepEngine
 {
-	typedef int ArchetypeHash;
+	typedef uint64_t ArchetypeHash;
 	typedef uint64_t ECSHandle;
 	typedef std::vector<ECSHandle> ECSType;
 
+	class ArbitaryVector
+	{
+	public:
+		virtual ~ArbitaryVector() {}
+		virtual size_t Size() { return 0; }
+		virtual int New() { return DEEP_ECS_NULL; }
+	};
+
+	template<typename T>
+	class ArbitaryVectorDefinition : public ArbitaryVector
+	{
+	public:
+		std::vector<T> Vector;
+
+		//Vector.clear would need to be called here if Vector was a std::vector<destructable> so that the destructor of T is called, otherwise a for loop and delete for std::vector<pointers> etc...
+		virtual ~ArbitaryVectorDefinition() {}
+		virtual size_t Size() { return Vector.size(); }
+		virtual int New() { Vector.push_back({}); return Size() - 1; }
+	};
+
 	struct ComponentList
 	{
-		void* Elements; //vector<T>*
+		ArbitaryVector* Elements; //vector<T>*
 	};
 
 	struct Archetype
@@ -44,39 +64,52 @@ namespace DeepEngine
 		std::vector<ECSHandle> Handles;
 		std::vector<ComponentList> Components;
 		std::unordered_map<ECSHandle, Edge> Edges;
+
+		ComponentList GetComponent(ECSHandle SingleType);
+		std::vector<ComponentList> GetComponents(ECSType SubArchetype);
 	};
 
 	struct ECSReference
 	{
-		Archetype* Archetype;
-		int Index;
+		Archetype* Archetype = nullptr;
+		int Index = -1;
 	};
 
 	struct DeepComponent
 	{
-		ECSHandle Handle;
-		size_t Size;
+		size_t Size; //sizeof(Component);
 	};
 
 	struct DeepIdentifier
 	{
-		ECSHandle Handle;
 		std::string Name = "ECS_NULL";
 	};
 
-	struct DeepECS
+	class DeepECS
 	{
+	private:
+		Archetype* CreateArchetype(Archetype* Root, ECSHandle Type);
+		Archetype* AddArchetype(Archetype* Root, ECSHandle Type);
+		Archetype* AddArchetype(Archetype* Root, ECSType& Type);
+		ECSHandle GetHandle();
+
+	public:
 		std::unordered_map<ECSHandle, ECSReference> Hierarchy; //Contains a hierarchy table of existing entities and their archetype
-		std::vector<void*> AllocatedComponents; //Contains a list of component pointers to free
+		std::vector<ArbitaryVector*> AllocatedComponents; //Contains a list of component pointers to free
 		std::unordered_map<ArchetypeHash, Archetype*> AllocatedArchetypes; //Contains a list of archetypes
 
 		DeepECS();
 		~DeepECS();
 		void DebugEntityIndex(bool BinaryMode = false);
+		
+		template<typename T>
+		ECSHandle CreateComponent();
+		ECSHandle CreateComponent(size_t Size);
 
-		inline Archetype* CreateArchetype(Archetype* Root, ECSHandle Type);
-		Archetype* AddArchetype(Archetype* Root, ECSHandle Type);
-		Archetype* AddArchetype(Archetype* Root, ECSType& Type);
+		template<typename T>
+		inline T* GetComponent(ECSHandle Handle, ECSHandle Type) { return GetComponent<T>(Hierarchy[Handle], Type); }
+		template<typename T>
+		T* GetComponent(ECSReference Reference, ECSHandle Type);
 	};
 
 	extern Archetype RootArchetype;

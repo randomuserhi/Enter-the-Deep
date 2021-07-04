@@ -3,12 +3,7 @@
 //TODO:: implement ExpressionTemplates (to make code cache friendly)
 
 namespace DeepEngine
-{
-	inline bool operator ==(const Vector3& LHS, const Vector3& RHS)
-	{
-		return (LHS.X == RHS.X && LHS.Y == RHS.Y && LHS.Z == RHS.Z);
-	}
-	
+{	
 	Vector3::Vector3(float X, float Y, float Z)
 	{
 		this->X = X;

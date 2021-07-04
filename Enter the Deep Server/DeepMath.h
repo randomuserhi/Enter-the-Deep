@@ -21,6 +21,9 @@ namespace DeepEngine
 		Vector3 operator *(const float Other);
 		Vector3 operator /(const float Other);
 	};
-	inline bool operator ==(const Vector3& LHS, const Vector3& RHS);
+	inline bool operator ==(const Vector3& LHS, const Vector3& RHS) 
+	{
+		return (LHS.X == RHS.X && LHS.Y == RHS.Y && LHS.Z == RHS.Z);
+	}
 	inline bool operator !=(const Vector3& LHS, const Vector3& RHS) { return !(LHS == RHS); }
 }

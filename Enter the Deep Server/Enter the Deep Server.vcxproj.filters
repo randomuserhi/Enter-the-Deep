@@ -42,7 +42,10 @@
     <ClCompile Include="DeepNetwork-Server.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="DeepEngine.cpp">
+    <ClCompile Include="DeepEngine-DeepECS.cpp">
+      <Filter>Source Files\DeepEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-Archetype.cpp">
       <Filter>Source Files\DeepEngine</Filter>
     </ClCompile>
   </ItemGroup>

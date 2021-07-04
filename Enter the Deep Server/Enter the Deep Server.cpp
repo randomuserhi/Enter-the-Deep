@@ -5,6 +5,8 @@
 
 #include <windows.h>
 #include <bitset> //Remove later, this is just here for debugging
+#include <string> //Remove later, this is just here for debugging
+#include <chrono> //Remove later, this is for profiling
 
 void Cleanup()
 {
@@ -26,10 +28,17 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 
 int main()
 {
+	/*auto Prev = std::chrono::system_clock::now();
+	auto After = std::chrono::system_clock::now();
+	std::chrono::duration<float> Elapsed = After - Prev;
+	std::cout << Elapsed.count() << '\n';*/
+
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
 	//Initialize DeepEngine
 	DeepEngine::DeepECS DeepHandle{}; //https://stackoverflow.com/questions/31496810/parameterless-constructor
+	DeepEngine::ECSHandle Test = DeepHandle.CreateComponent(5);
+	DeepHandle.GetComponent<DeepEngine::DeepIdentifier>(Test, DEEP_ECS_ID)->Name = "TestComponent";
 	DeepHandle.DebugEntityIndex();
 
 	std::cout << "DeepEngine Initialized.\n";
@@ -46,7 +55,7 @@ int main()
 
 	std::cout << "Server started on port: " << Server.GetPort() << ".\n";
 
-	int Data = 10;
+	//int Data = 10;
 
 	while (true)
 	{

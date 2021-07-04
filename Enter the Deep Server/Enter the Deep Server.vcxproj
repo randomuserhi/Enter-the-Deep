@@ -175,7 +175,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DeepEngine.cpp" />
+    <ClCompile Include="DeepEngine-Archetype.cpp" />
+    <ClCompile Include="DeepEngine-DeepECS.cpp" />
     <ClCompile Include="DeepMath-Vector.cpp" />
     <ClCompile Include="DeepNetwork-Server.cpp" />
     <ClCompile Include="DeepNetwork-Socket.cpp" />
