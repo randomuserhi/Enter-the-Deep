@@ -22,7 +22,7 @@ namespace DeepEngine
 		NewType.push_back(Type);
 		std::sort(NewType.begin(), NewType.end());
 
-		int ArchetypeHash = TypeHash(&NewType);
+		ArchetypeHash ArchetypeHash = TypeHash(&NewType);
 		
 		if (AllocatedArchetypes.find(ArchetypeHash) == AllocatedArchetypes.end())
 		{
@@ -48,7 +48,7 @@ namespace DeepEngine
 	Archetype* DeepECS::AddArchetype(Archetype* Root, ECSType& Type)
 	{
 		Archetype* Node = Root;
-		for (int i = 0; i < Type.size(); ++i)
+		for (size_t i = 0; i < Type.size(); ++i)
 		{
 			Node = AddArchetype(Node, Type[i]);
 		}
@@ -156,7 +156,7 @@ namespace DeepEngine
 	template<typename T>
 	T* DeepECS::GetComponent(ECSReference Reference, ECSHandle Type)
 	{
-		for (int i = 0; i < Reference.Archetype->Type.size(); ++i)
+		for (size_t i = 0; i < Reference.Archetype->Type.size(); ++i)
 		{
 			if (Reference.Archetype->Type[i] == Type)
 			{

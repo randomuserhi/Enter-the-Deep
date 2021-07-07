@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{ad1d12b1-610e-4015-8127-ae902f82b0d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{6ca9fd3d-305e-4078-adc5-8e33189e5601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeepEngine">
+      <UniqueIdentifier>{9c8f7f04-8577-4a71-a38b-c495af19131b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeepEngine\Math">
+      <UniqueIdentifier>{ae1b876b-c3bf-480e-a793-ba1957f3134d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DeepEngine">
+      <UniqueIdentifier>{6153ff6e-aaf8-47b7-80f1-92c43bc60d5c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Enter the Deep Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepMath-Vector.cpp">
+      <Filter>Source Files\DeepEngine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepNetwork-Socket.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepNetwork-Server.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-DeepECS.cpp">
+      <Filter>Source Files\DeepEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-Archetype.cpp">
+      <Filter>Source Files\DeepEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepEngine-ComponentList.cpp">
+      <Filter>Source Files\DeepEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeepEngine.h">
+      <Filter>Header Files\DeepEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DeepNetwork.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="DeepMath.h">
+      <Filter>Header Files\DeepEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
