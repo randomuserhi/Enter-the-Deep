@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-
 #include "Deep.h"
+#include "DeepContainers.h"
 #include "DeepMath.h"
 #include "DeepEngine.h"
 #include "DeepNetwork.h"
@@ -30,6 +27,9 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
+
+	int* intArr = Deep_DynamicVoidArr_Create(int);
+	Deep_DynamicVoidArr_Free(intArr);
 
 	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);

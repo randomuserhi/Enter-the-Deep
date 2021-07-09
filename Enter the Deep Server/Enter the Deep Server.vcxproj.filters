@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Deep\Engine\Math">
       <UniqueIdentifier>{282d09cf-27dd-4423-8eaa-d3fa8f549fd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Deep\Containers">
+      <UniqueIdentifier>{5d902b70-50b3-4dd9-8d3f-00c3f75b22f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeepNetwork-Server.c">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="Enter the Deep Server.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep-VoidDynArray.c">
+      <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
