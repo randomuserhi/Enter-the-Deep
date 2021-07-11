@@ -165,7 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Deep-VoidDynArray.c">
+    <ClCompile Include="Deep-DynArray.c">
       <SubType>
       </SubType>
     </ClCompile>
@@ -182,7 +182,6 @@
   <ItemGroup>
     <ClInclude Include="Deep-DynArray.h" />
     <ClInclude Include="Deep-UnorderedMap.h" />
-    <ClInclude Include="Deep-VoidDynArray.h" />
     <ClInclude Include="Deep.h" />
     <ClInclude Include="DeepContainers.h" />
     <ClInclude Include="DeepEngine.h" />

@@ -75,7 +75,7 @@ int DeepNetwork_Socket_Bind(Deep_Network_Socket* const deepSocket, unsigned shor
 int DeepNetwork_Socket_GetRemainingBytes(Deep_Network_Socket* const deepSocket);
 
 int DeepNetwork_Socket_Send(Deep_Network_Socket* const deepSocket, const char* const data, int dataSize, Deep_SocketAddr* address);
-Deep__Inline int DeepNetwork_Socket_Send_DeepAddress(Deep_Network_Socket* const deepSocket, const char* const data, int dataSize, Deep_Network_Address* address)
+Deep__Force_Inline int DeepNetwork_Socket_Send_DeepAddress(Deep_Network_Socket* const deepSocket, const char* const data, int dataSize, Deep_Network_Address* address)
 {
 	return DeepNetwork_Socket_Send(deepSocket, data, dataSize, &address->sockAddr);
 };
@@ -96,7 +96,7 @@ typedef struct
 } Deep_Network_Server;
 extern const Deep_Network_Server DeepNetwork_Server_Default;
 
-Deep__Inline unsigned short DeepNetwork_Server_GetPort(Deep_Network_Server* const deepServer)
+Deep__Force_Inline unsigned short DeepNetwork_Server_GetPort(Deep_Network_Server* const deepServer)
 {
 	return deepServer->socket._port;
 };
@@ -104,7 +104,7 @@ void DeepNetwork_Server_Start(Deep_Network_Server* const deepServer, unsigned sh
 void DeepNetwork_Server_Close(Deep_Network_Server* const deepServer);
 void DeepNetwork_Server_Tick(Deep_Network_Server* const deepServer);
 
-Deep__Inline int DeepNetwork_Server_Send(Deep_Network_Server* const deepServer, const char* const Data, int DataSize, Deep_SocketAddr* Address)
+Deep__Force_Inline int DeepNetwork_Server_Send(Deep_Network_Server* const deepServer, const char* const Data, int DataSize, Deep_SocketAddr* Address)
 {
 	return DeepNetwork_Socket_Send(&deepServer->socket, Data, DataSize, Address);
 };

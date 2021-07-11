@@ -43,6 +43,7 @@ int main()
 
 	DeepEngine::ComponentList DynArr(sizeof(DeepEngine::DeepComponent));
 	DeepEngine::DeepComponent Comp = {10};
+	DynArr.Reserve(7);
 	DynArr.Add<DeepEngine::DeepComponent>(Comp);
 	std::cout << DynArr.Size<DeepEngine::DeepComponent>() << '\n';
 	Comp = { 30 };
@@ -69,6 +70,13 @@ int main()
 
 	DynArr.Get<DeepEngine::DeepComponent>(0).Size = 100;
 
+	DynArr.Get<DeepEngine::DeepComponent>(1).Size = 1000;
+	DynArr.Get<DeepEngine::DeepComponent>(2).Size = 1000;
+	DynArr.Get<DeepEngine::DeepComponent>(3).Size = 1000;
+	DynArr.Get<DeepEngine::DeepComponent>(4).Size = 1000;
+	DynArr.Get<DeepEngine::DeepComponent>(5).Size = 1000;
+	DynArr.Get<DeepEngine::DeepComponent>(6).Size = 1000;
+
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(0).Size << '\n';
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(1).Size << '\n';
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(2).Size << '\n';
@@ -76,7 +84,16 @@ int main()
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(4).Size << '\n';
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(5).Size << '\n';
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(6).Size << '\n';
+	std::cout << "nice" << '\n';
 	std::cout << DynArr.Get<DeepEngine::DeepComponent>(7).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(8).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(9).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(10).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(11).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(12).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(13).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(14).Size << '\n';
+	std::cout << DynArr.Get<DeepEngine::DeepComponent>(15).Size << '\n';
 
 	std::cout << "DeepEngine Initialized.\n";
 

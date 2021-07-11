@@ -54,7 +54,7 @@
     <ClCompile Include="Enter the Deep Server.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep-VoidDynArray.c">
+    <ClCompile Include="Deep-DynArray.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,9 +72,6 @@
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Deep-DynArray.h">
-      <Filter>Header Files\Deep\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Deep-VoidDynArray.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Deep-UnorderedMap.h">

@@ -68,6 +68,32 @@ namespace DeepEngine
 		ComponentList(size_t TypeSize);
 		~ComponentList();
 
+		int Reserve(int Num)
+		{
+			if (Data == nullptr)// [[unlikely]]
+			{
+				unsigned char* Temp = (unsigned char*)malloc(TypeSize * DEEP_ECS_DYNAMIC_SIZE);
+				//TODO:: handle malloc error
+				Capacity = TypeSize * DEEP_ECS_DYNAMIC_SIZE;
+				Data = Temp;
+				End = Data;
+			}
+			else if (Size() + Num * TypeSize >= Capacity)
+			{
+				size_t NewCapacity = Size() + Num * TypeSize;
+				unsigned char* Temp = (unsigned char*)realloc(Data, NewCapacity);
+				//TODO:: handle realloc error
+				Data = Temp;
+				End = Data + Capacity;
+				Capacity = NewCapacity;
+				//std::cout << Capacity << ", Grow\n";
+			}
+
+			End += TypeSize * Num;
+
+			return DEEP_ECS_DYNAMIC_NOERROR;
+		}
+
 		template<typename T>
 		int Add(T Item) //Micro optimization might be to do with branch prediction : https://stackoverflow.com/questions/3702903/portable-branch-prediction-hints 
 						//														    => http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0479r0.html (implemented in VC2019)
@@ -98,14 +124,14 @@ namespace DeepEngine
 			}
 			else if (Size() == Capacity)
 			{
-				int NewCapacity = ((Capacity / TypeSize) * 1.5);
+				size_t NewCapacity = (size_t)((Capacity / TypeSize) * 1.5);
 				NewCapacity *= TypeSize;
 				unsigned char* Temp = (unsigned char*)realloc(Data, NewCapacity);
-				//TODO:: handle realloc error
+				if (Temp == nullptr) return DEEP_ECS_DYNAMIC_ERROR_MALLOC;
 				Data = Temp;
 				End = Data + Capacity;
 				Capacity = NewCapacity;
-				//std::cout << Capacity << ", Grow\n";
+				std::cout << Capacity << ", Grow\n";
 			}
 
 			*((T*)End) = Item;

@@ -29,7 +29,7 @@ void DeepNetwork_Server_Tick(Deep_Network_Server* const deepServer)
 			unsigned int fromAddress = ntohl(deepServer->from.sa_in.sin_addr.s_addr);
 			unsigned int fromPort = ntohs(deepServer->from.sa_in.sin_port);
 
-			if (deepServer->OnReceiveHandle != NULL) deepServer->OnReceiveHandle(deepServer->buffer, bytesReceived, fromAddress, fromPort);
+			if (deepServer->OnReceiveHandle) deepServer->OnReceiveHandle(deepServer->buffer, bytesReceived, fromAddress, fromPort);
 		}
 	}
 }
