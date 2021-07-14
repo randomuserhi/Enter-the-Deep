@@ -36,9 +36,8 @@ int main()
 
 	for (int i = 0; i < 100000000; ++i)
 	{
-		//int _DEEP_DYNAMIC_VOID_ARR_RESULT; 
-		Deep_DynamicArr_Push(intArr, 10);
 		//Deep_DynamicArr_EmptyPush(intArr);
+		Deep_DynamicArr_Push(intArr, 10);
 	}
 
 	clock_t end = clock();

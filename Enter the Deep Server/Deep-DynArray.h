@@ -2,7 +2,8 @@
 
 #include "Deep.h"
 
-#define DEEP_DYNAMIC_ARR_SIZE 10 // Default size for dynamic arrays (component storage)
+#define DEEP_DYNAMIC_ARR_SIZE 10 // Default size for dynamic arrays
+#define DEEP_DYNAMIC_ARR_GROWTHRATE 2 //Growthrate for dynamic arrays
 
 /*
 
@@ -42,25 +43,25 @@ typedef struct
 	size_t size; // Number of elements in array (to optimize out division)
 	size_t typeSize; // Size of type
 	size_t capacity; // Capacity of array (not number of elements in array)
-} _Deep_DynamicArr;
+} Deep_DynamicArr_Head;
 
 typedef unsigned char Deep_DynamicArr;
 
 // Careful with this header code
-// use of casting to (_Deep_DynamicArr*) stops compiler warnings, but the warning has a point 
+// use of casting to (Deep_DynamicArr_Head*) stops compiler warnings, but the warning has a point 
 // (refer to Type punning, Strict Aliasing and Alignment issues with casting)
 // Technically should be fine as I never reinterpret the bytes of the struct differently (Type Punning)
 // (in otherwords converting between void* and T* will always return the same pointer, same with char* and T*)
 // and malloc guarantees alignment.
-#define _Deep_DynamicArr_Header(arr) ((_Deep_DynamicArr*)((Deep_DynamicArr*)(arr) - sizeof(_Deep_DynamicArr)))
-#define _Deep_DynamicArr_Realloc(dest, src, newCapacity) dest = src; dest->begin = (Deep_DynamicArr*)dest + sizeof(_Deep_DynamicArr); dest->end = dest->begin + dest->typeSize * dest->size; dest->capacity = newCapacity
+#define Deep_DynamicArr_Header(arr) ((Deep_DynamicArr_Head*)((Deep_DynamicArr*)(arr) - sizeof(Deep_DynamicArr_Head)))
+#define _Deep_DynamicArr_Realloc(dest, src, newCapacity) dest = src; dest->begin = (Deep_DynamicArr*)dest + sizeof(Deep_DynamicArr_Head); dest->end = dest->begin + dest->typeSize * dest->size; dest->capacity = newCapacity
 
-#define Deep_DynamicArr_Create_Raw(typeSize, arr) Deep_DynamicArr arr = _Deep_DynamicArr_Create(typeSize)
+#define Deep_DynamicArr_Create_Raw(typeSize, arr) Deep_DynamicArr* arr = _Deep_DynamicArr_Create(typeSize)
 #define Deep_DynamicArr_Create(typename, arr) typename* arr = (typename*)_Deep_DynamicArr_Create(sizeof(typename))
 Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize);
 
-#define Deep_DynamicArr_Size(arr) _Deep_DynamicArr_Header(arr)->size
-#define Deep_DynamicArr_Free(arr) free(_Deep_DynamicArr_Header(arr))
+#define Deep_DynamicArr_Size(arr) Deep_DynamicArr_Header(arr)->size
+#define Deep_DynamicArr_Free(arr) free(Deep_DynamicArr_Header(arr))
 
 #if defined DEEP_ERRORHANDLING_VERBOSE
 
@@ -69,16 +70,16 @@ do {\
 	if (arr) \
 	{ \
 		_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_NOERROR; \
-		_Deep_DynamicArr* header = _Deep_DynamicArr_Header(arr); \
+		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
 		if (header->typeSize) \
 		{ \
 			if (header->typeSize == sizeof item) \
 			{ \
 				if (header->size == header->capacity) \
 				{ \
-					size_t newCapacity = (size_t)(header->capacity * 2); \
+					size_t newCapacity = (size_t)(header->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE); \
 					if (newCapacity == header->capacity) ++newCapacity; \
-					void* tmp = realloc(header, sizeof(_Deep_DynamicArr) + header->typeSize * newCapacity); \
+					void* tmp = realloc(header, sizeof(Deep_DynamicArr_Head) + header->typeSize * newCapacity); \
 					if (tmp) \
 					{ \
 						_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
@@ -116,14 +117,14 @@ do {\
 	if (arr) \
 	{ \
 		_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_NOERROR; \
-		_Deep_DynamicArr* header = _Deep_DynamicArr_Header(arr); \
+		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
 		if (header->typeSize) \
 		{ \
 			if (header->size == header->capacity) \
 			{ \
-				size_t newCapacity = (size_t)(header->capacity * 2); \
+				size_t newCapacity = (size_t)(header->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE); \
 				if (newCapacity == header->capacity) ++newCapacity; \
-				void* tmp = realloc(header, sizeof(_Deep_DynamicArr) + header->typeSize * newCapacity); \
+				void* tmp = realloc(header, sizeof(Deep_DynamicArr_Head) + header->typeSize * newCapacity); \
 				if (tmp) \
 				{ \
 					_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
@@ -154,7 +155,7 @@ do {\
 #define Deep_DynamicArr_Pop(arr) \
 do { \
 	_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_NOERROR; \
-	_Deep_DynamicArr* dynArray = _Deep_DynamicArr_Header(arr); \
+	Deep_DynamicArr_Head* dynArray = Deep_DynamicArr_Header(arr); \
 	if (dynArray->begin != dynArray->end) \
 	{ \
 		dynArray->end -= dynArray->typeSize; \
@@ -164,9 +165,9 @@ do { \
 		_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_ERROR_EMPTY; \
 } while(0)
 
-#define Deep_DynamicArr_EmptyPushBlock(arr, num) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_EmptyPush(_Deep_DynamicArr_Header(arr), &arr, num)
-#define Deep_DynamicArr_Reserve(arr, num) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_Reserve(_Deep_DynamicArr_Header(arr), &arr, num)
-#define Deep_DynamicArr_Shrink(arr) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_Shrink(_Deep_DynamicArr_Header(arr), &arr)
+#define Deep_DynamicArr_EmptyPushBlock(arr, num) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_EmptyPush(Deep_DynamicArr_Header(arr), &arr, num)
+#define Deep_DynamicArr_Reserve(arr, num) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_Reserve(Deep_DynamicArr_Header(arr), &arr, num)
+#define Deep_DynamicArr_Shrink(arr) _DEEP_DYNAMIC_ARR_RESULT = _Deep_DynamicArr_Shrink(Deep_DynamicArr_Header(arr), &arr)
 
 #else
 
@@ -174,14 +175,14 @@ do { \
 do {\
 	if (arr) \
 	{ \
-		_Deep_DynamicArr* header = _Deep_DynamicArr_Header(arr); \
+		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
 		if (header->typeSize && header->typeSize == sizeof item) \
 		{ \
 			if (header->size == header->capacity) \
 			{ \
-				size_t newCapacity = (size_t)(header->capacity * 2); \
+				size_t newCapacity = (size_t)(header->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE); \
 				if (newCapacity == header->capacity) ++newCapacity; \
-				void* tmp = realloc(header, sizeof(_Deep_DynamicArr) + header->typeSize * newCapacity); \
+				void* tmp = realloc(header, sizeof(Deep_DynamicArr_Head) + header->typeSize * newCapacity); \
 				if (tmp) \
 				{ \
 					_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
@@ -206,14 +207,14 @@ do {\
 do {\
 	if (arr) \
 	{ \
-		_Deep_DynamicArr* header = _Deep_DynamicArr_Header(arr); \
+		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
 		if (header->typeSize) \
 		{ \
 			if (header->size == header->capacity) \
 			{ \
-				size_t newCapacity = (size_t)(header->capacity * 2); \
+				size_t newCapacity = (size_t)(header->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE); \
 				if (newCapacity == header->capacity) ++newCapacity; \
-				void* tmp = realloc(header, sizeof(_Deep_DynamicArr) + header->typeSize * newCapacity); \
+				void* tmp = realloc(header, sizeof(Deep_DynamicArr_Head) + header->typeSize * newCapacity); \
 				if (tmp) \
 				{ \
 					_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
@@ -234,20 +235,23 @@ do {\
 
 #define Deep_DynamicArr_Pop(arr) \
 do { \
-	_Deep_DynamicArr* dynArray = _Deep_DynamicArr_Header(arr); \
-	if (dynArray->begin != dynArray->end) \
+	if (arr) \
 	{ \
-		dynArray->end -= dynArray->typeSize; \
-		--dynArray->size; \
+		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
+		if (header->begin != header->end) \
+		{ \
+			header->end -= header->typeSize; \
+			--header->size; \
+		} \
 	} \
 } while(0)
 
-#define Deep_DynamicArr_EmptyPushBlock(arr, num) _Deep_DynamicArr_EmptyPush(_Deep_DynamicArr_Header(arr), &arr, num)
-#define Deep_DynamicArr_Reserve(arr, num) _Deep_DynamicArr_Reserve(_Deep_DynamicArr_Header(arr), &arr, num)
-#define Deep_DynamicArr_Shrink(arr) _Deep_DynamicArr_Shrink(_Deep_DynamicArr_Header(arr), &arr)
+#define Deep_DynamicArr_EmptyPushBlock(arr, num) _Deep_DynamicArr_EmptyPush(Deep_DynamicArr_Header(arr), &arr, num)
+#define Deep_DynamicArr_Reserve(arr, num) _Deep_DynamicArr_Reserve(Deep_DynamicArr_Header(arr), &arr, num)
+#define Deep_DynamicArr_Shrink(arr) _Deep_DynamicArr_Shrink(Deep_DynamicArr_Header(arr), &arr)
 
 #endif
 
-int _Deep_DynamicArr_Reserve(_Deep_DynamicArr* dynArray, void** arr, size_t num);
-int _Deep_DynamicArr_EmptyPush(_Deep_DynamicArr* dynArray, void** arr, size_t num);
-int _Deep_DynamicArr_Shrink(_Deep_DynamicArr* dynArray, void** arr);
+int _Deep_DynamicArr_Reserve(Deep_DynamicArr_Head* dynArray, void** arr, size_t num);
+int _Deep_DynamicArr_EmptyPush(Deep_DynamicArr_Head* dynArray, void** arr, size_t num);
+int _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr);

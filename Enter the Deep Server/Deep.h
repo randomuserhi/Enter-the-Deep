@@ -15,7 +15,7 @@ DEEP_ERRORHANDLING_VERBOSE => Verbose detailed errors are returned by functions.
 
 */
 
-#define DEEP_ERRORHANDLING_VERBOSE
+//#define DEEP_ERRORHANDLING_VERBOSE
 
 /*
 

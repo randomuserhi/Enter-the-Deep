@@ -2,7 +2,7 @@
 
 Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize)
 {
-	_Deep_DynamicArr* dynArr;
+	Deep_DynamicArr_Head* dynArr;
 	void* tmp = malloc(sizeof *dynArr + typeSize * DEEP_DYNAMIC_ARR_SIZE);
 	if (!tmp) return NULL;
 
@@ -16,14 +16,14 @@ Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize)
 	return dynArr->begin;
 }
 
-int _Deep_DynamicArr_Reserve(_Deep_DynamicArr* dynArray, void** arr, size_t num)
+int _Deep_DynamicArr_Reserve(Deep_DynamicArr_Head* dynArray, void** arr, size_t num)
 {
 	if (!dynArray || dynArray->typeSize == 0) return DEEP_DYNAMIC_ARR_ERROR_NULL;
 	if (num == 0) return DEEP_DYNAMIC_ARR_NOERROR;
 	size_t newCapacity = dynArray->size + num;
 	if (newCapacity > dynArray->capacity)
 	{
-		_Deep_DynamicArr* tmp = realloc(dynArray, sizeof(_Deep_DynamicArr) + dynArray->typeSize * newCapacity);
+		Deep_DynamicArr_Head* tmp = realloc(dynArray, sizeof(Deep_DynamicArr_Head) + dynArray->typeSize * newCapacity);
 		if (!tmp)
 		{
 			free(dynArray);
@@ -36,14 +36,14 @@ int _Deep_DynamicArr_Reserve(_Deep_DynamicArr* dynArray, void** arr, size_t num)
 	return DEEP_DYNAMIC_ARR_NOERROR;
 }
 
-int _Deep_DynamicArr_EmptyPush(_Deep_DynamicArr* dynArray, void** arr, size_t num)
+int _Deep_DynamicArr_EmptyPush(Deep_DynamicArr_Head* dynArray, void** arr, size_t num)
 {
 	if (!dynArray || dynArray->typeSize == 0) return DEEP_DYNAMIC_ARR_ERROR_NULL;
 	if (num == 0) return DEEP_DYNAMIC_ARR_NOERROR;
 	size_t newCapacity = dynArray->size + num;
 	if (dynArray->size + num > dynArray->capacity)
 	{
-		_Deep_DynamicArr* tmp = realloc(dynArray, sizeof(_Deep_DynamicArr) + dynArray->typeSize * newCapacity);
+		Deep_DynamicArr_Head* tmp = realloc(dynArray, sizeof(Deep_DynamicArr_Head) + dynArray->typeSize * newCapacity);
 		if (!tmp)
 		{
 			free(dynArray);
@@ -58,13 +58,13 @@ int _Deep_DynamicArr_EmptyPush(_Deep_DynamicArr* dynArray, void** arr, size_t nu
 	return DEEP_DYNAMIC_ARR_NOERROR;
 }
 
-int _Deep_DynamicArr_Shrink(_Deep_DynamicArr* dynArray, void** arr)
+int _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 {
 	if (!dynArray || dynArray->typeSize == 0) return DEEP_DYNAMIC_ARR_ERROR_NULL;
 	size_t newCapacity = dynArray->size;
 	if (newCapacity != dynArray->capacity)
 	{
-		_Deep_DynamicArr* tmp = realloc(dynArray, sizeof(_Deep_DynamicArr) + dynArray->typeSize * newCapacity);
+		Deep_DynamicArr_Head* tmp = realloc(dynArray, sizeof(Deep_DynamicArr_Head) + dynArray->typeSize * newCapacity);
 		if (!tmp)
 		{
 			free(dynArray);
