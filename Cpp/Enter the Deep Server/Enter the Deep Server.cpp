@@ -8,6 +8,8 @@
 #include <string> //Remove later, this is just here for debugging
 #include <chrono> //Remove later, this is for profiling
 
+#include <concurrent_unordered_map.h> //Testing
+
 void Cleanup()
 {
 	DeepNetwork::ShutdownSockets();
@@ -28,6 +30,8 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 
 int main()
 {
+	concurrency::concurrent_unordered_map<char, int> map;
+
 	/*auto Prev = std::chrono::system_clock::now();
 	auto After = std::chrono::system_clock::now();
 	std::chrono::duration<std::chrono::milliseconds> Elapsed = After - Prev;

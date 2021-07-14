@@ -169,6 +169,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Deep-UnorderedMap.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="DeepNetwork-Server.c">
       <SubType>
       </SubType>
