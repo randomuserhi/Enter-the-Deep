@@ -48,7 +48,7 @@ int main()
 	for (int i = 100000000 - 3; i < 100000000; ++i)
 	{
 		//int _DEEP_DYNAMIC_VOID_ARR_RESULT; 
-		printf("%i\n", intArr[i]);
+		printf("%i\n", Deep_DynamicArr_RawGet(int, intArr, i));
 	}
 
 	printf("%i\n", Deep_DynamicArr_Size(intArr));

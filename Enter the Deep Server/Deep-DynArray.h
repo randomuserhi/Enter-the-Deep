@@ -63,6 +63,8 @@ Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize);
 #define Deep_DynamicArr_Size(arr) Deep_DynamicArr_Header(arr)->size
 #define Deep_DynamicArr_Free(arr) free(Deep_DynamicArr_Header(arr))
 
+#define Deep_DynamicArr_RawGet(type, arr, index) ((type*)arr)[index]
+
 #if defined DEEP_ERRORHANDLING_VERBOSE
 
 #define Deep_DynamicArr_Push(arr, item) \
@@ -84,7 +86,7 @@ do {\
 					{ \
 						_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
 						*((void**)&(arr)) = header->begin; \
-						arr[header->size] = item; \
+						*((Deep_DynamicArr*)arr + header->typeSize * header->size) = item; \
 						header->end += header->typeSize; \
 						++header->size; \
 					} \
@@ -97,7 +99,7 @@ do {\
 				} \
 				else \
 				{ \
-					arr[header->size] = item; \
+					*((Deep_DynamicArr*)arr + header->typeSize * header->size) = item; \
 					header->end += header->typeSize; \
 					++header->size; \
 				} \
@@ -187,7 +189,7 @@ do {\
 				{ \
 					_Deep_DynamicArr_Realloc(header, tmp, newCapacity); \
 					*((void**)&(arr)) = header->begin; \
-					arr[header->size] = item; \
+					*((Deep_DynamicArr*)arr + header->typeSize * header->size) = item; \
 					header->end += header->typeSize; \
 					++header->size; \
 				} \
@@ -195,7 +197,7 @@ do {\
 			} \
 			else \
 			{ \
-				arr[header->size] = item; \
+				*((Deep_DynamicArr*)arr + header->typeSize * header->size) = item; \
 				header->end += header->typeSize; \
 				++header->size; \
 			} \
