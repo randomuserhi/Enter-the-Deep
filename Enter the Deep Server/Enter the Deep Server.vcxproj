@@ -169,7 +169,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-UnorderedMap.c">
+    <ClCompile Include="Deep-HashMap.c">
       <SubType>
       </SubType>
     </ClCompile>
@@ -185,7 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep-DynArray.h" />
-    <ClInclude Include="Deep-UnorderedMap.h" />
+    <ClInclude Include="Deep-HashMap.h" />
     <ClInclude Include="Deep.h" />
     <ClInclude Include="DeepContainers.h" />
     <ClInclude Include="DeepEngine.h" />

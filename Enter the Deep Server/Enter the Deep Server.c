@@ -29,45 +29,19 @@ int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	int _DEEP_DYNAMIC_ARR_RESULT;
-	Deep_DynamicArr_Create(int, intArr);
+	Deep_HashMap(uint64_t, size_t, testHashMap);
 
 	clock_t begin = clock();
 
 	for (int i = 0; i < 100000000; ++i)
 	{
-		//Deep_DynamicArr_EmptyPush(intArr);
-		Deep_DynamicArr_Push(intArr, 10);
+		Deep_HashMap_Insert(testHashMap, 1, 1);
 	}
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	getchar();
-
-	for (int i = 100000000 - 3; i < 100000000; ++i)
-	{
-		//int _DEEP_DYNAMIC_VOID_ARR_RESULT; 
-		printf("%i\n", Deep_DynamicArr_RawGet(int, intArr, i));
-	}
-
-	printf("%i\n", Deep_DynamicArr_Size(intArr));
-	
-	begin = clock();
-
-	for (int i = 0; i < 100000000; ++i)
-	{
-		Deep_DynamicArr_Pop(intArr);
-	}
-
-	end = clock();
-	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("%f\n", time_spent);
-	getchar();
-
-	printf("%i\n", Deep_DynamicArr_Size(intArr));
-
-	Deep_DynamicArr_Free(intArr);
+	//getchar();
 
 	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);

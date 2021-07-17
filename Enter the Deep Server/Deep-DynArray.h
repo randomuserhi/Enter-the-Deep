@@ -57,7 +57,7 @@ typedef unsigned char Deep_DynamicArr;
 #define _Deep_DynamicArr_Realloc(dest, src, newCapacity) dest = src; dest->begin = (Deep_DynamicArr*)dest + sizeof(Deep_DynamicArr_Head); dest->end = dest->begin + dest->typeSize * dest->size; dest->capacity = newCapacity
 
 #define Deep_DynamicArr_Create_Raw(typeSize, arr) Deep_DynamicArr* arr = _Deep_DynamicArr_Create(typeSize)
-#define Deep_DynamicArr_Create(typename, arr) typename* arr = (typename*)_Deep_DynamicArr_Create(sizeof(typename))
+#define Deep_DynamicArr_Create(typeName, arr) typeName* arr = (typeName*)_Deep_DynamicArr_Create(sizeof(typeName))
 Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize);
 
 #define Deep_DynamicArr_Size(arr) Deep_DynamicArr_Header(arr)->size
@@ -73,6 +73,7 @@ do {\
 	{ \
 		_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_NOERROR; \
 		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
+		/* Check if typeSize is 0, if so then the array is NULL and should not be operated on */ \
 		if (header->typeSize) \
 		{ \
 			if (header->typeSize == sizeof item) \
@@ -120,6 +121,7 @@ do {\
 	{ \
 		_DEEP_DYNAMIC_ARR_RESULT = DEEP_DYNAMIC_ARR_NOERROR; \
 		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
+		/* Check if typeSize is 0, if so then the array is NULL and should not be operated on */ \
 		if (header->typeSize) \
 		{ \
 			if (header->size == header->capacity) \
@@ -178,6 +180,7 @@ do {\
 	if (arr) \
 	{ \
 		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
+		/* Check if typeSize is 0, if so then the array is NULL and should not be operated on */ \
 		if (header->typeSize && header->typeSize == sizeof item) \
 		{ \
 			if (header->size == header->capacity) \
@@ -210,6 +213,7 @@ do {\
 	if (arr) \
 	{ \
 		Deep_DynamicArr_Head* header = Deep_DynamicArr_Header(arr); \
+		/* Check if typeSize is 0, if so then the array is NULL and should not be operated on */ \
 		if (header->typeSize) \
 		{ \
 			if (header->size == header->capacity) \

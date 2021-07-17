@@ -57,7 +57,7 @@
     <ClCompile Include="Deep-DynArray.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Deep-UnorderedMap.c">
+    <ClCompile Include="Deep-HashMap.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +77,7 @@
     <ClInclude Include="Deep-DynArray.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Deep-UnorderedMap.h">
+    <ClInclude Include="Deep-HashMap.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
     <ClInclude Include="DeepMath.h">
