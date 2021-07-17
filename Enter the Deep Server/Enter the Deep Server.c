@@ -29,19 +29,28 @@ int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	Deep_HashMap(uint64_t, size_t, testHashMap);
+	Deep_DynamicArr_Create(int, intArr);
+	Deep_HashMap_Create(uint64_t, size_t, testHashMap);
+
+	int Collision = 0;
 
 	clock_t begin = clock();
 
-	for (int i = 0; i < 100000000; ++i)
+	for (uint64_t i = 0; i < 100; ++i)
 	{
-		Deep_HashMap_Insert(testHashMap, 1, 1);
+		//Deep_DynamicArr_Push(intArr, 10);
+		Deep_HashMap_Insert(testHashMap, i, 1);
 	}
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	//getchar();
+	printf("%i\n", Collision);
+
+	Deep_DynamicArr_Free(intArr);
+	Deep_HashMap_Free(testHashMap);
+
+	getchar();
 
 	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);
