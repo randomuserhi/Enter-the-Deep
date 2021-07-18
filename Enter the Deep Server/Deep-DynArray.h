@@ -56,8 +56,8 @@ typedef unsigned char Deep_DynamicArr;
 #define Deep_DynamicArr_Header(arr) ((Deep_DynamicArr_Head*)((Deep_DynamicArr*)(arr) - sizeof(Deep_DynamicArr_Head)))
 #define _Deep_DynamicArr_Realloc(dest, src, newCapacity) dest = src; dest->begin = (Deep_DynamicArr*)dest + sizeof(Deep_DynamicArr_Head); dest->end = dest->begin + dest->typeSize * dest->size; dest->capacity = newCapacity
 
-#define Deep_DynamicArr_Create_Raw(typeSize, arr) Deep_DynamicArr* arr = _Deep_DynamicArr_Create(typeSize)
-#define Deep_DynamicArr_Create(typeName, arr) typeName* arr = (void*)_Deep_DynamicArr_Create(sizeof(typeName))
+#define Deep_DynamicArr_Create_Raw(typeSize) _Deep_DynamicArr_Create(typeSize)
+#define Deep_DynamicArr_Create(typeName) (void*)_Deep_DynamicArr_Create(sizeof(typeName))
 Deep_DynamicArr* _Deep_DynamicArr_Create(size_t typeSize);
 
 #define Deep_DynamicArr_Size(arr) Deep_DynamicArr_Header(arr)->size

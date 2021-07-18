@@ -29,7 +29,7 @@ int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	Deep_DynamicArr_Create(int, intArr);
+	int* intArr = Deep_DynamicArr_Create(int);
 	Deep_HashMap_Create(uint64_t, size_t, testHashMap);
 
 	int Collision = 0;
@@ -45,6 +45,7 @@ int main()
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
+	printf("%i\n", Deep_HashMap_Size(testHashMap));
 	printf("%i\n", Collision);
 
 	Deep_DynamicArr_Free(intArr);

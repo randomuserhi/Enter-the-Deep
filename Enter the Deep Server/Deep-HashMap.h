@@ -12,7 +12,7 @@ LoadFactor 7/8 ?? =>
 */
 
 #define DEEP_HASHMAP_GROUP_SIZE 16 // Default group size = 16, its important for SSE instructions
-#define DEEP_HASHMAP_SIZE 10 // Default number of groups
+#define DEEP_HASHMAP_SIZE 20 // Default number of groups
 #define DEEP_HASHMAP_ELEMENT_SIZE DEEP_HASHMAP_GROUP_SIZE * DEEP_HASHMAP_SIZE
 
 #define DEEP_HASHMAP_SEED 0x31415296
@@ -63,15 +63,14 @@ struct { \
 
 #define Deep_HashMap_Create(keyType, valueType, name) Deep_HashMap(keyType, valueType)* name = NULL; \
 do { \
-    void* tmp = malloc(sizeof *name + sizeof(cntrl_t) * DEEP_HASHMAP_ELEMENT_SIZE + sizeof(_Deep_HashMap_Slot(keyType)) * DEEP_HASHMAP_ELEMENT_SIZE); \
+    void* tmp = malloc(sizeof *name + sizeof *name->metadata * DEEP_HASHMAP_ELEMENT_SIZE + sizeof *name->slots * DEEP_HASHMAP_ELEMENT_SIZE); \
     if (tmp) \
     { \
         name = tmp; \
         name->metadata = (cntrl_t*)(name + 1); \
         name->slots = (void*)(name->metadata + DEEP_HASHMAP_ELEMENT_SIZE); \
         name->numGroups = DEEP_HASHMAP_SIZE; \
-        Deep_DynamicArr_Create(_Deep_HashMap_KeyPair(keyType, valueType), arr); \
-        name->values = (void*)arr; \
+        name->values = (void*)Deep_DynamicArr_Create(*name->values); \
         /*Initialize metadata*/ \
         for (size_t i = 0; i < DEEP_HASHMAP_ELEMENT_SIZE; ++i) name->metadata[i] = Deep_HashMap_kEmpty; \
     } \
@@ -95,8 +94,8 @@ do { \
                 hashtable->slots[group * DEEP_HASHMAP_GROUP_SIZE + slot].key = _key; \
                 hashtable->slots[group * DEEP_HASHMAP_GROUP_SIZE + slot].index = Deep_DynamicArr_Size(hashtable->values); \
                 Deep_DynamicArr_EmptyPush(hashtable->values); \
-                hashtable->values[Deep_DynamicArr_Size(hashtable->values)].key = _key; \
-                hashtable->values[Deep_DynamicArr_Size(hashtable->values)].value = _value; \
+                hashtable->values[Deep_DynamicArr_Size(hashtable->values) - 1].key = _key; \
+                hashtable->values[Deep_DynamicArr_Size(hashtable->values) - 1].value = _value; \
                 break; \
             } \
             /* Check if simply assigning to same key */ \
@@ -124,6 +123,7 @@ do { \
 #endif
 
 #define Deep_HashMap_Free(hashtable) free(hashtable)
+#define Deep_HashMap_Size(hashtable) Deep_DynamicArr_Size(hashtable->values)
 
 #define Deep_HashMap_HashBits  ((sizeof(Deep_Hash)) * 8)
 #define Deep_HashMap_Siphash_C_Rounds 1
