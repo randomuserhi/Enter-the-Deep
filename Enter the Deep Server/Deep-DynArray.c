@@ -81,9 +81,9 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-Deep_DynArr__raw Deep_DynArr__raw__Create(size_t typeSize)
+Deep_DynArray_Head _Deep_DynArray_Create(size_t typeSize)
 {
-	Deep_DynArr__raw arr;
+	Deep_DynArray_Head arr;
 	arr.data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
 	arr.size = 0;
 	arr.capacity = DEEP_DYNAMIC_ARR_SIZE;
@@ -91,13 +91,13 @@ Deep_DynArr__raw Deep_DynArr__raw__Create(size_t typeSize)
 	return arr;
 }
 
-void Deep_DynArr__raw__Free(Deep_DynArr__raw* arr)
+void _Deep_DynArray_Free(Deep_DynArray_Head* arr)
 {
 	free(arr->data);
 	arr->data = NULL;
 }
 
-void Deep_DynArr__raw__EmptyPush(Deep_DynArr__raw* arr)
+void _Deep_DynArray_EmptyPush(Deep_DynArray_Head* arr)
 {
 	if (arr->size == arr->capacity)
 	{ 
@@ -122,7 +122,7 @@ void Deep_DynArr__raw__EmptyPush(Deep_DynArr__raw* arr)
 	} 
 }
 
-void Deep_DynArr__raw__Shrink(Deep_DynArr__raw* arr)
+void _Deep_DynArray_Shrink(Deep_DynArray_Head* arr)
 {
 	size_t newCapacity = arr->size;
 	if (newCapacity != arr->capacity)

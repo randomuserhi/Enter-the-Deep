@@ -58,12 +58,15 @@ int main()
 
 #else
 
+	Deep_DynArray(raw) rawArr = Deep_DynArray__raw__Create(sizeof(int));
 	Deep_DynArray(Deep_DynArray_int) intArr = Deep_DynArray_Create(Deep_DynArray_int);
 
 	clock_t begin = clock();
 
 	for (int i = 0; i < 10; ++i)
 	{
+		Deep_DynArray_EmptyPush(raw, rawArr);
+		((int*)(rawArr.$))[i] = 10;
 		Deep_DynArray(int) arr = Deep_DynArray_Create(int);
 		for (int j = 0; j < i; ++j)
 		{
@@ -79,6 +82,11 @@ int main()
 
 	for (int i = 0; i < 10; ++i)
 	{
+		printf("%i\n", ((int*)rawArr.$)[i]);
+	}
+
+	for (int i = 0; i < 10; ++i)
+	{
 		for (int j = 0; j < i; ++j)
 		{
 			printf("%i\n", intArr.$[i].$[j]);
@@ -91,6 +99,7 @@ int main()
 		Deep_DynArray_Free(int, intArr.$[i]);
 	}
 	Deep_DynArray_Free(Deep_DynArray_int, intArr);
+	Deep_DynArray_Free(raw, rawArr);
 
 	getchar();
 
