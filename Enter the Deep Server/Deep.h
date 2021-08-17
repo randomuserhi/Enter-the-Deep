@@ -6,7 +6,7 @@
 #include <string.h>
 
 /*
-* ============== / Library Format \ ==============
+* ============== /  Library Format  \ ==============
 * 
 * -> All Deep library functions are prefixed by "Deep"
 * 
@@ -16,14 +16,17 @@
 * -> Private library implementation functions / variables 
 *    are prefixed by "$Deep"
 * 
+* ============== | Templated Format | ==============
+* 
 * -> Type safe functions are formatted using:
 *        <function name>$<type1>_$<type2>_$...
+*    -> e.g Deep_DoSomething$int_$float()
 * 
 * -> Type safe functions that operate on a "this" type are formatted:
 *        <this type>$<type1>_$<type2>_$..._<function name>
 *    -> e.g Deep_DynArray$int_Push or Deep_Dictionary$int_$float_Insert()
 * 
-* ============== \ ============== / ==============
+* ============== \ ================ / ==============
 */
 
 //#define OLD_DEEP_DYNAMIC_IMPLEMENTATION
