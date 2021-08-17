@@ -150,7 +150,7 @@ Deep_DynArr_Head _Deep_DynArr_Create(size_t typeSize);
 void _Deep_DynArr_EmptyPush(Deep_DynArr_Head* arr, size_t typeSize);
 void _Deep_DynArr_Shrink(Deep_DynArr_Head* arr, size_t typeSize);
 
-#define Deep_DynArray(tag) struct _Deep_DynArray_##tag
+#define Deep_DynArray(tag) struct Deep_DynArray_##tag
 
 #define Deep_DynArray_Get(tag, arr) Deep_DynArray__##tag##(&arr) 
 #define Deep_DynArray_Create(tag) Deep_DynArray__##tag##__Create()
@@ -161,7 +161,7 @@ void _Deep_DynArr_Shrink(Deep_DynArr_Head* arr, size_t typeSize);
 
 //NOTE:: how functions are declared as static to allow for multiple definitions from Deep_DynArray_Decl in multiple .c files
 #define Deep_DynArray_Decl(type, tag) \
-Deep_DynArray(tag) { union { Deep_DynArr_Head _; struct { size_t size; size_t capacity; type* v; }; }; }; \
+Deep_DynArray(tag) { union { Deep_DynArr_Head _; struct { size_t size; size_t capacity; type* $; }; }; }; \
 static Deep__Inline Deep_DynArray(tag) Deep_DynArray__##tag##__Create() \
 { \
 	Deep_DynArr_Head tmp = _Deep_DynArr_Create(sizeof(type)); \

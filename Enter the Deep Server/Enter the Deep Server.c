@@ -81,14 +81,14 @@ int main()
 	{
 		for (int j = 0; j < i; ++j)
 		{
-			printf("%i\n", intArr.v[i].v[j]);
+			printf("%i\n", intArr.$[i].$[j]);
 		}
 		printf("\n");
 	}
 
 	for (int i = 0; i < 10; ++i)
 	{
-		Deep_DynArray_Free(int, intArr.v[i]);
+		Deep_DynArray_Free(int, intArr.$[i]);
 	}
 	Deep_DynArray_Free(Deep_DynArray_int, intArr);
 
