@@ -133,10 +133,7 @@ void _Deep_DynArray_RemoveAt(Deep_DynArray_Full* arr, size_t index)
 	if (arr->size > 1 && arr->data && index > 0 && index < arr->size)
 	{
 		size_t size = arr->size - 1 - index;
-		if (size != 0)
-		{
-			memmove(arr->data + index * arr->typeSize, arr->data + (index + 1) * arr->typeSize, size * arr->typeSize);
-		}
+		if (size != 0) memmove(arr->data + index * arr->typeSize, arr->data + (index + 1) * arr->typeSize, size * arr->typeSize);
 		--arr->size;
 	}
 }
