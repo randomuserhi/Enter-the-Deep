@@ -58,7 +58,7 @@ int main()
 
 #else
 
-	Deep_DynArray(raw) rawArr = Deep_DynArray__raw__Create(sizeof(int));
+	Deep_DynArray(raw) rawArr = Deep_DynArray$raw$_Create(sizeof(int));
 	Deep_DynArray(Deep_DynArray_int) intArr = Deep_DynArray_Create(Deep_DynArray_int);
 
 	clock_t begin = clock();

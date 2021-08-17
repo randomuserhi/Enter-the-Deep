@@ -16,6 +16,13 @@
 * -> Private library implementation functions / variables 
 *    are prefixed by "$Deep"
 * 
+* -> Type safe functions are formatted using:
+*        <function name>$<type1>$<type2>$...$
+* 
+* -> Type safe functions that operate on a "this" type are formatted:
+*        <this type>$<type1>$<type2>$...$_<function name>
+*    -> e.g Deep_DynArray$int$_Push or Deep_Dictionary$int$float$_Insert()
+* 
 * ============== \ ============== / ==============
 */
 
