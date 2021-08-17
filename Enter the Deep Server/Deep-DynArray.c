@@ -81,7 +81,7 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-void _Deep_DynArray_Create(Deep_DynArray_Full* arr, size_t typeSize)
+void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize)
 {
 	arr->data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
 	arr->size = 0;
@@ -89,13 +89,13 @@ void _Deep_DynArray_Create(Deep_DynArray_Full* arr, size_t typeSize)
 	arr->typeSize = typeSize;
 }
 
-void _Deep_DynArray_Free(Deep_DynArray_Full* arr)
+void $Deep_DynArray_Free($Deep_DynArray* arr)
 {
 	free(arr->data);
 	arr->data = NULL;
 }
 
-void _Deep_DynArray_EmptyPush(Deep_DynArray_Full* arr)
+void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
 {
 	if (arr->size == arr->capacity)
 	{ 
@@ -120,7 +120,7 @@ void _Deep_DynArray_EmptyPush(Deep_DynArray_Full* arr)
 	} 
 }
 
-void _Deep_DynArray_Pop(Deep_DynArray_Full* arr)
+void $Deep_DynArray_Pop($Deep_DynArray* arr)
 {
 	if (arr->size > 0 && arr->data)
 	{
@@ -128,7 +128,7 @@ void _Deep_DynArray_Pop(Deep_DynArray_Full* arr)
 	}
 }
 
-void _Deep_DynArray_RemoveAt(Deep_DynArray_Full* arr, size_t index)
+void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index)
 {
 	if (arr->size > 1 && arr->data && index > 0 && index < arr->size)
 	{
@@ -138,7 +138,7 @@ void _Deep_DynArray_RemoveAt(Deep_DynArray_Full* arr, size_t index)
 	}
 }
 
-void _Deep_DynArray_Shrink(Deep_DynArray_Full* arr)
+void $Deep_DynArray_Shrink($Deep_DynArray* arr)
 {
 	size_t newCapacity = arr->size;
 	if (newCapacity != arr->capacity)
