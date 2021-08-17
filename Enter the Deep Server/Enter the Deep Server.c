@@ -66,7 +66,7 @@ int main()
 	for (int i = 0; i < 10; ++i)
 	{
 		Deep_DynArray_EmptyPush(raw, rawArr);
-		((int*)(rawArr.$))[i] = 10;
+		((int*)(rawArr.$))[i] = i;
 		Deep_DynArray(int) arr = Deep_DynArray_Create(int);
 		for (int j = 0; j < i; ++j)
 		{
