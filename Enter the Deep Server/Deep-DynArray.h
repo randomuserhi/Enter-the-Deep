@@ -177,7 +177,21 @@ static Deep__Inline Deep_DynArray(tag) Deep_DynArray__##tag##__Create() \
 } \
 _Deep_DynArray_Decl_Func(type, tag)
 
-#define _Deep_DynArray_Decl_Type(type, tag) Deep_DynArray(tag) { union { Deep_DynArray_Full full; struct { size_t size; size_t capacity; type* $; }; }; };
+#define _Deep_DynArray_Decl_Type(type, tag) \
+Deep_DynArray(tag) \
+{ \
+	union \
+	{ \
+		Deep_DynArray_Full full; \
+		struct \
+		{  \
+			size_t size; \
+			size_t capacity; \
+			type* $; \
+		}; \
+	}; \
+};
+
 #define _Deep_DynArray_Decl_Func(type, tag) \
 static Deep__Inline void Deep_DynArray__##tag##__Free(Deep_DynArray(tag)* arr) \
 { \
