@@ -25,33 +25,57 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 	printf("Message received: %i\n", *(int*)Buffer);
 }
 
+#if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
+#else
+
+Deep_DynArray_Decl(int)
+
+#endif
+
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	int* intArr = Deep_DynamicArr_Create(int);
-	Deep_HashMap_Create(uint64_t, size_t, testHashMap);
+#if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
 
-	int Collision = 0;
+	int* intArr = Deep_DynamicArr_Create(int);
 
 	clock_t begin = clock();
 
-	for (uint64_t i = 0; i < 100; ++i)
+	for (int i = 0; i < 100000000; ++i)
 	{
-		//Deep_DynamicArr_Push(intArr, 10);
-		Deep_HashMap_Insert(testHashMap, i, 1);
+		Deep_DynamicArr_Push(intArr, i);
 	}
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	printf("%i\n", Deep_HashMap_Size(testHashMap));
-	printf("%i\n", Collision);
 
 	Deep_DynamicArr_Free(intArr);
-	Deep_HashMap_Free(testHashMap);
 
 	getchar();
+
+#else
+
+	Deep_DynArray(int) intArr = Deep_DynArray_Create(int);
+
+	clock_t begin = clock();
+
+	for (int i = 0; i < 100000000; ++i)
+	{
+		Deep_DynArray_Push(int, intArr, i + 1);
+	}
+
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("%f\n", time_spent);
+	printf("%i\n", intArr->arr.size);
+
+	Deep_DynArray_Free(int, intArr);
+
+	getchar();
+
+#endif
 
 	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);
