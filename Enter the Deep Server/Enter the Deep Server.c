@@ -29,7 +29,7 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 #else
 
 Deep_DynArray_Decl(int, int)
-Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray_int)
+Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray$int)
 
 #endif
 
@@ -58,8 +58,8 @@ int main()
 
 #else
 
-	Deep_DynArray(raw) rawArr = Deep_DynArray$raw$_Create(sizeof(int));
-	Deep_DynArray(Deep_DynArray_int) intArr = Deep_DynArray_Create(Deep_DynArray_int);
+	Deep_DynArray(raw) rawArr = Deep_DynArray$raw_Create(sizeof(int));
+	Deep_DynArray(Deep_DynArray$int) intArr = Deep_DynArray_Create(Deep_DynArray$int);
 
 	clock_t begin = clock();
 
@@ -72,7 +72,7 @@ int main()
 		{
 			Deep_DynArray_Push(int)(&arr, j);
 		}
-		Deep_DynArray_Push(Deep_DynArray_int)(&intArr, arr);
+		Deep_DynArray_Push(Deep_DynArray$int)(&intArr, arr);
 	}
 
 	clock_t end = clock();
@@ -98,7 +98,7 @@ int main()
 	{
 		Deep_DynArray_Free(int)(&intArr $[i]);
 	}
-	Deep_DynArray_Free(Deep_DynArray_int)(&intArr);
+	Deep_DynArray_Free(Deep_DynArray$int)(&intArr);
 	Deep_DynArray_Free(raw)(&rawArr);
 
 	getchar();

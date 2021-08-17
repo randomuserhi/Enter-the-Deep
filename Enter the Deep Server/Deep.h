@@ -17,11 +17,11 @@
 *    are prefixed by "$Deep"
 * 
 * -> Type safe functions are formatted using:
-*        <function name>$<type1>$<type2>$...$
+*        <function name>$<type1>_$<type2>_$...
 * 
 * -> Type safe functions that operate on a "this" type are formatted:
-*        <this type>$<type1>$<type2>$...$_<function name>
-*    -> e.g Deep_DynArray$int$_Push or Deep_Dictionary$int$float$_Insert()
+*        <this type>$<type1>_$<type2>_$..._<function name>
+*    -> e.g Deep_DynArray$int_Push or Deep_Dictionary$int_$float_Insert()
 * 
 * ============== \ ============== / ==============
 */
