@@ -81,14 +81,12 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-Deep_DynArray_Full _Deep_DynArray_Create(size_t typeSize)
+void _Deep_DynArray_Create(Deep_DynArray_Full* arr, size_t typeSize)
 {
-	Deep_DynArray_Full arr;
-	arr.data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
-	arr.size = 0;
-	arr.capacity = DEEP_DYNAMIC_ARR_SIZE;
-	arr.typeSize = typeSize;
-	return arr;
+	arr->data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
+	arr->size = 0;
+	arr->capacity = DEEP_DYNAMIC_ARR_SIZE;
+	arr->typeSize = typeSize;
 }
 
 void _Deep_DynArray_Free(Deep_DynArray_Full* arr)

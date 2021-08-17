@@ -149,7 +149,7 @@ typedef struct
 
 #define Deep_DynArray(tag) struct Deep_DynArray__##tag
 
-Deep_DynArray_Full _Deep_DynArray_Create(size_t typeSize);
+void _Deep_DynArray_Create(Deep_DynArray_Full* arr, size_t typeSize);
 void _Deep_DynArray_Free(Deep_DynArray_Full* arr);
 void _Deep_DynArray_EmptyPush(Deep_DynArray_Full* arr);
 void _Deep_DynArray_Pop(Deep_DynArray_Full* arr);
@@ -171,8 +171,9 @@ void _Deep_DynArray_Shrink(Deep_DynArray_Full* arr);
 _Deep_DynArray_Decl_Type(type, tag) \
 static Deep__Inline Deep_DynArray(tag) Deep_DynArray__##tag##__Create() \
 { \
-	Deep_DynArray_Full tmp = _Deep_DynArray_Create(sizeof(type)); \
-	return *((Deep_DynArray(tag)*)((Deep_DynArray_Full*)&(tmp))); \
+	Deep_DynArray(tag) tmp; \
+	_Deep_DynArray_Create(&tmp.full, sizeof(type)); \
+	return tmp; \
 } \
 _Deep_DynArray_Decl_Func(type, tag)
 
@@ -191,7 +192,7 @@ static Deep__Inline void Deep_DynArray__##tag##__Push(Deep_DynArray(tag)* arr, t
 	if (arr->full.typeSize == sizeof(type)) \
 	{ \
 		_Deep_DynArray_EmptyPush(&arr->full); \
-		if (arr->full.data) ((type*)(arr->full.data))[arr->full.size - 1] = value; \
+		if (arr->$) arr->$[arr->full.size - 1] = value; \
 	} \
 } \
 static Deep__Inline void Deep_DynArray__##tag##__Pop(Deep_DynArray(tag)* arr) \
@@ -211,8 +212,9 @@ static Deep__Inline void Deep_DynArray__##tag##__Shrink(Deep_DynArray(tag)* arr)
 _Deep_DynArray_Decl_Type(char, raw)
 static Deep__Inline Deep_DynArray(raw) Deep_DynArray__raw__Create(size_t typeSize)
 {
-	Deep_DynArray_Full tmp = _Deep_DynArray_Create(typeSize);
-	return *((Deep_DynArray(raw)*)((Deep_DynArray_Full*)&(tmp)));
+	Deep_DynArray(raw) tmp;
+	_Deep_DynArray_Create(&tmp.full, typeSize);
+	return tmp;
 }
 _Deep_DynArray_Decl_Func(char, raw)
 
