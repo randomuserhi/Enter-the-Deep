@@ -13,12 +13,12 @@ Utilities => Defined by '__' (double underscore)
 
 */
 
-#define Deep__Inline static inline
+#define Deep__Inline inline
 
 #if (defined _WIN32 || defined _WIN64)
 	#define Deep__Force_Inline Deep__Inline
 #elif (defined __APPLE__ || defined _APPLE)
-	#define Deep__Force_Inline static __attribute__((always_inline))
+	#define Deep__Force_Inline __attribute__((always_inline))
 #else
 	#define Deep__Force_Inline Deep__Inline
 #endif

@@ -28,7 +28,7 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 #if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
 #else
 
-Deep_DynArray_Decl(int)
+Deep_DynArray_Decl(int);
 
 #endif
 
@@ -61,7 +61,8 @@ int main()
 
 	clock_t begin = clock();
 
-	for (int i = 0; i < 100000000; ++i)
+	//100000000
+	for (int i = 0; i < 100; ++i)
 	{
 		Deep_DynArray_Push(int, intArr, i + 1);
 	}
@@ -69,7 +70,12 @@ int main()
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	printf("%i\n", intArr->arr.size);
+	printf("%i\n", intArr->size);
+
+	for (int i = 0; i < 100; ++i)
+	{
+		printf("%i\n", Deep_DynArray_int(intArr)[i]);
+	}
 
 	Deep_DynArray_Free(int, intArr);
 

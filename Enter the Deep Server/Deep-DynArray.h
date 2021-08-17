@@ -141,9 +141,9 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr);
 
 typedef struct
 {
-	char* data; // Pointer to data
 	size_t size; // Number of elements in array (to optimize out division)
 	size_t capacity; // Capacity of array (not number of elements in array)
+	char* data; // Pointer to data
 } Deep_DynArr_Head;
 
 Deep_DynArr_Head* _Deep_DynArr_Create(size_t arrHeadSize, size_t typeSize);
@@ -162,10 +162,10 @@ void _Deep_DynArr_Shrink(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t type
 
 //NOTE:: how functions are declared as static to allow for multiple definitions from Deep_DynArray_Decl in multiple .c files
 #define Deep_DynArray_Decl(type) \
-_Deep_DynArray(type) { Deep_DynArr_Head arr; }; \
+_Deep_DynArray(type) { union { Deep_DynArr_Head _; struct { size_t size; size_t capacity; }; }; }; \
 static Deep__Inline type* Deep_DynArray_##type##(Deep_DynArray(type) arr) \
 { \
-	return (type*)arr->arr.data; \
+	return (type*)arr->_.data; \
 } \
 static Deep__Inline Deep_DynArray(type) Deep_DynArray_##type##_Create() \
 { \
@@ -183,7 +183,7 @@ static Deep__Inline void Deep_DynArray_##type##_EmptyPush(Deep_DynArray(type)* a
 static Deep__Inline void Deep_DynArray_##type##_Push(Deep_DynArray(type)* arr, type value) \
 { \
 	_Deep_DynArr_EmptyPush((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
-	if (*arr) ((type*)(*arr)->arr.data)[(*arr)->arr.size - 1] = value; \
+	if (*arr) ((type*)(*arr)->_.data)[(*arr)->_.size - 1] = value; \
 } \
 static Deep__Inline void Deep_DynArray_##type##_Shrink(Deep_DynArray(type)* arr) \
 { \
