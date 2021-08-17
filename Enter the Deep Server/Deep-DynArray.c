@@ -81,71 +81,61 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-Deep__Inline void reallocDynArr(Deep_DynArr_Head** arr, void* tmp, size_t arrHeadSize, size_t newCapacity)
+Deep_DynArr_Head _Deep_DynArr_Create(size_t typeSize)
 {
-	(*arr) = tmp;
-	(*arr)->data = (char*)(*arr) + arrHeadSize;
-	(*arr)->capacity = newCapacity;
-}
-
-Deep_DynArr_Head* _Deep_DynArr_Create(size_t arrHeadSize, size_t typeSize)
-{
-	Deep_DynArr_Head* arr;
-	void* tmp = malloc(arrHeadSize + typeSize * DEEP_DYNAMIC_ARR_SIZE);
-	if (!tmp) return NULL;
-
-	arr = tmp;
-	arr->data = (char*)arr + arrHeadSize;
-	arr->size = 0;
-	arr->capacity = DEEP_DYNAMIC_ARR_SIZE;
-
+	Deep_DynArr_Head arr;
+	arr.data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
+	arr.size = 0;
+	arr.capacity = DEEP_DYNAMIC_ARR_SIZE;
 	return arr;
 }
 
-void _Deep_DynArr_EmptyPush(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t typeSize)
+void _Deep_DynArr_EmptyPush(Deep_DynArr_Head* arr, size_t typeSize)
 {
-	if (*arr) 
+	if (arr) 
 	{ 
-		if ((*arr)->size == (*arr)->capacity)
+		if (arr->size == arr->capacity)
 		{ 
-			size_t newCapacity = (size_t)((*arr)->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE);
-			if (newCapacity == (*arr)->capacity) ++newCapacity;
-			void* tmp = realloc(*arr, arrHeadSize + typeSize * newCapacity);
+			size_t newCapacity = (size_t)(arr->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE);
+			if (newCapacity == arr->capacity) ++newCapacity;
+			void* tmp = realloc(arr->data, typeSize * newCapacity);
 			if (tmp) 
 			{ 
-				reallocDynArr(arr, tmp, arrHeadSize, newCapacity);
-				++(*arr)->size;
+				arr->data = tmp;
+				arr->capacity = newCapacity;
+				++arr->size;
 			} 
 			else 
 			{ 
-				free(*arr); 
-				*arr = NULL; 
+				free(arr->data); 
+				arr->data = NULL; 
 			}
 		} 
 		else 
 		{ 
-			++(*arr)->size;
+			++arr->size;
 		} 
 	} 
 }
 
-void _Deep_DynArr_Shrink(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t typeSize)
+void _Deep_DynArr_Shrink(Deep_DynArr_Head* arr, size_t typeSize)
 {
 	if (arr)
 	{
-		size_t newCapacity = (*arr)->size;
-		if (newCapacity != (*arr)->capacity)
+		size_t newCapacity = arr->size;
+		if (newCapacity != arr->capacity)
 		{
-			void* tmp = realloc(*arr, arrHeadSize + typeSize * newCapacity);
+			void* tmp = realloc(arr->data, typeSize * newCapacity);
 			if (tmp)
 			{
-				reallocDynArr(arr, tmp, arrHeadSize, newCapacity);
-				++(*arr)->size;
+				arr->data = tmp;
+				arr->capacity = newCapacity;
+				++arr->size;
 			}
 			else
 			{
-				free(*arr);
-				*arr = NULL;
+				free(arr);
+				arr->data = NULL;
 			}
 		}
 	}

@@ -28,7 +28,8 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 #if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
 #else
 
-Deep_DynArray_Decl(int);
+Deep_DynArray_Decl(int, int)
+Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray_int)
 
 #endif
 
@@ -42,7 +43,7 @@ int main()
 
 	clock_t begin = clock();
 
-	for (int i = 0; i < 100000000; ++i)
+	for (int i = 0; i < 1000000000; ++i)
 	{
 		Deep_DynamicArr_Push(intArr, i);
 	}
@@ -57,27 +58,39 @@ int main()
 
 #else
 
-	Deep_DynArray(int) intArr = Deep_DynArray_Create(int);
+	Deep_DynArray(Deep_DynArray_int) intArr = Deep_DynArray_Create(Deep_DynArray_int);
 
 	clock_t begin = clock();
 
-	//100000000
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
-		Deep_DynArray_Push(int, intArr, i + 1);
+		Deep_DynArray(int) arr = Deep_DynArray_Create(int);
+		for (int j = 0; j < i; ++j)
+		{
+			Deep_DynArray_Push(int, arr, j);
+		}
+		Deep_DynArray_Push(Deep_DynArray_int, intArr, arr);
 	}
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	printf("%i\n", intArr->size);
+	printf("%i\ntest:\n", intArr.size);
 
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
-		printf("%i\n", Deep_DynArray_int(intArr)[i]);
+		for (int j = 0; j < i; ++j)
+		{
+			printf("%i\n", intArr.v[i].v[j]);
+		}
+		printf("\n");
 	}
 
-	Deep_DynArray_Free(int, intArr);
+	for (int i = 0; i < 10; ++i)
+	{
+		Deep_DynArray_Free(int, intArr.v[i]);
+	}
+	Deep_DynArray_Free(Deep_DynArray_int, intArr);
 
 	getchar();
 

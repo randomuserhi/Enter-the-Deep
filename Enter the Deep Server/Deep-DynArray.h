@@ -146,48 +146,44 @@ typedef struct
 	char* data; // Pointer to data
 } Deep_DynArr_Head;
 
-Deep_DynArr_Head* _Deep_DynArr_Create(size_t arrHeadSize, size_t typeSize);
-void _Deep_DynArr_EmptyPush(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t typeSize);
-void _Deep_DynArr_Shrink(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t typeSize);
+Deep_DynArr_Head _Deep_DynArr_Create(size_t typeSize);
+void _Deep_DynArr_EmptyPush(Deep_DynArr_Head* arr, size_t typeSize);
+void _Deep_DynArr_Shrink(Deep_DynArr_Head* arr, size_t typeSize);
 
-#define _Deep_DynArray(type) struct _Deep_DynArray_##type
-#define Deep_DynArray(type) struct _Deep_DynArray_##type*
+#define Deep_DynArray(tag) struct _Deep_DynArray_##tag
 
-#define Deep_DynArray_Get(type, arr) Deep_DynArray_##type##(&arr) 
-#define Deep_DynArray_Create(type) Deep_DynArray_##type##_Create()
-#define Deep_DynArray_Free(type, arr) Deep_DynArray_##type##_Free(&arr) 
-#define Deep_DynArray_EmptyPush(type, arr) Deep_DynArray_##type##_EmptyPush(&arr) 
-#define Deep_DynArray_Push(type, arr, value) Deep_DynArray_##type##_Push(&arr, value) 
-#define Deep_DynArray_Shrink(type, arr) Deep_DynArray_##type##_Shrink(&arr) 
+#define Deep_DynArray_Get(tag, arr) Deep_DynArray__##tag##(&arr) 
+#define Deep_DynArray_Create(tag) Deep_DynArray__##tag##__Create()
+#define Deep_DynArray_Free(tag, arr) Deep_DynArray__##tag##__Free(&arr) 
+#define Deep_DynArray_EmptyPush(tag, arr) Deep_DynArray__##tag##__EmptyPush(&arr) 
+#define Deep_DynArray_Push(tag, arr, value) Deep_DynArray__##tag##__Push(&arr, value) 
+#define Deep_DynArray_Shrink(tag, arr) Deep_DynArray__##tag##__Shrink(&arr) 
 
 //NOTE:: how functions are declared as static to allow for multiple definitions from Deep_DynArray_Decl in multiple .c files
-#define Deep_DynArray_Decl(type) \
-_Deep_DynArray(type) { union { Deep_DynArr_Head _; struct { size_t size; size_t capacity; }; }; }; \
-static Deep__Inline type* Deep_DynArray_##type##(Deep_DynArray(type) arr) \
+#define Deep_DynArray_Decl(type, tag) \
+Deep_DynArray(tag) { union { Deep_DynArr_Head _; struct { size_t size; size_t capacity; type* v; }; }; }; \
+static Deep__Inline Deep_DynArray(tag) Deep_DynArray__##tag##__Create() \
 { \
-	return (type*)arr->_.data; \
+	Deep_DynArr_Head tmp = _Deep_DynArr_Create(sizeof(type)); \
+	return *((Deep_DynArray(tag)*)((Deep_DynArr_Head*)&(tmp))); \
 } \
-static Deep__Inline Deep_DynArray(type) Deep_DynArray_##type##_Create() \
+static Deep__Inline void Deep_DynArray__##tag##__Free(Deep_DynArray(tag)* arr) \
 { \
-	return (Deep_DynArray(type))_Deep_DynArr_Create(sizeof(_Deep_DynArray(type)), sizeof(type)); \
+	free(arr->_.data); \
+	arr->_.data = NULL; \
 } \
-static Deep__Inline void Deep_DynArray_##type##_Free(Deep_DynArray(type)* arr) \
+static Deep__Inline void Deep_DynArray__##tag##__EmptyPush(Deep_DynArray(tag)* arr) \
 { \
-	free(*arr); \
-	*arr = NULL; \
+	_Deep_DynArr_EmptyPush(&arr->_, sizeof(type)); \
 } \
-static Deep__Inline void Deep_DynArray_##type##_EmptyPush(Deep_DynArray(type)* arr) \
+static Deep__Inline void Deep_DynArray__##tag##__Push(Deep_DynArray(tag)* arr, type value) \
 { \
-	_Deep_DynArr_EmptyPush((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
+	_Deep_DynArr_EmptyPush(&arr->_, sizeof(type)); \
+	if (arr->_.data) ((type*)(arr->_.data))[arr->_.size - 1] = value; \
 } \
-static Deep__Inline void Deep_DynArray_##type##_Push(Deep_DynArray(type)* arr, type value) \
+static Deep__Inline void Deep_DynArray__##tag##__Shrink(Deep_DynArray(tag)* arr) \
 { \
-	_Deep_DynArr_EmptyPush((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
-	if (*arr) ((type*)(*arr)->_.data)[(*arr)->_.size - 1] = value; \
-} \
-static Deep__Inline void Deep_DynArray_##type##_Shrink(Deep_DynArray(type)* arr) \
-{ \
-	_Deep_DynArr_Shrink((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
+	_Deep_DynArr_Shrink(&arr->_, sizeof(type)); \
 }
 
 #endif
