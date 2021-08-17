@@ -81,7 +81,7 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-inline void reallocDynArr(Deep_DynArr_Head** arr, void* tmp, size_t arrHeadSize, size_t newCapacity)
+Deep__Inline void reallocDynArr(Deep_DynArr_Head** arr, void* tmp, size_t arrHeadSize, size_t newCapacity)
 {
 	(*arr) = tmp;
 	(*arr)->data = (char*)(*arr) + arrHeadSize;

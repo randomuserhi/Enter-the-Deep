@@ -160,31 +160,32 @@ void _Deep_DynArr_Shrink(Deep_DynArr_Head** arr, size_t arrHeadSize, size_t type
 #define Deep_DynArray_Push(type, arr, value) Deep_DynArray_##type##_Push(&arr, value) 
 #define Deep_DynArray_Shrink(type, arr) Deep_DynArray_##type##_Shrink(&arr) 
 
+//NOTE:: how functions are declared as static to allow for multiple definitions from Deep_DynArray_Decl in multiple .c files
 #define Deep_DynArray_Decl(type) \
 _Deep_DynArray(type) { Deep_DynArr_Head arr; }; \
-inline type* Deep_DynArray_##type##(Deep_DynArray(type) arr) \
+static Deep__Inline type* Deep_DynArray_##type##(Deep_DynArray(type) arr) \
 { \
 	return (type*)arr->arr.data; \
 } \
-inline Deep_DynArray(type) Deep_DynArray_##type##_Create() \
+static Deep__Inline Deep_DynArray(type) Deep_DynArray_##type##_Create() \
 { \
 	return (Deep_DynArray(type))_Deep_DynArr_Create(sizeof(_Deep_DynArray(type)), sizeof(type)); \
 } \
-inline void Deep_DynArray_##type##_Free(Deep_DynArray(type)* arr) \
+static Deep__Inline void Deep_DynArray_##type##_Free(Deep_DynArray(type)* arr) \
 { \
 	free(*arr); \
 	*arr = NULL; \
 } \
-inline void Deep_DynArray_##type##_EmptyPush(Deep_DynArray(type)* arr) \
+static Deep__Inline void Deep_DynArray_##type##_EmptyPush(Deep_DynArray(type)* arr) \
 { \
 	_Deep_DynArr_EmptyPush((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
 } \
-inline void Deep_DynArray_##type##_Push(Deep_DynArray(type)* arr, type value) \
+static Deep__Inline void Deep_DynArray_##type##_Push(Deep_DynArray(type)* arr, type value) \
 { \
 	_Deep_DynArr_EmptyPush((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
 	if (*arr) ((type*)(*arr)->arr.data)[(*arr)->arr.size - 1] = value; \
 } \
-inline void Deep_DynArray_##type##_Shrink(Deep_DynArray(type)* arr) \
+static Deep__Inline void Deep_DynArray_##type##_Shrink(Deep_DynArray(type)* arr) \
 { \
 	_Deep_DynArr_Shrink((Deep_DynArr_Head**)arr, sizeof(_Deep_DynArray(type)), sizeof(type)); \
 }
