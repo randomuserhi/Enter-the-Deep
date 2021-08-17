@@ -81,62 +81,63 @@ void _Deep_DynamicArr_Shrink(Deep_DynamicArr_Head* dynArray, void** arr)
 
 #else
 
-Deep_DynArr_Head _Deep_DynArr_Create(size_t typeSize)
+Deep_DynArr__Raw Deep_DynArr__Raw__Create(size_t typeSize)
 {
-	Deep_DynArr_Head arr;
+	Deep_DynArr__Raw arr;
 	arr.data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
 	arr.size = 0;
 	arr.capacity = DEEP_DYNAMIC_ARR_SIZE;
+	arr.typeSize = typeSize;
 	return arr;
 }
 
-void _Deep_DynArr_EmptyPush(Deep_DynArr_Head* arr, size_t typeSize)
+void Deep_DynArr__Raw__Free(Deep_DynArr__Raw* arr)
 {
-	if (arr) 
+	free(arr->data);
+	arr->data = NULL;
+}
+
+void Deep_DynArr__Raw__EmptyPush(Deep_DynArr__Raw* arr)
+{
+	if (arr->size == arr->capacity)
 	{ 
-		if (arr->size == arr->capacity)
+		size_t newCapacity = (size_t)(arr->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE);
+		if (newCapacity == arr->capacity) ++newCapacity;
+		void* tmp = realloc(arr->data, arr->typeSize * newCapacity);
+		if (tmp) 
 		{ 
-			size_t newCapacity = (size_t)(arr->capacity * DEEP_DYNAMIC_ARR_GROWTHRATE);
-			if (newCapacity == arr->capacity) ++newCapacity;
-			void* tmp = realloc(arr->data, typeSize * newCapacity);
-			if (tmp) 
-			{ 
-				arr->data = tmp;
-				arr->capacity = newCapacity;
-				++arr->size;
-			} 
-			else 
-			{ 
-				free(arr->data); 
-				arr->data = NULL; 
-			}
+			arr->data = tmp;
+			arr->capacity = newCapacity;
+			++arr->size;
 		} 
 		else 
 		{ 
-			++arr->size;
-		} 
+			free(arr->data); 
+			arr->data = NULL; 
+		}
+	} 
+	else 
+	{ 
+		++arr->size;
 	} 
 }
 
-void _Deep_DynArr_Shrink(Deep_DynArr_Head* arr, size_t typeSize)
+void Deep_DynArr__Raw__Shrink(Deep_DynArr__Raw* arr)
 {
-	if (arr)
+	size_t newCapacity = arr->size;
+	if (newCapacity != arr->capacity)
 	{
-		size_t newCapacity = arr->size;
-		if (newCapacity != arr->capacity)
+		void* tmp = realloc(arr->data, arr->typeSize * newCapacity);
+		if (tmp)
 		{
-			void* tmp = realloc(arr->data, typeSize * newCapacity);
-			if (tmp)
-			{
-				arr->data = tmp;
-				arr->capacity = newCapacity;
-				++arr->size;
-			}
-			else
-			{
-				free(arr);
-				arr->data = NULL;
-			}
+			arr->data = tmp;
+			arr->capacity = newCapacity;
+			++arr->size;
+		}
+		else
+		{
+			free(arr);
+			arr->data = NULL;
 		}
 	}
 }
