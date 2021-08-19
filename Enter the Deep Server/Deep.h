@@ -26,6 +26,10 @@
 *        <this type>$<type1>_$<type2>_$..._<function name>
 *    -> e.g Deep_DynArray$int_Push or Deep_Dictionary$int_$float_Insert()
 * 
+* -> All containers that have type safety also expose the raw version of 
+*    themselves where type safety is not present. These can be used to
+*    reduce code size if you don't want to Decl several times.
+* 
 * ============== \ ================ / ==============
 */
 

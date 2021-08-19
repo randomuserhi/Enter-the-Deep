@@ -5,9 +5,20 @@
 
 #define Deep_UnorderedMap(tag) struct Deep_UnorderedMap$##tag
 
+/*
+* 2 Methods of implementation 
+*   -> (1) Use memcpy (should get optimzed out by compiler)
+*   -> (2) Have insert return a void* and the user writes their
+*         value to the void* themselves.
+* 
+*   -> Option (2) is used as it makes code more efficient with less indirection
+*      via memcpy.
+*/
+
 #define Deep_UnorderedMap_Decl(keyType, valueType, tag) \
-Deep_DynArray_Decl(valueType, $Deep_UnorderedMap_values$##tag##) \
 Deep_UnorderedMap(tag) \
 { \
-	Deep_DynArray($Deep_UnorderedMap_values$##tag##) values; \
+	keyType tmpKey; \
+	valueType tmpValue; \
+	Deep_DynArray(raw) values; \
 };

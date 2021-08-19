@@ -61,13 +61,15 @@ int main()
 #else
 
 	Deep_UnorderedMap(int$int) testMap;
-	testMap.values = Deep_DynArray_Create($Deep_UnorderedMap_values$int$int);
-	Deep_DynArray_Push($Deep_UnorderedMap_values$int$int)(&testMap.values, 10);
-	testMap.values $[0];
-	printf("%i\n", testMap.values $[0]);
+	Deep_DynArray$raw_Create(&testMap.values, sizeof(int));
+	Deep_DynArray_EmptyPush(raw)(&testMap.values);
+	((int*)(testMap.values $))[0] = 10;
+	printf("%i\n", ((int*)(testMap.values $))[0]);
 
-	Deep_DynArray(raw) rawArr = Deep_DynArray$raw_Create(sizeof(int));
-	Deep_DynArray(Deep_DynArray$int) intArr = Deep_DynArray_Create(Deep_DynArray$int);
+	Deep_DynArray(raw) rawArr; 
+	Deep_DynArray_Create(raw)(&rawArr, sizeof(int));
+	Deep_DynArray(Deep_DynArray$int) intArr; 
+	Deep_DynArray_Create(Deep_DynArray$int)(&intArr);
 
 	clock_t begin = clock();
 
@@ -75,7 +77,7 @@ int main()
 	{
 		Deep_DynArray_EmptyPush(raw)(&rawArr);
 		((int*)(rawArr $))[i] = i;
-		Deep_DynArray(int) arr = Deep_DynArray_Create(int);
+		Deep_DynArray(int) arr; Deep_DynArray_Create(int)(&arr);
 		for (int j = 0; j < i; ++j)
 		{
 			Deep_DynArray_Push(int)(&arr, j);
