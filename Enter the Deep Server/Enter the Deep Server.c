@@ -77,7 +77,8 @@ int main()
 	{
 		Deep_DynArray_EmptyPush(raw)(&rawArr);
 		((int*)(rawArr $))[i] = i;
-		Deep_DynArray(int) arr; Deep_DynArray_Create(int)(&arr);
+		Deep_DynArray(int) arr; 
+		Deep_DynArray_Create(int)(&arr);
 		for (int j = 0; j < i; ++j)
 		{
 			Deep_DynArray_Push(int)(&arr, j);
