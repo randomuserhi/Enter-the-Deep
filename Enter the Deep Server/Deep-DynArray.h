@@ -162,7 +162,10 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr);
 /*
 * Casts a Deep_DynArray of type(tag) to another Deep_DynArray of type(tag).
 * 
-* This cast is UB due to pointer casts between structs. Please use ((type*)arr $) instead.
+* This cast is implementation defined and may be UB on other systems
+* due to alignment of struct members. Refer too [POINTER CASTING AND UB].
+* For MSVC compiling C (/Tc) this is defined behaviour as members are positioned
+* the same and the alignment of the structs themselves are the same.
 */
 #define Deep_DynArray_ReinterpretCast(tag, arr) (*(Deep_DynArray(tag)*)&arr)
 

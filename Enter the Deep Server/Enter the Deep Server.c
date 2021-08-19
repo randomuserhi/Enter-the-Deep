@@ -31,6 +31,8 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 Deep_DynArray_Decl(int, int)
 Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray$int)
 
+Deep_UnorderedMap_Decl(int, int, int$int)
+
 #endif
 
 int main()
@@ -57,6 +59,12 @@ int main()
 	getchar();
 
 #else
+
+	Deep_UnorderedMap(int$int) testMap;
+	testMap.values = Deep_DynArray_Create($Deep_UnorderedMap_values$int$int);
+	Deep_DynArray_Push($Deep_UnorderedMap_values$int$int)(&testMap.values, 10);
+	testMap.values $[0];
+	printf("%i\n", testMap.values $[0]);
 
 	Deep_DynArray(raw) rawArr = Deep_DynArray$raw_Create(sizeof(int));
 	Deep_DynArray(Deep_DynArray$int) intArr = Deep_DynArray_Create(Deep_DynArray$int);
