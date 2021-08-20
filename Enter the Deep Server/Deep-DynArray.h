@@ -184,7 +184,8 @@ static Deep$Inline void Deep_DynArray$##tag##_Create(Deep_DynArray(tag)* arr) \
 { \
 	$Deep_DynArray_Create(&arr->$arr, sizeof(type)); \
 } \
-$Deep_DynArray_Decl_Func(type, tag)
+$Deep_DynArray_Decl_Func(type, tag) \
+$Deep_DynArray_Decl_Func_Push(type, tag)
 
 #define $Deep_DynArray_Decl_Type(type, tag) \
 Deep_DynArray(tag) \
@@ -216,10 +217,6 @@ static Deep$Inline void Deep_DynArray$##tag##_EmptyPush(Deep_DynArray(tag)* arr)
 { \
 	$Deep_DynArray_EmptyPush(&arr->$arr); \
 } \
-static Deep$Inline void Deep_DynArray$##tag##_Push(Deep_DynArray(tag)* arr, type value) \
-{ \
-	$Deep_DynArray_Push(&arr->$arr, &value); \
-} \
 static Deep$Inline void Deep_DynArray$##tag##_Pop(Deep_DynArray(tag)* arr) \
 { \
 	$Deep_DynArray_Pop(&arr->$arr); \
@@ -233,6 +230,12 @@ static Deep$Inline void Deep_DynArray$##tag##_Shrink(Deep_DynArray(tag)* arr) \
 	$Deep_DynArray_Shrink(&arr->$arr); \
 }
 
+#define $Deep_DynArray_Decl_Func_Push(type, tag) \
+static Deep$Inline void Deep_DynArray$##tag##_Push(Deep_DynArray(tag)* arr, type value) \
+{ \
+	$Deep_DynArray_Push(&arr->$arr, &value); \
+} \
+
 /*
 * The following is used to define the "raw" version of Deep_DynArray 
 * which uses a custom Create function to assign sizeof(type).
@@ -243,5 +246,9 @@ static Deep$Inline void Deep_DynArray$raw_Create(Deep_DynArray(raw)* arr, size_t
 	$Deep_DynArray_Create(&arr->$arr, typeSize);
 }
 $Deep_DynArray_Decl_Func(unsigned char, raw)
+static Deep$Inline void Deep_DynArray$raw_Push(Deep_DynArray(raw)* arr, void* value)
+{
+	$Deep_DynArray_Push(&arr->$arr, value);
+}
 
 #endif

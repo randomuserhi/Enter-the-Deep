@@ -60,7 +60,7 @@ int main()
 
 #else
 
-	Deep_UnorderedMap(int$int) testMap;
+	/*Deep_UnorderedMap(int$int) testMap;
 	Deep_DynArray$raw_Create(&testMap.values, sizeof(int));
 	Deep_DynArray_EmptyPush(raw)(&testMap.values);
 	//((int*)(testMap.values $))[0] = 10;
@@ -77,11 +77,38 @@ int main()
 	Deep_DynArray(raw) rawArr; 
 	Deep_DynArray_Create(raw)(&rawArr, sizeof(int));
 	Deep_DynArray(Deep_DynArray$int) intArr; 
-	Deep_DynArray_Create(Deep_DynArray$int)(&intArr);
+	Deep_DynArray_Create(Deep_DynArray$int)(&intArr);*/
+
+	Deep_DynArray(raw) testarr;
+	Deep_DynArray$raw_Create(&testarr, sizeof(int));
+	//Deep_DynArray(int) tmp = Deep_DynArray_ReinterpretCast(int)(&testarr);
+	//Deep_DynArray(int) testarr;
+	//Deep_DynArray_Create(int)(&testarr);
 
 	clock_t begin = clock();
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 1000000000; ++i)
+	{
+		//Deep_DynArray(int) tmp = Deep_DynArray_ReinterpretCast(int)(&testarr);
+		//Deep_DynArray_Push(int)(&tmp, i);
+		//testarr = Deep_DynArray_ReinterpretCast(raw)(&tmp);
+		
+		Deep_DynArray_Push(raw)(&testarr, &i);
+
+		//Deep_DynArray_EmptyPush(int)(&tmp);
+		//tmp $[i] = i;
+
+		// unsafe but faster push (with no comparison to check if push worked (if (testarr.values)) runs much faster
+		// and is slightly faster with no pointer calculation of testarr.size - 1
+		//Deep_DynArray_EmptyPush(raw)(&testarr);
+		//((int*)(testarr $))[i] = i;
+
+		//Deep_DynArray_Push(int)(&testarr, i);
+		//Deep_DynArray_EmptyPush(int)(&testarr);
+		//testarr $[i] = i;
+	}
+
+	/*for (int i = 0; i < 10; ++i)
 	{
 		Deep_DynArray_EmptyPush(raw)(&rawArr);
 		((int*)(rawArr $))[i] = i;
@@ -92,14 +119,23 @@ int main()
 			Deep_DynArray_Push(int)(&arr, j);
 		}
 		Deep_DynArray_Push(Deep_DynArray$int)(&intArr, arr);
-	}
+	}*/
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-	printf("%i\ntest:\n", intArr.size);
 
-	for (int i = 0; i < 10; ++i)
+	//testarr = Deep_DynArray_ReinterpretCast(raw)(&tmp);
+	Deep_DynArray(int) tmp = Deep_DynArray_ReinterpretCast(int)(&testarr);
+
+	for (int i = 0; i < 100; ++i)
+	{
+		printf("%i\n", tmp $[i]);
+	}
+
+	//printf("%i\ntest:\n", intArr.size);
+
+	/*for (int i = 0; i < 10; ++i)
 	{
 		printf("%i\n", ((int*)rawArr $)[i]);
 	}
@@ -118,7 +154,7 @@ int main()
 		Deep_DynArray_Free(int)(&intArr $[i]);
 	}
 	Deep_DynArray_Free(Deep_DynArray$int)(&intArr);
-	Deep_DynArray_Free(raw)(&rawArr);
+	Deep_DynArray_Free(raw)(&rawArr);*/
 
 	getchar();
 
