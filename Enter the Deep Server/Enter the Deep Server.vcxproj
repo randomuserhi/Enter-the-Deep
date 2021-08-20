@@ -112,7 +112,7 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <AdditionalOptions>/Tc %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/QIntel-jcc-erratum /Tc %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -153,7 +153,7 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <AdditionalOptions>/Tc %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/QIntel-jcc-erratum /Tc %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
