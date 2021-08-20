@@ -63,8 +63,16 @@ int main()
 	Deep_UnorderedMap(int$int) testMap;
 	Deep_DynArray$raw_Create(&testMap.values, sizeof(int));
 	Deep_DynArray_EmptyPush(raw)(&testMap.values);
-	((int*)(testMap.values $))[0] = 10;
+	//((int*)(testMap.values $))[0] = 10;
+	//printf("%i\n", ((int*)(testMap.values $))[0]);
+	Deep_DynArray(int) tmp = Deep_DynArray_ReinterpretCast(int)(&testMap.values);
+	tmp $[0] = 10;
+	printf("%i\n", tmp $[0]);
+	Deep_DynArray_Push(int)(&tmp, 11);
 	printf("%i\n", ((int*)(testMap.values $))[0]);
+	printf("%i\n", testMap.values.size);
+	testMap.values = Deep_DynArray_ReinterpretCast(raw)(&tmp);
+	printf("%i\n", testMap.values.size);
 
 	Deep_DynArray(raw) rawArr; 
 	Deep_DynArray_Create(raw)(&rawArr, sizeof(int));

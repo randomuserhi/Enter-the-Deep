@@ -120,6 +120,12 @@ void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
 	} 
 }
 
+void $Deep_DynArray_Push($Deep_DynArray* arr, void* value)
+{
+	$Deep_DynArray_EmptyPush(arr);
+	if (arr->data) memcpy(arr->data + (arr->size - 1) * arr->typeSize, value, arr->typeSize);
+}
+
 void $Deep_DynArray_Pop($Deep_DynArray* arr)
 {
 	if (arr->size > 0 && arr->data)

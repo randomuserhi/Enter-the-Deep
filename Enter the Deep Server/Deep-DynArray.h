@@ -155,19 +155,10 @@ typedef struct
 void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize);
 void $Deep_DynArray_Free($Deep_DynArray* arr);
 void $Deep_DynArray_EmptyPush($Deep_DynArray* arr);
+void $Deep_DynArray_Push($Deep_DynArray* arr, void* value);
 void $Deep_DynArray_Pop($Deep_DynArray* arr);
 void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index);
 void $Deep_DynArray_Shrink($Deep_DynArray* arr);
-
-/*
-* Casts a Deep_DynArray of type(tag) to another Deep_DynArray of type(tag).
-* 
-* This cast is implementation defined and may be UB on other systems
-* due to alignment of struct members. Refer too [POINTER CASTING AND UB].
-* For MSVC compiling C (/Tc) this is defined behaviour as members are positioned
-* the same and the alignment of the structs themselves are the same.
-*/
-#define Deep_DynArray_ReinterpretCast(tag, arr) (*(Deep_DynArray(tag)*)&arr)
 
 /*
 * Access "operator" for easily accessing Deep_DynArray values.
@@ -178,6 +169,7 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr);
 * Utility macros for getting functions for type(tag).
 */
 
+#define Deep_DynArray_ReinterpretCast(tag) Deep_DynArray$##tag##_ReinterpretCast
 #define Deep_DynArray_Create(tag) Deep_DynArray$##tag##_Create
 #define Deep_DynArray_Free(tag) Deep_DynArray$##tag##_Free
 #define Deep_DynArray_EmptyPush(tag) Deep_DynArray$##tag##_EmptyPush
@@ -210,6 +202,12 @@ Deep_DynArray(tag) \
 };
 
 #define $Deep_DynArray_Decl_Func(type, tag) \
+static Deep$Inline Deep_DynArray(tag) Deep_DynArray$##tag##_ReinterpretCast(void* arr) \
+{ \
+	Deep_DynArray(tag) dst; \
+	memcpy(&dst, arr, sizeof dst); \
+	return dst; \
+} \
 static Deep$Inline void Deep_DynArray$##tag##_Free(Deep_DynArray(tag)* arr) \
 { \
 	$Deep_DynArray_Free(&arr->$arr); \
@@ -220,11 +218,7 @@ static Deep$Inline void Deep_DynArray$##tag##_EmptyPush(Deep_DynArray(tag)* arr)
 } \
 static Deep$Inline void Deep_DynArray$##tag##_Push(Deep_DynArray(tag)* arr, type value) \
 { \
-	if (arr->$arr.typeSize == sizeof(type)) \
-	{ \
-		$Deep_DynArray_EmptyPush(&arr->$arr); \
-		if (arr->values) arr->values[arr->$arr.size - 1] = value; \
-	} \
+	$Deep_DynArray_Push(&arr->$arr, &value); \
 } \
 static Deep$Inline void Deep_DynArray$##tag##_Pop(Deep_DynArray(tag)* arr) \
 { \
