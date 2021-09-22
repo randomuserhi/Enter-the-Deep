@@ -87,7 +87,7 @@ int main()
 
 	clock_t begin = clock();
 
-	for (int i = 0; i < 1000000000; ++i)
+	for (int i = 0; i < 100000000; ++i)
 	{
 		Deep_DynArray_Push(int)(&testarr, i);
 	}
