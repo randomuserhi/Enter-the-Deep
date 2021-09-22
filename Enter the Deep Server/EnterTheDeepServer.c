@@ -35,9 +35,31 @@ Deep_UnorderedMap_Decl(int, int, int$int)
 
 #endif
 
+#define GIGA_BYTE (1024 * 1024 * 1024)
+
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
+
+	unsigned long long mallocSize = 0, numGigaBytes = 0;
+	void* mallocMemory = NULL;
+
+	do
+	{
+		mallocSize += GIGA_BYTE;
+		numGigaBytes = mallocSize / GIGA_BYTE;
+		mallocMemory = malloc(mallocSize);
+		if (mallocMemory)
+		{
+			printf("Dynamically allocated %llu GBs\n", numGigaBytes);
+			free(mallocMemory);
+		}
+		else
+		{
+			printf("Failed to allocate %llu GBs\n", numGigaBytes);
+			break;
+		}
+	} while (TRUE);
 
 #if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
 
