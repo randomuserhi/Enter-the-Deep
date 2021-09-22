@@ -181,7 +181,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Enter the Deep Server.c" />
+    <ClCompile Include="EnterTheDeepServer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep-DynArray.h" />
