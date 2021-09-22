@@ -79,6 +79,8 @@ int main()
 		printf("%i\n", testarr $[i]);
 	}
 
+	Deep_DynArray_Free(int)(&testarr);
+
 	getchar();
 
 #endif

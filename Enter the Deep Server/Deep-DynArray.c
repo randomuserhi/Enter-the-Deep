@@ -87,12 +87,23 @@ void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize)
 	arr->size = 0;
 	arr->capacity = DEEP_DYNAMIC_ARR_SIZE;
 	arr->typeSize = typeSize;
+	arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
+	arr->options.freeOnError = DEEP_DYNAMIC_ARR_FREE_ON_ERROR;
 }
 
 void $Deep_DynArray_Free($Deep_DynArray* arr)
 {
 	free(arr->data);
 	arr->data = NULL;
+}
+
+inline void $Deep_DynArray_ErrorFree($Deep_DynArray* arr)
+{
+	if (arr->options.freeOnError)
+	{
+		free(arr->data);
+		arr->data = NULL;
+	}
 }
 
 void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
@@ -107,16 +118,18 @@ void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
 			arr->data = tmp;
 			arr->capacity = newCapacity;
 			++arr->size;
+			arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
 		} 
 		else 
 		{ 
-			free(arr->data); 
-			arr->data = NULL; 
+			$Deep_DynArray_ErrorFree(arr);
+			arr->errorCode = DEEP_DYNAMIC_ARR_ERROR_REALLOC;
 		}
 	} 
 	else 
 	{ 
 		++arr->size;
+		arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
 	} 
 }
 
@@ -155,11 +168,12 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr)
 			arr->data = tmp;
 			arr->capacity = newCapacity;
 			++arr->size;
+			arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
 		}
 		else
 		{
-			free(arr);
-			arr->data = NULL;
+			$Deep_DynArray_ErrorFree(arr);
+			arr->errorCode = DEEP_DYNAMIC_ARR_ERROR_REALLOC;
 		}
 	}
 }
