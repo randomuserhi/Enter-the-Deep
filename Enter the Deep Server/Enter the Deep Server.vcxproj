@@ -173,6 +173,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Deep.c" />
     <ClCompile Include="DeepNetwork-Server.c">
       <SubType>
       </SubType>

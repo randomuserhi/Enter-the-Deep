@@ -60,6 +60,9 @@
     <ClCompile Include="Deep-HashMap.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Deep.c">
+      <Filter>Header Files\Deep</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">

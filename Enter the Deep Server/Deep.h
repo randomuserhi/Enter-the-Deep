@@ -33,8 +33,6 @@
 * ============== \ ================ / ==============
 */
 
-//#define OLD_DEEP_DYNAMIC_IMPLEMENTATION
-
 #define Deep$Inline inline
 
 #if (defined _WIN32 || defined _WIN64)
@@ -44,3 +42,9 @@
 #else
 	#define Deep$Force_Inline Deep$Inline
 #endif
+
+/*
+* Deep Utility Functions
+*/
+
+void Deep_CheckMaxAllocationSize();

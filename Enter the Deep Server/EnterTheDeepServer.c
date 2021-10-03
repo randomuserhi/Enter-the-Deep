@@ -25,62 +25,16 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 	printf("Message received: %i\n", *(int*)Buffer);
 }
 
-#if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
-#else
-
 Deep_DynArray_Decl(int, int)
 Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray$int)
 
 Deep_UnorderedMap_Decl(int, int, int$int)
 
-#endif
-
-#define GIGA_BYTE (1024 * 1024 * 1024)
-
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	unsigned long long mallocSize = 0, numGigaBytes = 0;
-	void* mallocMemory = NULL;
-
-	do
-	{
-		mallocSize += GIGA_BYTE;
-		numGigaBytes = mallocSize / GIGA_BYTE;
-		mallocMemory = malloc(mallocSize);
-		if (mallocMemory)
-		{
-			printf("Dynamically allocated %llu GBs\n", numGigaBytes);
-			free(mallocMemory);
-		}
-		else
-		{
-			printf("Failed to allocate %llu GBs\n", numGigaBytes);
-			break;
-		}
-	} while (TRUE);
-
-#if defined(OLD_DEEP_DYNAMIC_IMPLEMENTATION)
-
-	int* intArr = Deep_DynamicArr_Create(int);
-
-	clock_t begin = clock();
-
-	for (int i = 0; i < 1000000000; ++i)
-	{
-		Deep_DynamicArr_Push(intArr, i);
-	}
-
-	clock_t end = clock();
-	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("%f\n", time_spent);
-
-	Deep_DynamicArr_Free(intArr);
-
-	getchar();
-
-#else
+	Deep_CheckMaxAllocationSize();
 
 	Deep_DynArray(int) testarr;
 	Deep_DynArray$int_Create(&testarr);
@@ -104,8 +58,6 @@ int main()
 	Deep_DynArray_Free(int)(&testarr);
 
 	getchar();
-
-#endif
 
 	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);
