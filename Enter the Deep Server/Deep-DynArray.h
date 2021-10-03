@@ -28,11 +28,6 @@ typedef struct
 	size_t typeSize; // sizeof(type)
 } $Deep_DynArray;
 
-/*
-* Defines a Deep_DynArray of type(tag).
-*/
-#define Deep_DynArray(tag) struct Deep_DynArray$##tag
-
 void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize);
 void $Deep_DynArray_Free($Deep_DynArray* arr);
 void $Deep_DynArray_EmptyPush($Deep_DynArray* arr);
@@ -40,6 +35,11 @@ void $Deep_DynArray_Push($Deep_DynArray* arr, void* value);
 void $Deep_DynArray_Pop($Deep_DynArray* arr);
 void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index);
 void $Deep_DynArray_Shrink($Deep_DynArray* arr);
+
+/*
+* Defines a Deep_DynArray of type(tag).
+*/
+#define Deep_DynArray(tag) struct Deep_DynArray$##tag
 
 /*
 * Access "operator" for easily accessing Deep_DynArray values.
