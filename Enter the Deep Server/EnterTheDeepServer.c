@@ -42,7 +42,7 @@ int main()
 	for (int i = 0; i < 100; i++)
 	{
 		size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-		*(Deep_UnorderedMap_Insert(int, int)(&hashMap, Hash, &i)) = i;
+		*(Deep_UnorderedMap_Insert(int, int)(&hashMap, Hash, &i)) = i + 10;
 		printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&hashMap, Hash, &i)));
 	}
 

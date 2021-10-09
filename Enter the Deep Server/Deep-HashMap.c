@@ -107,17 +107,19 @@ size_t Deep_UnorderedMap_Hash(void* ptr, size_t len, size_t seed)
 #endif
 }
 
-void $Deep_UnorderedMap_Create($Deep_UnorderedMap* unorderedMap, size_t keyTypeSize, size_t valueTypeSize, size_t valueTypeAlignment)
+void $Deep_UnorderedMap_Create($Deep_UnorderedMap* unorderedMap, size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
 {
 	unorderedMap->keyTypeSize = keyTypeSize;
 	unorderedMap->valueTypeSize = valueTypeSize;
 	unorderedMap->valueTypeAlignment = valueTypeAlignment;
+	unorderedMap->keyTypeAlignment = keyTypeAlignment;
 	unorderedMap->bucketSize = DEEP_UNORDEREDMAP_BUCKETSIZE;
 	unorderedMap->size = 0;
 
-	// Calculate offset for $Deep_UnorderedMap_HashSlot to be stored as a header to the value
+	// Calculate offset for $Deep_UnorderedMap_HashSlot to be stored as a header to the key and value
 	// refer to https://youtu.be/IAdLwUXRUvg?t=1716
-	unorderedMap->valueOffset = (sizeof(**unorderedMap->hashes) + unorderedMap->valueTypeAlignment - 1) / unorderedMap->valueTypeAlignment * unorderedMap->valueTypeAlignment;
+	unorderedMap->keyOffset = (sizeof(**unorderedMap->hashes) + unorderedMap->keyTypeAlignment - 1) / unorderedMap->keyTypeAlignment * unorderedMap->keyTypeAlignment;
+	unorderedMap->valueOffset = ((unorderedMap->keyOffset + sizeof(unorderedMap->keyTypeSize)) + unorderedMap->valueTypeAlignment - 1) / unorderedMap->valueTypeAlignment * unorderedMap->valueTypeAlignment;
 
 	unorderedMap->hashes = calloc(DEEP_UNORDEREDMAP_BUCKETSIZE, sizeof(*unorderedMap->hashes));
 	unorderedMap->start = NULL;
@@ -168,7 +170,7 @@ void $Deep_UnorderedMap_ReHash($Deep_UnorderedMap* unorderedMap)
 	}
 }
 
-void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, void* value)
+void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, void* key)
 {
 	$Deep_UnorderedMap_ReHash(unorderedMap);
 
@@ -189,6 +191,10 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 			unorderedMap->end = unorderedMap->hashes[index];
 			if (unorderedMap->start == NULL)
 				unorderedMap->start = unorderedMap->hashes[index];
+			
+			//Set key
+			memcpy((unsigned char*)unorderedMap->hashes[index] + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
+
 			return (unsigned char*)unorderedMap->hashes[index] + unorderedMap->valueOffset;
 		}
 		else
@@ -201,7 +207,7 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 		Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
 		while (1)
 		{
-			if (memcmp((unsigned char*)hashSlot + unorderedMap->valueOffset, value, unorderedMap->valueTypeSize) == 0)
+			if (memcmp((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize) == 0)
 			{
 				return (unsigned char*)hashSlot + unorderedMap->valueOffset;
 			}
@@ -223,6 +229,9 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 			unorderedMap->end->next = hashSlot->$next;
 			unorderedMap->end = hashSlot->$next;
 
+			//Set key
+			memcpy((unsigned char*)hashSlot->$next + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
+
 			return (unsigned char*)hashSlot->$next + unorderedMap->valueOffset;
 		}
 		else
@@ -232,7 +241,7 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 	}
 }
 
-void $Deep_UnorderedMap_Erase($Deep_UnorderedMap* unorderedMap, size_t hash, void* value)
+void $Deep_UnorderedMap_Erase($Deep_UnorderedMap* unorderedMap, size_t hash, void* key)
 {
 	size_t index = hash % unorderedMap->bucketSize;
 	if (unorderedMap->hashes[index] != NULL)
@@ -241,7 +250,7 @@ void $Deep_UnorderedMap_Erase($Deep_UnorderedMap* unorderedMap, size_t hash, voi
 		Deep_UnorderedMap_HashSlot* prevhashSlot = NULL;
 		while (1)
 		{
-			if (memcmp((unsigned char*)hashSlot + unorderedMap->valueOffset, value, unorderedMap->valueTypeSize) == 0)
+			if (memcmp((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize) == 0)
 			{
 				if (prevhashSlot)
 					prevhashSlot->$next = hashSlot->$next;
