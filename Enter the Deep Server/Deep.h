@@ -44,6 +44,13 @@
 #endif
 
 /*
+* Deep Macros
+*/
+
+//#define Deep$SizeOf_SizeT 4
+#define Deep$SizeOf_SizeT 8
+
+/*
 * Deep Utility Functions
 */
 

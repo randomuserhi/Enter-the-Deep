@@ -28,15 +28,41 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 Deep_DynArray_Decl(int, int)
 Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray$int)
 
-Deep_UnorderedMap_Decl(int, int, int$int)
+Deep_UnorderedMap_Decl(int, int, int, int)
 
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
 
-	Deep_CheckMaxAllocationSize();
+	//Deep_CheckMaxAllocationSize();
 
-	Deep_DynArray(int) testarr;
+	Deep_UnorderedMap(int, int) hashMap;
+	Deep_UnorderedMap_Create(int, int)(&hashMap);
+
+	for (int i = 0; i < 100; i++)
+	{
+		size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
+		*(Deep_UnorderedMap_Insert(int, int)(&hashMap, Hash, &i)) = i;
+		printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&hashMap, Hash, &i)));
+	}
+
+	printf("size %i\n", hashMap.size);
+	int i = 12;
+	size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
+	Deep_UnorderedMap_Erase(int, int)(&hashMap, Hash, &i);
+	//*(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)) = i;
+	//printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)));
+	printf("size %i\n", hashMap.size);
+
+	//for ($Deep_UnorderedMap_HashSlot* hashSlot = HashMap.end; hashSlot != NULL; hashSlot = hashSlot->prev)
+	for (Deep_UnorderedMap_HashSlot* hashSlot = hashMap.start; hashSlot != NULL; hashSlot = hashSlot->next)
+	{
+		printf("%i\n", *Deep_UnorderedMap_Value(int, int)(&hashMap, hashSlot));
+	}
+
+	Deep_UnorderedMap_Free(int, int)(&hashMap);
+
+	/*Deep_DynArray(int) testarr;
 	Deep_DynArray$int_Create(&testarr);
 
 	clock_t begin = clock();
@@ -55,7 +81,7 @@ int main()
 		printf("%i\n", testarr $[i]);
 	}
 
-	Deep_DynArray_Free(int)(&testarr);
+	Deep_DynArray_Free(int)(&testarr);*/
 
 	getchar();
 

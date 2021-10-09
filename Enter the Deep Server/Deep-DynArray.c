@@ -115,3 +115,45 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr)
 	}
 	else  arr->errorCode = DEEP_DYNAMIC_ARR_ERROR_DATA_NULL;
 }
+
+void $Deep_DynArray_Reserve($Deep_DynArray* arr, size_t size)
+{
+	if (arr->data)
+	{
+		size_t newCapacity = arr->size + size;
+		if (newCapacity > arr->capacity)
+		{
+			void* tmp = realloc(arr->data, arr->typeSize * newCapacity);
+			if (tmp)
+			{
+				arr->data = tmp;
+				arr->capacity = newCapacity;
+				arr->size = size;
+				arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
+			}
+			else
+			{
+				$Deep_DynArray_ErrorFree(arr);
+				arr->errorCode = DEEP_DYNAMIC_ARR_ERROR_REALLOC;
+			}
+		}
+		else
+		{
+			arr->size = size;
+			arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
+		}
+	}
+	else
+	{
+		void* tmp = malloc(arr->typeSize * size);
+		if (tmp)
+		{
+			arr->data = tmp;
+			arr->capacity = size;
+			arr->size = size;
+			arr->errorCode = DEEP_DYNAMIC_ARR_NO_ERROR;
+		}
+		else
+			arr->errorCode = DEEP_DYNAMIC_ARR_ERROR_MALLOC;
+	}
+}

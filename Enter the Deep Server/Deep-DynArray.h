@@ -11,6 +11,7 @@
 #define DEEP_DYNAMIC_ARR_NO_ERROR 0
 #define DEEP_DYNAMIC_ARR_ERROR_DATA_NULL 1
 #define DEEP_DYNAMIC_ARR_ERROR_REALLOC 2
+#define DEEP_DYNAMIC_ARR_ERROR_MALLOC 3
 
 typedef struct
 {
@@ -35,6 +36,7 @@ void $Deep_DynArray_Push($Deep_DynArray* arr, void* value);
 void $Deep_DynArray_Pop($Deep_DynArray* arr);
 void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index);
 void $Deep_DynArray_Shrink($Deep_DynArray* arr);
+void $Deep_DynArray_Reserve($Deep_DynArray* arr, size_t size);
 
 /*
 * Defines a Deep_DynArray of type(tag).
@@ -58,6 +60,7 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr);
 #define Deep_DynArray_Pop(tag) Deep_DynArray$##tag##_Pop
 #define Deep_DynArray_RemoveAt(tag) Deep_DynArray$##tag##_RemoveAt
 #define Deep_DynArray_Shrink(tag) Deep_DynArray$##tag##_Shrink 
+#define Deep_DynArray_Reserve(tag) Deep_DynArray$##tag##_Reserve
 
 #define Deep_DynArray_Decl(type, tag) \
 $Deep_DynArray_Decl_Type(type, tag) \
@@ -111,6 +114,10 @@ static Deep$Inline void Deep_DynArray$##tag##_RemoveAt(Deep_DynArray(tag)* arr, 
 static Deep$Inline void Deep_DynArray$##tag##_Shrink(Deep_DynArray(tag)* arr) \
 { \
 	$Deep_DynArray_Shrink(&arr->$arr); \
+} \
+static Deep$Inline void Deep_DynArray$##tag##_Reserve(Deep_DynArray(tag)* arr, size_t size) \
+{ \
+	$Deep_DynArray_Reserve(&arr->$arr, size); \
 }
 
 #define $Deep_DynArray_Decl_Func_Push(type, tag) \
