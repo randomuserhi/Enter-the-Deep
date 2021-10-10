@@ -63,6 +63,9 @@
     <ClCompile Include="Deep.c">
       <Filter>Source Files\Deep</Filter>
     </ClCompile>
+    <ClCompile Include="DeepEngine.c">
+      <Filter>Source Files\Deep\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">

@@ -4,6 +4,8 @@
 
 //TODO:: add error codes like dynamic array
 //TODO:: refactor to not use the strainge $next attribute and work with a flag similar to std::unorderedMap
+//TODO:: storage of key is not very flexible, for example can't store keys that are of variable length such as arrays.
+//		 this is also a problem when comparing keys that have pointers to other values inside them like DynArray's.
 //NOTE:: Declaration functions have to be static so that they work cross files
 
 //TODO:: make this be random everytime program boots / something (Should not be random per hash function)
