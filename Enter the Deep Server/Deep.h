@@ -43,6 +43,10 @@
 	#define Deep$Force_Inline Deep$Inline
 #endif
 
+#if (defined _WIN32 || defined _WIN64)
+	#define Deep$AlignOf(type) _Alignof(type)
+#endif
+
 /*
 * Deep Macros
 */

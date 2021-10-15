@@ -58,10 +58,11 @@ void $Deep_UnorderedMap_Erase($Deep_UnorderedMap* unorderedMap, size_t hash, voi
 #define Deep_UnorderedMap_Value(valueTag, keyTag) Deep_UnorderedMap$##valueTag##$##keyTag##_Value
 
 #define Deep_UnorderedMap_Decl(keyType, valueType, valueTag, keyTag) \
-Deep_UnorderedMap_Decl_Type(keyType, valueType, valueTag, keyTag) \
-Deep_UnorderedMap_Decl_Func(keyType, valueType, valueTag, keyTag)
+Deep_UnorderedMap_Decl_Type(valueTag, keyTag) \
+Deep_UnorderedMap_Decl_Func(keyType, valueType, valueTag, keyTag) \
+Deep_UnorderedMap_Decl_Func_Create(keyType, valueType, valueTag, keyTag)
 
-#define Deep_UnorderedMap_Decl_Type(keyType, valueType, valueTag, keyTag) \
+#define Deep_UnorderedMap_Decl_Type(valueTag, keyTag) \
 Deep_UnorderedMap(valueTag, keyTag) \
 { \
 	union \
@@ -79,10 +80,6 @@ Deep_UnorderedMap(valueTag, keyTag) \
 };
 
 #define Deep_UnorderedMap_Decl_Func(keyType, valueType, valueTag, keyTag) \
-static Deep$Inline void Deep_UnorderedMap$##valueTag##$##keyTag##_Create(Deep_UnorderedMap(valueTag, keyTag)* unorderedMap) \
-{ \
-	$Deep_UnorderedMap_Create(&unorderedMap->$unorderedMap, sizeof(keyType), _Alignof(keyType), sizeof(valueType), _Alignof(valueType)); \
-} \
 static Deep$Inline void Deep_UnorderedMap$##valueTag##$##keyTag##_Free(Deep_UnorderedMap(valueTag, keyTag)* unorderedMap) \
 { \
 	$Deep_UnorderedMap_Free(&unorderedMap->$unorderedMap); \
@@ -98,4 +95,22 @@ static Deep$Inline void Deep_UnorderedMap$##valueTag##$##keyTag##_Erase(Deep_Uno
 static Deep$Inline valueType* Deep_UnorderedMap$##valueTag##$##keyTag##_Value(Deep_UnorderedMap(valueTag, keyTag)* unorderedMap, Deep_UnorderedMap_HashSlot* hashSlot) \
 { \
 	return (valueType*)((unsigned char*)hashSlot + unorderedMap->$unorderedMap.valueOffset); \
+}
+
+#define Deep_UnorderedMap_Decl_Func_Create(keyType, valueType, valueTag, keyTag) \
+static Deep$Inline void Deep_UnorderedMap$##valueTag##$##keyTag##_Create(Deep_UnorderedMap(valueTag, keyTag)* unorderedMap) \
+{ \
+	$Deep_UnorderedMap_Create(&unorderedMap->$unorderedMap, sizeof(keyType), Deep$AlignOf(keyType), sizeof(valueType), Deep$AlignOf(valueType)); \
+}
+
+/*
+* The following is used to define the "raw" version of Deep_DynArray
+* which uses a custom Create function to assign sizeof(type).
+*/
+
+Deep_UnorderedMap_Decl_Type(raw, raw)
+Deep_UnorderedMap_Decl_Func(void, void, raw, raw)
+static Deep$Inline void Deep_UnorderedMap$raw$raw_Create(Deep_UnorderedMap(raw, raw)* unorderedMap, size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment) \
+{ \
+$Deep_UnorderedMap_Create(&unorderedMap->$unorderedMap, keyTypeSize, keyTypeAlignment, valueTypeSize, valueTypeAlignment); \
 }
