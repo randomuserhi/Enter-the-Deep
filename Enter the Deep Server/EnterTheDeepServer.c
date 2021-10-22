@@ -1,8 +1,8 @@
 #include "Deep.h"
-#include "DeepContainers.h"
-#include "DeepMath.h"
-#include "DeepEngine.h"
-#include "DeepNetwork.h"
+#include "Deep-Containers.h"
+#include "Deep-Math.h"
+#include "Deep-Engine.h"
+#include "Deep-Network.h"
 
 #include <windows.h>
 #include <time.h>

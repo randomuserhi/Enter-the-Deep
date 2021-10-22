@@ -169,38 +169,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Deep-DynArray.c">
+    <ClCompile Include="Deep-Containers-DynArray.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-HashMap.c">
+    <ClCompile Include="Deep-Containers-HashMap.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Deep-ECS-Archetype.c">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Deep.c" />
-    <ClCompile Include="DeepEngine.c">
+    <ClCompile Include="Deep-Engine.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="DeepNetwork-Server.c">
+    <ClCompile Include="Deep-Network-Server.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="DeepNetwork-Socket.c">
+    <ClCompile Include="Deep-Network-Socket.c">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="EnterTheDeepServer.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Deep-DynArray.h" />
-    <ClInclude Include="Deep-HashMap.h" />
+    <ClInclude Include="Deep-Containers-DynArray.h" />
+    <ClInclude Include="Deep-ECS.h" />
+    <ClInclude Include="Deep-Containers-HashMap.h" />
     <ClInclude Include="Deep.h" />
-    <ClInclude Include="DeepContainers.h" />
-    <ClInclude Include="DeepEngine.h" />
-    <ClInclude Include="DeepMath-Vector.h" />
-    <ClInclude Include="DeepMath.h" />
-    <ClInclude Include="DeepNetwork.h" />
+    <ClInclude Include="Deep-Containers.h" />
+    <ClInclude Include="Deep-Engine.h" />
+    <ClInclude Include="Deep-Math-Vector.h" />
+    <ClInclude Include="Deep-Math.h" />
+    <ClInclude Include="Deep-Network.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

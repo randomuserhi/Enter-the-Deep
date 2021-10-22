@@ -43,54 +43,66 @@
     <Filter Include="Source Files\Deep\Containers">
       <UniqueIdentifier>{5d902b70-50b3-4dd9-8d3f-00c3f75b22f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Deep\Engine\ECS">
+      <UniqueIdentifier>{b1a76edd-2f3c-486e-8b81-aeb778108c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Engine\ECS">
+      <UniqueIdentifier>{cbedee14-5bc7-4f85-a37d-c656cc45fbe1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeepNetwork-Server.c">
+    <ClCompile Include="Deep-Network-Server.c">
       <Filter>Source Files\Deep\Network</Filter>
     </ClCompile>
-    <ClCompile Include="DeepNetwork-Socket.c">
+    <ClCompile Include="Deep-Network-Socket.c">
       <Filter>Source Files\Deep\Network</Filter>
     </ClCompile>
     <ClCompile Include="EnterTheDeepServer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep-DynArray.c">
+    <ClCompile Include="Deep-Containers-DynArray.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Deep-HashMap.c">
+    <ClCompile Include="Deep-Containers-HashMap.c">
       <Filter>Source Files\Deep\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Deep.c">
       <Filter>Source Files\Deep</Filter>
     </ClCompile>
-    <ClCompile Include="DeepEngine.c">
+    <ClCompile Include="Deep-Engine.c">
       <Filter>Source Files\Deep\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep-ECS-Archetype.c">
+      <Filter>Source Files\Deep\Engine\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="DeepEngine.h">
+    <ClInclude Include="Deep-Engine.h">
       <Filter>Header Files\Deep\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="DeepNetwork.h">
+    <ClInclude Include="Deep-Network.h">
       <Filter>Header Files\Deep\Network</Filter>
     </ClInclude>
-    <ClInclude Include="DeepContainers.h">
+    <ClInclude Include="Deep-Containers.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Deep-DynArray.h">
+    <ClInclude Include="Deep-Containers-DynArray.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Deep-HashMap.h">
+    <ClInclude Include="Deep-Containers-HashMap.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="DeepMath.h">
+    <ClInclude Include="Deep-Math.h">
       <Filter>Header Files\Deep\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="DeepMath-Vector.h">
+    <ClInclude Include="Deep-Math-Vector.h">
       <Filter>Header Files\Deep\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep-ECS.h">
+      <Filter>Header Files\Deep\Engine\ECS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

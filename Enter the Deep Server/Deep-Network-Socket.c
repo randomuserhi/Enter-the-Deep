@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "DeepNetwork.h"
+#include "Deep-Network.h"
 
 const Deep_Network_Address DeepNetwork_Address_Default = { 127, 0, 0, 1, 0 };
 const Deep_Network_Socket DeepNetwork_Socket_Default = { INVALID_SOCKET, DEEP_NETWORK_DEFAULTPORT };

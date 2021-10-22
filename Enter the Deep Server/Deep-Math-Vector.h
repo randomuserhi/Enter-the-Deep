@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Deep.h"
-#include "DeepMath.h"
+#include "Deep-Math.h"
 
 typedef struct
 {

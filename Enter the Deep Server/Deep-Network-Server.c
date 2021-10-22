@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "DeepNetwork.h"
+#include "Deep-Network.h"
 
 #if PLATFORM == PLATFORM_WINDOWS
 
