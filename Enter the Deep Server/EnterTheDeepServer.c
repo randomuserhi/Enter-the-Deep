@@ -49,7 +49,7 @@ int main()
 	printf("size %i\n", hashMap.size);
 	int i = 12;
 	size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-	Deep_UnorderedMap_Erase(int, int)(&hashMap, Hash, &i);
+	Deep_UnorderedMap_Erase(raw, raw)(&hashMap, Hash, &i);
 	//*(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)) = i;
 	//printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)));
 	printf("size %i\n", hashMap.size);
