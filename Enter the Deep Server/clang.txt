@@ -1,1 +1,1 @@
-clang -I./ -O3 -o clang-test.exe DeepNetwork-Server.c DeepNetwork-Socket.c Deep-DynArray.c Deep-HashMap.c EnterTheDeepServer.c -lws2_32
+clang -I./ -O3 -o clang-test.exe Deep-Network-Server.c Deep-Network-Socket.c Deep-Containers-HashMap.c Deep-Containers-DynArray.c Deep.c EnterTheDeepServer.c -lws2_32

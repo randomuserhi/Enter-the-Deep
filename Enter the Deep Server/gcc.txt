@@ -1,1 +1,1 @@
-gcc -I./ -O3 -o gcc-test DeepNetwork-Server.c DeepNetwork-Socket.c Deep-DynArray.c Deep-HashMap.c EnterTheDeepServer.c -lws2_32
+gcc -I./ -O3 -o gcc-test Deep-Network-Server.c Deep-Network-Socket.c Deep-Containers-HashMap.c Deep-Containers-DynArray.c Deep.c EnterTheDeepServer.c -lws2_32

@@ -33,4 +33,7 @@ typedef struct
 	Deep_UnorderedMap(raw, raw) archetypes; // Deep_UnorderedMap(Deep_ECS_ArchetypeHash, Deep_ECS_Archetype)
 } Deep_ECS;
 
+void Deep_ECS_Create(Deep_ECS* ECS);
+
+// Archetypes
 Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(Deep_ECS_Archetype* archetype);
