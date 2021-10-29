@@ -2,6 +2,14 @@
 
 #include "Deep-Engine.h"
 
+#define DEEP_ECS_NULL 0 //Null entity
+#define DEEP_ECS_COMPONENT 0b100000000 //EntityHandle given to Components
+#define DEEP_ECS_ID 0b1000000000 //Component used for providing a name to entities (for readability)
+
+#define DEEP_ECS_ENTITY_MASK 0b1111111111111111111111111111111111111111111111111111111100000000 //Mask to provide Entity ID handle
+#define DEEP_ECS_CHILDOF 0b1 //This entity is a child of <EntityHandle> provided
+#define DEEP_ECS_INSTANCEOF 0b10 //This entity is an instance of <EntityHandle> provided
+
 typedef uint64_t Deep_ECS_Handle;
 typedef uint64_t Deep_ECS_ArchetypeHash;
 typedef Deep_DynArray(raw) Deep_ECS_Type; // Deep_DynArray(Deep_ECS_Handle)

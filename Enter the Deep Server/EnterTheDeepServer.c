@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <time.h>
 
+// TODO:: Go through all code and add const qualifier to pointers
+
 void Cleanup()
 {
 	DeepNetwork_ShutdownSockets();
@@ -42,14 +44,14 @@ int main()
 	for (int i = 0; i < 100; i++)
 	{
 		size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-		*(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i)) = i + 10;
-		printf("%i\n", *(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i)));
+		*(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare)) = i + 10;
+		printf("%i\n", *(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare)));
 	}
 
 	printf("size %i\n", hashMap.size);
 	int i = 12;
 	size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-	Deep_UnorderedMap_Erase(raw, raw)(&hashMap, Hash, &i);
+	Deep_UnorderedMap_Erase(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare);
 	//*(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)) = i;
 	//printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)));
 	printf("size %i\n", hashMap.size);

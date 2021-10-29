@@ -75,6 +75,9 @@
     <ClCompile Include="Deep-ECS-Archetype.c">
       <Filter>Source Files\Deep\Engine\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="Deep-ECS.c">
+      <Filter>Source Files\Deep\Engine\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">

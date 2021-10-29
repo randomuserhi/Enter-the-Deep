@@ -181,6 +181,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Deep-ECS.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Deep.c" />
     <ClCompile Include="Deep-Engine.c">
       <SubType>
