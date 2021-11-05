@@ -39,6 +39,7 @@ typedef struct
 {
 	Deep_UnorderedMap(raw, raw) hierarchy; // Deep_UnorderedMap(Deep_ECS_Handle, Deep_ECS_Reference) 
 	Deep_UnorderedMap(raw, raw) archetypes; // Deep_UnorderedMap(Deep_ECS_ArchetypeHash, Deep_ECS_Archetype)
+	Deep_UnorderedMap(raw, raw) components; // Deep_UnorderedMap(Deep_ECS_Handle, Deep_ECS_Archetype*) => gets a list of archetypes that contain a given component
 } Deep_ECS;
 
 void Deep_ECS_Create(Deep_ECS* ECS);

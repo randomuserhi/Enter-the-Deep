@@ -8,11 +8,6 @@
 #define DEEP_DYNAMIC_ARR_FREE_ON_ERROR 1
 #define DEEP_DYNAMIC_ARR_KEEP_ON_ERROR 0
 
-#define DEEP_DYNAMIC_ARR_NO_ERROR 0
-#define DEEP_DYNAMIC_ARR_ERROR_DATA_NULL 1
-#define DEEP_DYNAMIC_ARR_ERROR_REALLOC 2
-#define DEEP_DYNAMIC_ARR_ERROR_MALLOC 3
-
 typedef struct
 {
 	char freeOnError; // If set, will free the contents of the array when an error is caught, otherwise the contents remain
@@ -23,7 +18,6 @@ typedef struct
 	size_t size; // Number of elements in array (to optimize out division)
 	size_t capacity; // Capacity of array (not number of elements in array)
 	unsigned char* data; // Pointer to data
-	char errorCode; // After an array operation occurs, if an error has happened it is shown here
 	Deep_DynArray_Options options; // Array options
 
 	size_t typeSize; // sizeof(type)
@@ -82,7 +76,6 @@ Deep_DynArray(tag) \
 			size_t size; \
 			size_t capacity; \
 			type* values; \
-			char errorCode; \
 			Deep_DynArray_Options options; \
 		}; \
 	}; \
