@@ -95,7 +95,7 @@ int main()
 
     DeepNetwork_InitializeSockets();
 
-	Deep_Network_Server server = DeepNetwork_Server_Default;
+	struct Deep_Network_Server server = DeepNetwork_Server_Default;
 	server.OnReceiveHandle = &OnReceive;
 
 	DeepNetwork_Socket_Open(&server.socket);
@@ -108,7 +108,7 @@ int main()
 	while (TRUE)
 	{
 		DeepNetwork_Server_Tick(&server);
-		Deep_Network_Address addr = { 127, 0, 0, 1, 56732 };
+		struct Deep_Network_Address addr = { 127, 0, 0, 1, 56732 };
 		DeepNetwork_Address_Format(&addr);
 		DeepNetwork_Server_Send(&server, (char*)&data, sizeof data, &addr.sockAddr);
 	}
