@@ -21,5 +21,6 @@ struct Deep_ECS
 };
 
 void Deep_ECS_Create(struct Deep_ECS* ECS);
+void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS);
 
 #include "Deep-ECS-Archetype.h"

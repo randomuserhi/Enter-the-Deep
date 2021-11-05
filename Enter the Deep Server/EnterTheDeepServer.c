@@ -38,52 +38,9 @@ int main()
 
 	//Deep_CheckMaxAllocationSize();
 
-	struct Deep_UnorderedMap(raw, raw) hashMap;
-	Deep_UnorderedMap_Create(raw, raw)(&hashMap, sizeof(int), Deep$AlignOf(int), sizeof(int), Deep$AlignOf(int));
-
-	for (int i = 0; i < 100; i++)
-	{
-		size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-		*(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare)) = i + 10;
-		printf("%i\n", *(int*)(Deep_UnorderedMap_Insert(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare)));
-	}
-
-	printf("size %i\n", hashMap.size);
-	int i = 12;
-	size_t Hash = Deep_UnorderedMap_Hash(&i, sizeof(int), DEEP_UNORDEREDMAP_SEED);
-	Deep_UnorderedMap_Erase(raw, raw)(&hashMap, Hash, &i, Deep_UnorderedMap_ByteCompare);
-	//*(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)) = i;
-	//printf("%i\n", *(Deep_UnorderedMap_Insert(int, int)(&HashMap, Hash, &i)));
-	printf("size %i\n", hashMap.size);
-
-	//for ($Deep_UnorderedMap_HashSlot* hashSlot = HashMap.end; hashSlot != NULL; hashSlot = hashSlot->prev)
-	for (struct Deep_UnorderedMap_HashSlot* hashSlot = hashMap.start; hashSlot != NULL; hashSlot = hashSlot->next)
-	{
-		printf("%i\n", *(int*)Deep_UnorderedMap_Value(raw, raw)(&hashMap, hashSlot));
-	}
-
-	Deep_UnorderedMap_Free(raw, raw)(&hashMap);
-
-	/*Deep_DynArray(int) testarr;
-	Deep_DynArray$int_Create(&testarr);
-
-	clock_t begin = clock();
-
-	for (int i = 0; i < 100000000; ++i)
-	{
-		Deep_DynArray_Push(int)(&testarr, i);
-	}
-
-	clock_t end = clock();
-	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("%f\n", time_spent);
-
-	for (int i = 0; i < 100; ++i)
-	{
-		printf("%i\n", testarr $[i]);
-	}
-
-	Deep_DynArray_Free(int)(&testarr);*/
+	struct Deep_ECS ECS;
+	Deep_ECS_Create(&ECS);
+	Deep_ECS_PrintHierarchy(&ECS);
 
 	getchar();
 

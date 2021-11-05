@@ -10,7 +10,7 @@ struct Deep_ECS_Component
 
 struct Deep_ECS_Id
 {
-	char* name;
+	char name[10];
 };
 
 struct Deep_ECS_Archetype
