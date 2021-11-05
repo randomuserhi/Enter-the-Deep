@@ -112,7 +112,7 @@ int Deep_UnorderedMap_ByteCompare(void* hashKey, void* key, size_t keyTypeSize)
 	return (memcmp(hashKey, key, keyTypeSize) == 0);
 }
 
-void $Deep_UnorderedMap_Create($Deep_UnorderedMap* unorderedMap, size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
+void $Deep_UnorderedMap_Create(struct $Deep_UnorderedMap* unorderedMap, size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
 {
 	unorderedMap->keyTypeSize = keyTypeSize;
 	unorderedMap->valueTypeSize = valueTypeSize;
@@ -121,7 +121,7 @@ void $Deep_UnorderedMap_Create($Deep_UnorderedMap* unorderedMap, size_t keyTypeS
 	unorderedMap->bucketSize = DEEP_UNORDEREDMAP_BUCKETSIZE;
 	unorderedMap->size = 0;
 
-	// Calculate offset for $Deep_UnorderedMap_HashSlot to be stored as a header to the key and value
+	// Calculate offset for Deep_UnorderedMap_HashSlot to be stored as a header to the key and value
 	// refer to https://youtu.be/IAdLwUXRUvg?t=1716
 	unorderedMap->keyOffset = (sizeof(**unorderedMap->hashes) + unorderedMap->keyTypeAlignment - 1) / unorderedMap->keyTypeAlignment * unorderedMap->keyTypeAlignment;
 	unorderedMap->valueOffset = ((unorderedMap->keyOffset + sizeof(unorderedMap->keyTypeSize)) + unorderedMap->valueTypeAlignment - 1) / unorderedMap->valueTypeAlignment * unorderedMap->valueTypeAlignment;
@@ -131,18 +131,18 @@ void $Deep_UnorderedMap_Create($Deep_UnorderedMap* unorderedMap, size_t keyTypeS
 	unorderedMap->end = NULL;
 }
 
-void $Deep_UnorderedMap_Free($Deep_UnorderedMap* unorderedMap)
+void $Deep_UnorderedMap_Free(struct $Deep_UnorderedMap* unorderedMap)
 {
-	for (Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL;)
+	for (struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL;)
 	{
-		Deep_UnorderedMap_HashSlot* Old = hashSlot;
+		struct Deep_UnorderedMap_HashSlot* Old = hashSlot;
 		hashSlot = hashSlot->next;
 		free(Old);
 	}
 	free(unorderedMap->hashes);
 }
 
-void $Deep_UnorderedMap_ReHash($Deep_UnorderedMap* unorderedMap)
+void $Deep_UnorderedMap_ReHash(struct $Deep_UnorderedMap* unorderedMap)
 {
 	if (unorderedMap->size / unorderedMap->bucketSize > DEEP_UNORDEREDMAP_LOADFACTOR)
 	{
@@ -153,7 +153,7 @@ void $Deep_UnorderedMap_ReHash($Deep_UnorderedMap* unorderedMap)
 			free(unorderedMap->hashes);
 			unorderedMap->bucketSize = newBucketSize;
 			unorderedMap->hashes = tmp;
-			for (Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL; hashSlot = hashSlot->next)
+			for (struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL; hashSlot = hashSlot->next)
 			{
 				size_t index = hashSlot->hash % unorderedMap->bucketSize;
 				if (unorderedMap->hashes[index] == NULL)
@@ -162,7 +162,7 @@ void $Deep_UnorderedMap_ReHash($Deep_UnorderedMap* unorderedMap)
 				}
 				else
 				{
-					Deep_UnorderedMap_HashSlot* tmp = unorderedMap->hashes[index];
+					struct Deep_UnorderedMap_HashSlot* tmp = unorderedMap->hashes[index];
 					while (tmp->$next != NULL)
 					{
 						tmp = tmp->$next;
@@ -177,7 +177,7 @@ void $Deep_UnorderedMap_ReHash($Deep_UnorderedMap* unorderedMap)
 
 // keyCompareFunc returns true if the given key is equal to the hashKey its being compared with,
 //     int keyCompareFunc(void* hashKey, void* key, size_t keyTypeSize);
-void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, void* key, int (*keyCompareFunc)(void*, void*, size_t))
+void* $Deep_UnorderedMap_Insert(struct $Deep_UnorderedMap* unorderedMap, size_t hash, void* key, int (*keyCompareFunc)(void*, void*, size_t))
 {
 	$Deep_UnorderedMap_ReHash(unorderedMap);
 
@@ -211,7 +211,7 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 	}
 	else
 	{
-		Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
+		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
 		while (1)
 		{
 			if (keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
@@ -250,13 +250,13 @@ void* $Deep_UnorderedMap_Insert($Deep_UnorderedMap* unorderedMap, size_t hash, v
 
 // keyCompareFunc returns true if the given key is equal to the hashKey its being compared with,
 //     int keyCompareFunc(void* hashKey, void* key, size_t keyTypeSize);
-void $Deep_UnorderedMap_Erase($Deep_UnorderedMap* unorderedMap, size_t hash, void* key, int (*keyCompareFunc)(void*, void*, size_t))
+void $Deep_UnorderedMap_Erase(struct $Deep_UnorderedMap* unorderedMap, size_t hash, void* key, int (*keyCompareFunc)(void*, void*, size_t))
 {
 	size_t index = hash % unorderedMap->bucketSize;
 	if (unorderedMap->hashes[index] != NULL)
 	{
-		Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
-		Deep_UnorderedMap_HashSlot* prevhashSlot = NULL;
+		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
+		struct Deep_UnorderedMap_HashSlot* prevhashSlot = NULL;
 		while (1)
 		{
 			if (keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))

@@ -28,7 +28,7 @@ void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddres
 }
 
 Deep_DynArray_Decl(int, int)
-Deep_DynArray_Decl(Deep_DynArray(int), Deep_DynArray$int)
+Deep_DynArray_Decl(struct Deep_DynArray(int), Deep_DynArray$int)
 
 Deep_UnorderedMap_Decl(int, int, int, int)
 
@@ -38,7 +38,7 @@ int main()
 
 	//Deep_CheckMaxAllocationSize();
 
-	Deep_UnorderedMap(raw, raw) hashMap;
+	struct Deep_UnorderedMap(raw, raw) hashMap;
 	Deep_UnorderedMap_Create(raw, raw)(&hashMap, sizeof(int), Deep$AlignOf(int), sizeof(int), Deep$AlignOf(int));
 
 	for (int i = 0; i < 100; i++)
@@ -57,7 +57,7 @@ int main()
 	printf("size %i\n", hashMap.size);
 
 	//for ($Deep_UnorderedMap_HashSlot* hashSlot = HashMap.end; hashSlot != NULL; hashSlot = hashSlot->prev)
-	for (Deep_UnorderedMap_HashSlot* hashSlot = hashMap.start; hashSlot != NULL; hashSlot = hashSlot->next)
+	for (struct Deep_UnorderedMap_HashSlot* hashSlot = hashMap.start; hashSlot != NULL; hashSlot = hashSlot->next)
 	{
 		printf("%i\n", *(int*)Deep_UnorderedMap_Value(raw, raw)(&hashMap, hashSlot));
 	}

@@ -107,5 +107,8 @@
     <ClInclude Include="Deep-ECS.h">
       <Filter>Header Files\Deep\Engine\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Deep-ECS-Archetype.h">
+      <Filter>Header Files\Deep\Engine\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

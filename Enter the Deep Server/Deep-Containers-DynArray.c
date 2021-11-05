@@ -1,6 +1,6 @@
 #include "Deep-Containers-DynArray.h"
 
-void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize)
+void $Deep_DynArray_Create(struct $Deep_DynArray* arr, size_t typeSize)
 {
 	arr->data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
 	arr->size = 0;
@@ -9,13 +9,13 @@ void $Deep_DynArray_Create($Deep_DynArray* arr, size_t typeSize)
 	arr->options.freeOnError = DEEP_DYNAMIC_ARR_FREE_ON_ERROR;
 }
 
-void $Deep_DynArray_Free($Deep_DynArray* arr)
+void $Deep_DynArray_Free(struct $Deep_DynArray* arr)
 {
 	free(arr->data);
 	arr->data = NULL;
 }
 
-Deep$Inline void $Deep_DynArray_ErrorFree($Deep_DynArray* arr)
+Deep$Inline void $Deep_DynArray_ErrorFree(struct $Deep_DynArray* arr)
 {
 	if (arr->options.freeOnError)
 	{
@@ -24,7 +24,7 @@ Deep$Inline void $Deep_DynArray_ErrorFree($Deep_DynArray* arr)
 	}
 }
 
-void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
+void $Deep_DynArray_EmptyPush(struct $Deep_DynArray* arr)
 {
 	if (arr->data)
 	{
@@ -51,13 +51,13 @@ void $Deep_DynArray_EmptyPush($Deep_DynArray* arr)
 	}
 }
 
-void $Deep_DynArray_Push($Deep_DynArray* arr, void* value)
+void $Deep_DynArray_Push(struct $Deep_DynArray* arr, void* value)
 {
 	$Deep_DynArray_EmptyPush(arr); // Any error codes are coughed out by EmptyPush
 	if (arr->data) memcpy(arr->data + (arr->size - 1) * arr->typeSize, value, arr->typeSize);
 }
 
-void $Deep_DynArray_Pop($Deep_DynArray* arr)
+void $Deep_DynArray_Pop(struct $Deep_DynArray* arr)
 {
 	if (arr->data)
 	{
@@ -68,7 +68,7 @@ void $Deep_DynArray_Pop($Deep_DynArray* arr)
 	}
 }
 
-void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index)
+void $Deep_DynArray_RemoveAt(struct $Deep_DynArray* arr, size_t index)
 {
 	if (arr->data)
 	{
@@ -81,7 +81,7 @@ void $Deep_DynArray_RemoveAt($Deep_DynArray* arr, size_t index)
 	}
 }
 
-void $Deep_DynArray_Shrink($Deep_DynArray* arr)
+void $Deep_DynArray_Shrink(struct $Deep_DynArray* arr)
 {
 	if (arr->data)
 	{
@@ -103,7 +103,7 @@ void $Deep_DynArray_Shrink($Deep_DynArray* arr)
 	}
 }
 
-void $Deep_DynArray_Reserve($Deep_DynArray* arr, size_t size)
+void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size)
 {
 	if (arr->data)
 	{

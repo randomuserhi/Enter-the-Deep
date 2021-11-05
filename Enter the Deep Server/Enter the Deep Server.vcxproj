@@ -202,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep-Containers-DynArray.h" />
+    <ClInclude Include="Deep-ECS-Archetype.h" />
     <ClInclude Include="Deep-ECS.h" />
     <ClInclude Include="Deep-Containers-HashMap.h" />
     <ClInclude Include="Deep.h" />
