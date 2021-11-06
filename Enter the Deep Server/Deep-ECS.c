@@ -68,28 +68,26 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	if (!componentArchetype) return;
 	Deep_ECS_Archetype_Create(componentArchetype);
 
-	handle = DEEP_ECS_COMPONENT;
-	Deep_DynArray_Push(raw)(&componentArchetype->handles, &handle);
-	handle = DEEP_ECS_ID;
-	Deep_DynArray_Push(raw)(&componentArchetype->handles, &handle);
+	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&componentArchetype->handles) = DEEP_ECS_COMPONENT;
+	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&componentArchetype->handles) = DEEP_ECS_ID;
 	
 	struct Deep_DynArray(raw) componentList;
 	Deep_DynArray_Create(raw)(&componentList, sizeof(struct Deep_ECS_Component));
 	struct Deep_ECS_Component component;
 	component.size = 0;
-	Deep_DynArray_Push(raw)(&componentList, &component);
-	Deep_DynArray_Push(raw)(&componentList, &component);
+	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(&componentList) = component;
+	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(&componentList) = component;
 
 	struct Deep_DynArray(raw) identityList;
 	Deep_DynArray_Create(raw)(&identityList, sizeof(struct Deep_ECS_Id));
 	struct Deep_ECS_Id identity;
 	strcpy_s(identity.name, 10, "comp");
-	Deep_DynArray_Push(raw)(&identityList, &identity);
+	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(&identityList) = identity;
 	strcpy_s(identity.name, 10, "id");
-	Deep_DynArray_Push(raw)(&identityList, &identity);
+	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(&identityList) = identity;
 
-	Deep_DynArray_Push(raw)(&componentArchetype->components, &componentList);
-	Deep_DynArray_Push(raw)(&componentArchetype->components, &identityList);
+	*(struct Deep_DynArray(raw)*)Deep_DynArray_Push(raw)(&componentArchetype->components) = componentList;
+	*(struct Deep_DynArray(raw)*)Deep_DynArray_Push(raw)(&componentArchetype->components) = identityList;
 	
 	handle = DEEP_ECS_COMPONENT;
 	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);

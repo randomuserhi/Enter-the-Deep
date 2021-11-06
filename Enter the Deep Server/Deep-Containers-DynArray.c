@@ -3,6 +3,7 @@
 void $Deep_DynArray_Create(struct $Deep_DynArray* arr, size_t typeSize)
 {
 	arr->data = malloc(typeSize * DEEP_DYNAMIC_ARR_SIZE);
+	arr->end = arr->data;
 	arr->size = 0;
 	arr->capacity = DEEP_DYNAMIC_ARR_SIZE;
 	arr->typeSize = typeSize;
@@ -13,6 +14,7 @@ void $Deep_DynArray_Free(struct $Deep_DynArray* arr)
 {
 	free(arr->data);
 	arr->data = NULL;
+	arr->end = NULL;
 }
 
 Deep$Inline void $Deep_DynArray_ErrorFree(struct $Deep_DynArray* arr)
@@ -21,10 +23,11 @@ Deep$Inline void $Deep_DynArray_ErrorFree(struct $Deep_DynArray* arr)
 	{
 		free(arr->data);
 		arr->data = NULL;
+		arr->end = NULL;
 	}
 }
 
-void $Deep_DynArray_EmptyPush(struct $Deep_DynArray* arr)
+void* $Deep_DynArray_Push(struct $Deep_DynArray* arr)
 {
 	if (arr->data)
 	{
@@ -37,6 +40,7 @@ void $Deep_DynArray_EmptyPush(struct $Deep_DynArray* arr)
 			{
 				arr->data = tmp;
 				arr->capacity = newCapacity;
+				arr->end += arr->size != 0 ? arr->typeSize : 0; //TODO:: find a better way than a ternary operator
 				++arr->size;
 			}
 			else
@@ -46,15 +50,12 @@ void $Deep_DynArray_EmptyPush(struct $Deep_DynArray* arr)
 		}
 		else
 		{
+			arr->end += arr->size != 0 ? arr->typeSize : 0; //TODO:: find a better way than a ternary operator
 			++arr->size;
 		}
+		return arr->end;
 	}
-}
-
-void $Deep_DynArray_Push(struct $Deep_DynArray* arr, void* value)
-{
-	$Deep_DynArray_EmptyPush(arr); // Any error codes are coughed out by EmptyPush
-	if (arr->data) memcpy(arr->data + (arr->size - 1) * arr->typeSize, value, arr->typeSize);
+	return NULL;
 }
 
 void $Deep_DynArray_Pop(struct $Deep_DynArray* arr)
@@ -63,6 +64,7 @@ void $Deep_DynArray_Pop(struct $Deep_DynArray* arr)
 	{
 		if (arr->size > 0)
 		{
+			arr->end -= arr->typeSize;
 			--arr->size;
 		}
 	}
@@ -77,6 +79,7 @@ void $Deep_DynArray_RemoveAt(struct $Deep_DynArray* arr, size_t index)
 			size_t size = arr->size - 1 - index;
 			if (size != 0) memmove(arr->data + index * arr->typeSize, arr->data + (index + 1) * arr->typeSize, size * arr->typeSize);
 			--arr->size;
+			arr->end -= arr->typeSize;
 		}
 	}
 }
@@ -93,7 +96,6 @@ void $Deep_DynArray_Shrink(struct $Deep_DynArray* arr)
 			{
 				arr->data = tmp;
 				arr->capacity = newCapacity;
-				++arr->size;
 			}
 			else
 			{
@@ -116,6 +118,7 @@ void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size)
 				arr->data = tmp;
 				arr->capacity = newCapacity;
 				arr->size = size;
+				arr->end = arr->data + (arr->size - 1) * arr->typeSize;
 			}
 			else
 			{
@@ -125,6 +128,7 @@ void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size)
 		else
 		{
 			arr->size = size;
+			arr->end = arr->data + (arr->size - 1) * arr->typeSize;
 		}
 	}
 	else
@@ -135,6 +139,7 @@ void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size)
 			arr->data = tmp;
 			arr->capacity = size;
 			arr->size = size;
+			arr->end = arr->data + (arr->size - 1) * arr->typeSize;
 		}
 	}
 }
