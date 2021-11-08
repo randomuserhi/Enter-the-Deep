@@ -35,5 +35,5 @@ struct Deep_ECS_Reference
 };
 
 // Archetypes
-Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(struct Deep_ECS_Archetype* archetype);
+Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(const struct Deep_ECS_Archetype* archetype);
 void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype*);

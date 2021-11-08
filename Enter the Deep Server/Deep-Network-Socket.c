@@ -3,18 +3,18 @@
 
 #include "Deep-Network.h"
 
-const struct Deep_Network_Address DeepNetwork_Address_Default = { 127, 0, 0, 1, 0 };
-const struct Deep_Network_Socket DeepNetwork_Socket_Default = { INVALID_SOCKET, DEEP_NETWORK_DEFAULTPORT };
+const struct Deep_Network_Address Deep_Network_Address_Default = { 127, 0, 0, 1, 0 };
+const struct Deep_Network_Socket Deep_Network_Socket_Default = { INVALID_SOCKET, DEEP_NETWORK_DEFAULTPORT };
 
 #if PLATFORM == PLATFORM_WINDOWS
 
-BOOL DeepNetwork_IsBigEndian() //https://stackoverflow.com/questions/6136010/is-using-an-union-in-place-of-a-cast-well-defined
+BOOL Deep_Network_IsBigEndian() //https://stackoverflow.com/questions/6136010/is-using-an-union-in-place-of-a-cast-well-defined
 {
-	uint32_t i = 1;
+	const uint32_t i = 1;
 	return i == htonl(i);
 }
 
-BOOL DeepNetwork_InitializeSockets()
+BOOL Deep_Network_InitializeSockets()
 {
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == NO_ERROR)
@@ -26,41 +26,41 @@ BOOL DeepNetwork_InitializeSockets()
 	return FALSE;
 }
 
-void DeepNetwork_ShutdownSockets()
+void Deep_Network_ShutdownSockets()
 {
-	int result = WSACleanup();
+	const int result = WSACleanup();
 	if (result == NOERROR)
 		printf("WSA successfully cleaned up.\n");
 	else
 		printf("WSA failed to cleaup with error = %i.\n", WSAGetLastError());
 }
 
-void DeepNetwork_Address_Format(struct Deep_Network_Address* const address)
+void Deep_Network_Address_Format(struct Deep_Network_Address* address)
 {
-	unsigned int BitAddress = (address->a << 24) | (address->b << 16) | (address->c << 8) | address->d;
+	const unsigned int BitAddress = (address->a << 24) | (address->b << 16) | (address->c << 8) | address->d;
 
 	address->sockAddr.sa_in.sin_family = AF_INET;
 	address->sockAddr.sa_in.sin_addr.s_addr = htonl(BitAddress);
 	address->sockAddr.sa_in.sin_port = htons(address->port);
 }
 
-BOOL DeepNetwork_Address_Equal(const struct Deep_Network_Address* lhs, const struct Deep_Network_Address* rhs)
+BOOL Deep_Network_Address_Equal(const struct Deep_Network_Address* lhs, const struct Deep_Network_Address* rhs)
 {
 	return (lhs->sockAddr.sa_in.sin_addr.s_addr == rhs->sockAddr.sa_in.sin_addr.s_addr) && (lhs->sockAddr.sa_in.sin_port == rhs->sockAddr.sa_in.sin_port);
 }
 
-unsigned short DeepNetwork_socket_GetPort(struct Deep_Network_Socket* const deepSocket)
+unsigned short Deep_Network_socket_GetPort(const struct Deep_Network_Socket* deepSocket)
 {
 	return deepSocket->$port;
 }
 
-int DeepNetwork_Socket_Open(struct Deep_Network_Socket* const deepSocket)
+int Deep_Network_Socket_Open(struct Deep_Network_Socket* deepSocket)
 {
 	deepSocket->socketFD = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	if (deepSocket->socketFD == INVALID_SOCKET)
 	{
-		int err = WSAGetLastError();
+		const int err = WSAGetLastError();
 		printf("Socket function failed with error = %i.\n", err);
 		return err;
 	}
@@ -74,7 +74,7 @@ int DeepNetwork_Socket_Open(struct Deep_Network_Socket* const deepSocket)
 
 	return DEEP_NETWORK_NOERROR;
 }
-int DeepNetwork_Socket_Close(struct Deep_Network_Socket* const deepSocket)
+int Deep_Network_Socket_Close(struct Deep_Network_Socket* deepSocket)
 {
 	if (deepSocket->socketFD == INVALID_SOCKET)
 	{
@@ -82,7 +82,7 @@ int DeepNetwork_Socket_Close(struct Deep_Network_Socket* const deepSocket)
 		return DEEP_NETWORK_NOERROR;
 	}
 
-	int result = closesocket(deepSocket->socketFD);
+	const int result = closesocket(deepSocket->socketFD);
 	if (result == SOCKET_ERROR)
 	{
 		int err = WSAGetLastError();
@@ -94,16 +94,16 @@ int DeepNetwork_Socket_Close(struct Deep_Network_Socket* const deepSocket)
 	return DEEP_NETWORK_NOERROR;
 }
 
-int DeepNetwork_Socket_Bind(struct Deep_Network_Socket* const deepSocket, unsigned short port)
+int Deep_Network_Socket_Bind(struct Deep_Network_Socket* deepSocket, unsigned short port)
 {
 	struct sockaddr_in address;
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons(port);
 
-	if (bind(deepSocket->socketFD, (const struct sockaddr*)&address, sizeof address) == SOCKET_ERROR)
+	if (bind(deepSocket->socketFD, (struct sockaddr*)&address, sizeof address) == SOCKET_ERROR)
 	{
-		int err = WSAGetLastError();
+		const int err = WSAGetLastError();
 		printf("Socket failed to bind with error %i.\n", err);
 		return err;
 	}
@@ -138,10 +138,10 @@ int DeepNetwork_Socket_Bind(struct Deep_Network_Socket* const deepSocket, unsign
 	}
 }
 
-int DeepNetwork_Socket_GetRemainingBytes(struct Deep_Network_Socket* const deepSocket)
+int Deep_Network_Socket_GetRemainingBytes(struct Deep_Network_Socket* deepSocket)
 {
 	u_long remainingBytes;
-	int result = ioctlsocket(deepSocket->socketFD, FIONREAD, &remainingBytes);
+	const int result = ioctlsocket(deepSocket->socketFD, FIONREAD, &remainingBytes);
 	if (result != NOERROR)
 	{
 		printf("Failed to get remaining bytes with error = %i.\n", WSAGetLastError());
@@ -150,12 +150,12 @@ int DeepNetwork_Socket_GetRemainingBytes(struct Deep_Network_Socket* const deepS
 	return remainingBytes;
 }
 
-int DeepNetwork_Socket_Send(struct Deep_Network_Socket* const deepSocket, const char* const data, int dataSize, union Deep_SocketAddr* address)
+int Deep_Network_Socket_Send(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, union Deep_SocketAddr* address)
 {
-	int SentBytes = sendto(deepSocket->socketFD, data, dataSize, 0, &address->sa, sizeof *address);
+	const int SentBytes = sendto(deepSocket->socketFD, data, dataSize, 0, &address->sa, sizeof *address);
 	if (SentBytes != dataSize)
 	{
-		int err = WSAGetLastError();
+		const int err = WSAGetLastError();
 		printf("Failed to send packet to destination with error = %i.\n", err);
 		return err;
 	}
@@ -163,16 +163,15 @@ int DeepNetwork_Socket_Send(struct Deep_Network_Socket* const deepSocket, const 
 	return DEEP_NETWORK_NOERROR;
 }
 
-int DeepNetwork_Socket_Receive(struct Deep_Network_Socket* const deepSocket, char* const buffer, int maxBufferSize, union Deep_SocketAddr* fromAddress)
+int Deep_Network_Socket_Receive(struct Deep_Network_Socket* deepSocket, char* buffer, int maxBufferSize, union Deep_SocketAddr* fromAddress)
 {
-	struct sockaddr_in from;
-	socklen_t fromLength = sizeof from;
+	socklen_t fromLength = sizeof (struct sockaddr_in);
 
-	int BytesReceived = recvfrom(deepSocket->socketFD, (char*)buffer, maxBufferSize, 0, &fromAddress->sa, &fromLength);
+	const int BytesReceived = recvfrom(deepSocket->socketFD, (char*)buffer, maxBufferSize, 0, &fromAddress->sa, &fromLength);
 
 	if (BytesReceived < 0)
 	{
-		int Error = WSAGetLastError();
+		const int Error = WSAGetLastError();
 		if (Error != WSAEWOULDBLOCK) //https://stackoverflow.com/questions/17064069/recvfrom-error-10035-using-non-blocking-sockets
 		{
 			printf("Failed to receive packet with error = %i.\n", Error);

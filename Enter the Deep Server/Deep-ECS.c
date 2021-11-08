@@ -2,8 +2,15 @@
 
 //TODO:: Implement better GetComponent method, add wrapper using macros to convert reference to component struct
 //    :: Write code for strings to store for identity component
-//    :: Edit header files to move things about
 //    :: Better organise code
+//    :: Possibly rewrite to actually use Deep_DynArray type safety rather than (raw) => Might require header rework
+//			:: Honestly it is probably fine if they are defined in the header and then the user can use them as well
+//			:: Problem arises when multiple headers define the same Deep_DynArray, then there will be conflict if 
+//             both headers are included at the same time => maybe use a simple ifndef similar to standard header
+//			   protection
+//    :: Rewrite headers to be organised
+//    :: Write obsidian file
+
 struct ComponentReference
 {
 	size_t index;
@@ -12,7 +19,7 @@ struct ComponentReference
 
 struct ComponentReference Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_Handle handle, Deep_ECS_Handle componentHandle)
 {
-	struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
+	const struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
 	struct ComponentReference componentReference;
 	componentReference.index = 0;
 	componentReference.components = NULL;
@@ -32,7 +39,7 @@ struct ComponentReference Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_H
 
 void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 {
-	for (struct Deep_UnorderedMap_HashSlot* slot = ECS->hierarchy.start; slot != NULL; slot = slot->next)
+	for (const struct Deep_UnorderedMap_HashSlot* slot = ECS->hierarchy.start; slot != NULL; slot = slot->next)
 	{
 		Deep_ECS_Handle handle = *(Deep_ECS_Handle*)Deep_UnorderedMap_Key(raw, raw)(&ECS->hierarchy, slot);
 		if (handle == DEEP_ECS_NULL) continue;

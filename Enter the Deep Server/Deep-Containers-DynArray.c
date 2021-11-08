@@ -76,7 +76,7 @@ void $Deep_DynArray_RemoveAt(struct $Deep_DynArray* arr, size_t index)
 	{
 		if (arr->size > 1 && index > 0 && index < arr->size)
 		{
-			size_t size = arr->size - 1 - index;
+			const size_t size = arr->size - 1 - index;
 			if (size != 0) memmove(arr->data + index * arr->typeSize, arr->data + (index + 1) * arr->typeSize, size * arr->typeSize);
 			--arr->size;
 			arr->end -= arr->typeSize;
@@ -88,7 +88,7 @@ void $Deep_DynArray_Shrink(struct $Deep_DynArray* arr)
 {
 	if (arr->data)
 	{
-		size_t newCapacity = arr->size;
+		const size_t newCapacity = arr->size;
 		if (newCapacity != arr->capacity)
 		{
 			void* tmp = realloc(arr->data, arr->typeSize * newCapacity);
@@ -109,7 +109,7 @@ void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size)
 {
 	if (arr->data)
 	{
-		size_t newCapacity = arr->size + size;
+		const size_t newCapacity = arr->size + size;
 		if (newCapacity > arr->capacity)
 		{
 			void* tmp = realloc(arr->data, arr->typeSize * newCapacity);

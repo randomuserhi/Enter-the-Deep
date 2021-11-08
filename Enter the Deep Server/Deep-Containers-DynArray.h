@@ -38,11 +38,6 @@ void $Deep_DynArray_Reserve(struct $Deep_DynArray* arr, size_t size);
 #define Deep_DynArray(tag) Deep_DynArray$##tag
 
 /*
-* Access "operator" for easily accessing Deep_DynArray values.
-*/
-#define $ .values
-
-/*
 * Utility macros for getting functions for type(tag).
 */
 

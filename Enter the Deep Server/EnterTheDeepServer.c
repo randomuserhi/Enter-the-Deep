@@ -11,7 +11,7 @@
 
 void Cleanup()
 {
-	DeepNetwork_ShutdownSockets();
+	Deep_Network_ShutdownSockets();
 }
 
 BOOL WINAPI ExitHandler(DWORD Signal)
@@ -22,9 +22,9 @@ BOOL WINAPI ExitHandler(DWORD Signal)
 	return TRUE;
 }
 
-void OnReceive(unsigned char* Buffer, int BytesReceived, unsigned int FromAddress, unsigned int FromPort)
+void OnReceive(const unsigned char* Buffer, int BytesReceived, unsigned int FromAddress, unsigned int FromPort)
 {
-	printf("Message received: %i\n", *(int*)Buffer);
+	printf("Message received: %i\n", *(const int*)Buffer);
 }
 
 Deep_DynArray_Decl(int, int)
@@ -48,28 +48,28 @@ int main()
 	DeepMath_Vector3_Scale_InPlace(&vec3, 2);
 	printf("%f %f %f\n", vec3.x, vec3.y, vec3.z);
 
-	printf("IsBigEndian: %i.\n", DeepNetwork_IsBigEndian());
+	printf("IsBigEndian: %i.\n", Deep_Network_IsBigEndian());
 
-    DeepNetwork_InitializeSockets();
+    Deep_Network_InitializeSockets();
 
-	struct Deep_Network_Server server = DeepNetwork_Server_Default;
+	struct Deep_Network_Server server = Deep_Network_Server_Default;
 	server.OnReceiveHandle = &OnReceive;
 
-	DeepNetwork_Socket_Open(&server.socket);
-	DeepNetwork_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);
+	Deep_Network_Socket_Open(&server.socket);
+	Deep_Network_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);
 
-	printf("Server started on port: %i.\n", DeepNetwork_Server_GetPort(&server));
+	printf("Server started on port: %i.\n", Deep_Network_Server_GetPort(&server));
 
 	int data = 10;
 
+	struct Deep_Network_Address addr = { 127, 0, 0, 1, 56732 };
 	while (TRUE)
 	{
-		DeepNetwork_Server_Tick(&server);
-		struct Deep_Network_Address addr = { 127, 0, 0, 1, 56732 };
-		DeepNetwork_Address_Format(&addr);
-		DeepNetwork_Server_Send(&server, (char*)&data, sizeof data, &addr.sockAddr);
+		Deep_Network_Server_Tick(&server);
+		Deep_Network_Address_Format(&addr);
+		Deep_Network_Server_Send(&server, (char*)&data, sizeof data, &addr.sockAddr);
 	}
 
-	DeepNetwork_Server_Close(&server);
-    DeepNetwork_ShutdownSockets();
+	Deep_Network_Server_Close(&server);
+    Deep_Network_ShutdownSockets();
 }
