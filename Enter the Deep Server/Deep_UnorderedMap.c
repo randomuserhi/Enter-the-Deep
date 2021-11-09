@@ -112,8 +112,9 @@ int Deep_UnorderedMap_ByteCompare(const void* hashKey, const void* key, size_t k
 	return (memcmp(hashKey, key, keyTypeSize) == 0);
 }
 
-void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedMap, size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
+void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
 {
+	unorderedMap->keyCompareFunc = keyCompareFunc;
 	unorderedMap->keyTypeSize = keyTypeSize;
 	unorderedMap->valueTypeSize = valueTypeSize;
 	unorderedMap->valueTypeAlignment = valueTypeAlignment;
@@ -175,9 +176,7 @@ void _Deep_UnorderedMap_ReHash(struct _Deep_UnorderedMap* unorderedMap)
 	}
 }
 
-// keyCompareFunc returns true if the given key is equal to the hashKey its being compared with,
-//     int keyCompareFunc(void* hashKey, void* key, size_t keyTypeSize);
-void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key, int (*keyCompareFunc)(const void*, const void*, size_t))
+void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key)
 {
 	_Deep_UnorderedMap_ReHash(unorderedMap);
 
@@ -214,7 +213,7 @@ void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t 
 		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
 		while (1)
 		{
-			if (keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
+			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
 			{
 				return (unsigned char*)hashSlot + unorderedMap->valueOffset;
 			}
@@ -248,9 +247,7 @@ void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t 
 	}
 }
 
-// keyCompareFunc returns true if the given key is equal to the hashKey its being compared with,
-//     int keyCompareFunc(void* hashKey, void* key, size_t keyTypeSize);
-void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key, int (*keyCompareFunc)(const void*, const void*, size_t))
+void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key)
 {
 	const size_t index = hash % unorderedMap->bucketSize;
 	if (unorderedMap->hashes[index] != NULL)
@@ -259,7 +256,7 @@ void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t ha
 		struct Deep_UnorderedMap_HashSlot* prevhashSlot = NULL;
 		while (1)
 		{
-			if (keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
+			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
 			{
 				if (prevhashSlot)
 					prevhashSlot->_next = hashSlot->_next;

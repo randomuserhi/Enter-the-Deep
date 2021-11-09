@@ -77,7 +77,7 @@ struct Deep_ECS_Component
 
 struct Deep_ECS_Id
 {
-	char name[10];
+	char name[15];
 };
 
 struct Deep_ECS
