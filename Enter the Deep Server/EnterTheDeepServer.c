@@ -26,20 +26,9 @@ void OnReceive(const char* Buffer, int BytesReceived, unsigned int FromAddress, 
 	printf("Message received: %i\n", *(const int*)Buffer);
 }
 
-Deep_DynArray_Decl(int, int)
-
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
-
-	struct Deep_DynArray(int) intArr;
-	Deep_DynArray_Create(int)(&intArr);
-	*Deep_DynArray_Push(int)(&intArr) = 10;
-	printf("%i\n", *intArr.values);
-
-	struct Deep_String string;
-	Deep_String_Create(&string, "Hello World");
-	printf("%s\n", string.str.values);
 
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
