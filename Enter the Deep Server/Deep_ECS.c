@@ -1,14 +1,7 @@
-#include "Deep-ECS.h"
+#include "Deep_ECS.h"
 
 //TODO:: Implement better GetComponent method, add wrapper using macros to convert reference to component struct
 //    :: Write code for strings to store for identity component
-//    :: Better organise code
-//    :: Possibly rewrite to actually use Deep_DynArray type safety rather than (raw) => Might require header rework
-//			:: Honestly it is probably fine if they are defined in the header and then the user can use them as well
-//			:: Problem arises when multiple headers define the same Deep_DynArray, then there will be conflict if 
-//             both headers are included at the same time => maybe use a simple ifndef similar to standard header
-//			   protection
-//    :: Rewrite headers to be organised
 //    :: Write obsidian file
 
 struct ComponentReference
@@ -19,14 +12,13 @@ struct ComponentReference
 
 struct ComponentReference Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_Handle handle, Deep_ECS_Handle componentHandle)
 {
-	const struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
+	const struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
 	struct ComponentReference componentReference;
 	componentReference.index = 0;
 	componentReference.components = NULL;
 	for (size_t i = 0; i < reference->archetype->type.size; i++)
 	{
 		Deep_ECS_Handle h = ((Deep_ECS_Handle*)reference->archetype->type.values)[i];
-		//printf("%zu, %zu\n", h, componentHandle);
 		if (h == componentHandle)
 		{
 			componentReference.components = &((struct Deep_DynArray(raw)*)reference->archetype->components.values)[i];
@@ -41,10 +33,10 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 {
 	for (const struct Deep_UnorderedMap_HashSlot* slot = ECS->hierarchy.start; slot != NULL; slot = slot->next)
 	{
-		Deep_ECS_Handle handle = *(Deep_ECS_Handle*)Deep_UnorderedMap_Key(raw, raw)(&ECS->hierarchy, slot);
+		Deep_ECS_Handle handle = *Deep_UnorderedMap_Key(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, slot);
 		if (handle == DEEP_ECS_NULL) continue;
 
-		struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Value(raw, raw)(&ECS->hierarchy, slot);
+		struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Value(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, slot);
 
 		struct ComponentReference componentReference = Deep_ECS_GetComponent(ECS, handle, DEEP_ECS_ID);
 		printf("%s : ", ((struct Deep_ECS_Id*)componentReference.components->values)[componentReference.index].name);
@@ -64,19 +56,19 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 
 void Deep_ECS_Create(struct Deep_ECS* ECS)
 {
-	Deep_UnorderedMap_Create(raw, raw)(&ECS->hierarchy, sizeof(Deep_ECS_Handle), Deep$AlignOf(Deep_ECS_Handle), sizeof(struct Deep_ECS_Reference), Deep$AlignOf(struct Deep_ECS_Reference));
-	Deep_UnorderedMap_Create(raw, raw)(&ECS->archetypes, sizeof(Deep_ECS_ArchetypeHash), Deep$AlignOf(Deep_ECS_ArchetypeHash), sizeof(struct Deep_ECS_Archetype), Deep$AlignOf(struct Deep_ECS_Archetype));
-	Deep_UnorderedMap_Create(raw, raw)(&ECS->components, sizeof(Deep_ECS_Handle), Deep$AlignOf(Deep_ECS_Handle), sizeof(struct Deep_ECS_Archetype*), Deep$AlignOf(struct Deep_ECS_Archetype*));
+	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy);
+	Deep_UnorderedMap_Create(Deep_ECS_ArchetypeHash, Deep_ECS_Archetype)(&ECS->archetypes);
+	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Archetype_Ptr)(&ECS->components);
 
 	Deep_ECS_Handle handle = DEEP_ECS_NULL;
-	Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
+	Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
 	
 	struct Deep_ECS_Archetype* componentArchetype = malloc(sizeof * componentArchetype);
 	if (!componentArchetype) return;
 	Deep_ECS_Archetype_Create(componentArchetype);
 
-	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&componentArchetype->handles) = DEEP_ECS_COMPONENT;
-	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&componentArchetype->handles) = DEEP_ECS_ID;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_COMPONENT;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_ID;
 	
 	struct Deep_DynArray(raw) componentList;
 	Deep_DynArray_Create(raw)(&componentList, sizeof(struct Deep_ECS_Component));
@@ -93,16 +85,16 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	strcpy_s(identity.name, 10, "id");
 	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(&identityList) = identity;
 
-	*(struct Deep_DynArray(raw)*)Deep_DynArray_Push(raw)(&componentArchetype->components) = componentList;
-	*(struct Deep_DynArray(raw)*)Deep_DynArray_Push(raw)(&componentArchetype->components) = identityList;
+	*Deep_DynArray_Push(Deep_DynArray_raw)(&componentArchetype->components) = componentList;
+	*Deep_DynArray_Push(Deep_DynArray_raw)(&componentArchetype->components) = identityList;
 	
 	handle = DEEP_ECS_COMPONENT;
-	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
+	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
 	entityReference->archetype = componentArchetype;
 	entityReference->index = 0;
 
 	handle = DEEP_ECS_ID;
-	entityReference = Deep_UnorderedMap_Insert(raw, raw)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
+	entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle, Deep_UnorderedMap_ByteCompare);
 	entityReference->archetype = componentArchetype;
 	entityReference->index = 1;
 

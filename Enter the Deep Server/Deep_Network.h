@@ -1,4 +1,5 @@
-#pragma once
+#ifndef h_Deep_Network
+#define h_Deep_Network
 
 #define PLATFORM_WINDOWS  1
 #define PLATFORM_MAC      2
@@ -75,12 +76,12 @@ int Deep_Network_Socket_Bind(struct Deep_Network_Socket* deepSocket, unsigned sh
 int Deep_Network_Socket_GetRemainingBytes(struct Deep_Network_Socket* deepSocket);
 
 int Deep_Network_Socket_Send(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, union Deep_SocketAddr* address);
-Deep$Force_Inline int Deep_Network_Socket_Send_DeepAddress(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, struct Deep_Network_Address* address)
+Deep_ForceInline int Deep_Network_Socket_Send_DeepAddress(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, struct Deep_Network_Address* address)
 {
 	return Deep_Network_Socket_Send(deepSocket, data, dataSize, &address->sockAddr);
 };
 
-int Deep_Network_Socket_Receive(struct Deep_Network_Socket* deepSocket, char* const buffer, int maxBufferSize, union Deep_SocketAddr* fromAddress);
+int Deep_Network_Socket_Receive(struct Deep_Network_Socket* deepSocket, char* buffer, int maxBufferSize, union Deep_SocketAddr* fromAddress);
 
 #endif
 
@@ -89,14 +90,14 @@ struct Deep_Network_Server
 	struct Deep_Network_Socket socket;
 	union Deep_SocketAddr from;
 
-	unsigned char* buffer;
+	char* buffer;
 	unsigned int maxBufferSize;
 
-	void (*OnReceiveHandle)(const unsigned char*, int, unsigned int, unsigned int);
+	void (*OnReceiveHandle)(const char*, int, unsigned int, unsigned int);
 };
 extern const struct Deep_Network_Server Deep_Network_Server_Default;
 
-Deep$Force_Inline unsigned short Deep_Network_Server_GetPort(struct Deep_Network_Server* const deepServer)
+Deep_ForceInline unsigned short Deep_Network_Server_GetPort(struct Deep_Network_Server* const deepServer)
 {
 	return deepServer->socket.$port;
 };
@@ -104,7 +105,9 @@ void Deep_Network_Server_Start(struct Deep_Network_Server* deepServer, unsigned 
 void Deep_Network_Server_Close(struct Deep_Network_Server* deepServer);
 void Deep_Network_Server_Tick(struct Deep_Network_Server* deepServer);
 
-Deep$Force_Inline int Deep_Network_Server_Send(struct Deep_Network_Server* deepServer, const char* Data, int DataSize, union Deep_SocketAddr* Address)
+Deep_ForceInline int Deep_Network_Server_Send(struct Deep_Network_Server* deepServer, const char* Data, int DataSize, union Deep_SocketAddr* Address)
 {
 	return Deep_Network_Socket_Send(&deepServer->socket, Data, DataSize, Address);
 };
+
+#endif

@@ -1,13 +1,11 @@
 #include "Deep.h"
-#include "Deep-Containers.h"
-#include "Deep-Math.h"
-#include "Deep-Engine.h"
-#include "Deep-Network.h"
+#include "Deep_Containers.h"
+#include "Deep_Math.h"
+#include "Deep_Engine.h"
+#include "Deep_Network.h"
 
 #include <windows.h>
 #include <time.h>
-
-// TODO:: Go through all code and add const qualifier to pointers
 
 void Cleanup()
 {
@@ -22,21 +20,14 @@ BOOL WINAPI ExitHandler(DWORD Signal)
 	return TRUE;
 }
 
-void OnReceive(const unsigned char* Buffer, int BytesReceived, unsigned int FromAddress, unsigned int FromPort)
+void OnReceive(const char* Buffer, int BytesReceived, unsigned int FromAddress, unsigned int FromPort)
 {
 	printf("Message received: %i\n", *(const int*)Buffer);
 }
 
-Deep_DynArray_Decl(int, int)
-Deep_DynArray_Decl(struct Deep_DynArray(int), Deep_DynArray$int)
-
-Deep_UnorderedMap_Decl(int, int, int, int)
-
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
-
-	//Deep_CheckMaxAllocationSize();
 
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
@@ -44,8 +35,8 @@ int main()
 
 	getchar();
 
-	Deep_Math_Vector3 vec3 = Deep_Math_Vec3(10, 10, 0);
-	DeepMath_Vector3_Scale_InPlace(&vec3, 2);
+	struct Deep_Vector3 vec3 = Deep_Vector3_Create(10, 10, 0);
+	Deep_Vector3_Scale_InPlace(&vec3, 2);
 	printf("%f %f %f\n", vec3.x, vec3.y, vec3.z);
 
 	printf("IsBigEndian: %i.\n", Deep_Network_IsBigEndian());
@@ -62,7 +53,7 @@ int main()
 
 	int data = 10;
 
-	struct Deep_Network_Address addr = { 127, 0, 0, 1, 56732 };
+	struct Deep_Network_Address addr = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 56732 };
 	while (TRUE)
 	{
 		Deep_Network_Server_Tick(&server);

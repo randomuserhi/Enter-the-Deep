@@ -169,48 +169,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Deep-Containers-DynArray.c">
+    <ClCompile Include="Deep_DynArray.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-Containers-HashMap.c">
+    <ClCompile Include="Deep_UnorderedMap.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-ECS-Archetype.c">
+    <ClCompile Include="Deep_ECS_Archetype.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-ECS.c">
+    <ClCompile Include="Deep_ECS.c">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Deep.c" />
-    <ClCompile Include="Deep-Engine.c">
+    <ClCompile Include="Deep_Engine.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-Network-Server.c">
+    <ClCompile Include="Deep_Network_Server.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep-Network-Socket.c">
+    <ClCompile Include="Deep_Network_Socket.c">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="EnterTheDeepServer.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Deep-Containers-DynArray.h" />
-    <ClInclude Include="Deep-ECS-Archetype.h" />
-    <ClInclude Include="Deep-ECS.h" />
-    <ClInclude Include="Deep-Containers-HashMap.h" />
+    <ClInclude Include="Deep_Containers.h" />
+    <ClInclude Include="Deep_DynArray.h" />
+    <ClInclude Include="Deep_ECS.h" />
+    <ClInclude Include="Deep_UnorderedMap.h" />
     <ClInclude Include="Deep.h" />
-    <ClInclude Include="Deep-Containers.h" />
-    <ClInclude Include="Deep-Engine.h" />
-    <ClInclude Include="Deep-Math-Vector.h" />
-    <ClInclude Include="Deep-Math.h" />
-    <ClInclude Include="Deep-Network.h" />
+    <ClInclude Include="Deep_Engine.h" />
+    <ClInclude Include="Deep_Vector.h" />
+    <ClInclude Include="Deep_Math.h" />
+    <ClInclude Include="Deep_Network.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

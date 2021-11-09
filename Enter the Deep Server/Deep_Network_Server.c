@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "Deep-Network.h"
+#include "Deep_Network.h"
 
 #if PLATFORM == PLATFORM_WINDOWS
 
@@ -9,7 +9,7 @@ const struct Deep_Network_Server Deep_Network_Server_Default = {.maxBufferSize =
 
 void Deep_Network_Server_Start(struct Deep_Network_Server* deepServer, unsigned short port)
 {
-	deepServer->buffer = (unsigned char*)malloc(deepServer->maxBufferSize * sizeof(unsigned char*));
+	deepServer->buffer = malloc(deepServer->maxBufferSize * sizeof(unsigned char*));
 	Deep_Network_Socket_Bind(&deepServer->socket, port);
 }
 

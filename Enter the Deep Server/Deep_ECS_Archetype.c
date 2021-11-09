@@ -1,4 +1,4 @@
-# include "Deep-ECS-Archetype.h"
+#include "Deep_ECS.h"
 
 //This hash functions doesn't quite support 64 bit values => Needs changing
 Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(const struct Deep_ECS_Archetype* archetype)
@@ -13,12 +13,12 @@ Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(const struct Deep_ECS_Archetype* 
 
 void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 {
-	Deep_DynArray_Create(raw)(&archetype->type, sizeof(Deep_ECS_Handle));
-	Deep_DynArray_Create(raw)(&archetype->handles, sizeof(Deep_ECS_Handle));
-	Deep_DynArray_Create(raw)(&archetype->components, sizeof(struct Deep_DynArray(raw)));
+	Deep_DynArray_Create(Deep_ECS_Handle)(&archetype->type);
+	Deep_DynArray_Create(Deep_ECS_Handle)(&archetype->handles);
+	Deep_DynArray_Create(Deep_DynArray_raw)(&archetype->components);
 
 	Deep_ECS_Handle handle = DEEP_ECS_COMPONENT;
-	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&archetype->type) = handle;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = handle;
 	handle = DEEP_ECS_ID;
-	*(Deep_ECS_Handle*)Deep_DynArray_Push(raw)(&archetype->type) = handle;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = handle;
 }
