@@ -26,9 +26,20 @@ void OnReceive(const char* Buffer, int BytesReceived, unsigned int FromAddress, 
 	printf("Message received: %i\n", *(const int*)Buffer);
 }
 
+Deep_DynArray_Decl(int, int)
+
 int main()
 {
 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
+
+	struct Deep_DynArray(int) intArr;
+	Deep_DynArray_Create(int)(&intArr);
+	*Deep_DynArray_Push(int)(&intArr) = 10;
+	printf("%i\n", *intArr.values);
+
+	struct Deep_String string;
+	Deep_String_Create(&string, "Hello World");
+	printf("%s\n", string.str.values);
 
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
@@ -50,7 +61,7 @@ int main()
 	Deep_Network_Socket_Open(&server.socket);
 	Deep_Network_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);
 
-	printf("Server started on port: %i.\n", Deep_Network_Server_GetPort(&server));
+	printf("Server started on port: %i.\n", server.socket.port);
 
 	int data = 10;
 
@@ -65,3 +76,4 @@ int main()
 	Deep_Network_Server_Close(&server);
     Deep_Network_ShutdownSockets();
 }
+

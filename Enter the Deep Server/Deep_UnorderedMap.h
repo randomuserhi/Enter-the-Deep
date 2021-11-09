@@ -4,7 +4,6 @@
 #include "Deep.h"
 
 //TODO:: refactor to not use the strainge _next attribute and work with a flag similar to std::unorderedMap
-//NOTE:: Declaration functions have to be static so that they work cross files
 
 //TODO:: make this be random everytime program boots / something (Should not be random per hash function)
 #define DEEP_UNORDEREDMAP_SEED 0xee448401
@@ -40,7 +39,25 @@ struct _Deep_UnorderedMap
 size_t Deep_UnorderedMap_Hash(const void* ptr, size_t len, size_t seed);
 int Deep_UnorderedMap_ByteCompare(const void* hashKey, const void* hey, size_t keyTypeSize);
 
-void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment);
+Deep_Inline void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
+{
+	unorderedMap->keyCompareFunc = keyCompareFunc;
+	unorderedMap->keyTypeSize = keyTypeSize;
+	unorderedMap->valueTypeSize = valueTypeSize;
+	unorderedMap->valueTypeAlignment = valueTypeAlignment;
+	unorderedMap->keyTypeAlignment = keyTypeAlignment;
+	unorderedMap->bucketSize = DEEP_UNORDEREDMAP_BUCKETSIZE;
+	unorderedMap->size = 0;
+
+	// Calculate offset for Deep_UnorderedMap_HashSlot to be stored as a header to the key and value
+	// refer to https://youtu.be/IAdLwUXRUvg?t=1716
+	unorderedMap->keyOffset = (sizeof(**unorderedMap->hashes) + unorderedMap->keyTypeAlignment - 1) / unorderedMap->keyTypeAlignment * unorderedMap->keyTypeAlignment;
+	unorderedMap->valueOffset = ((unorderedMap->keyOffset + sizeof(unorderedMap->keyTypeSize)) + unorderedMap->valueTypeAlignment - 1) / unorderedMap->valueTypeAlignment * unorderedMap->valueTypeAlignment;
+
+	unorderedMap->hashes = calloc(DEEP_UNORDEREDMAP_BUCKETSIZE, sizeof(*unorderedMap->hashes));
+	unorderedMap->start = NULL;
+	unorderedMap->end = NULL;
+}
 void _Deep_UnorderedMap_Free(struct _Deep_UnorderedMap* unorderedMap);
 void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
 void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);

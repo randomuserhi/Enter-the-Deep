@@ -17,8 +17,6 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 	Deep_DynArray_Create(Deep_ECS_Handle)(&archetype->handles);
 	Deep_DynArray_Create(Deep_DynArray_raw)(&archetype->components);
 
-	Deep_ECS_Handle handle = DEEP_ECS_COMPONENT;
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = handle;
-	handle = DEEP_ECS_ID;
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = handle;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_COMPONENT;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_ID;
 }

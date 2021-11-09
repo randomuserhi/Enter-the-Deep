@@ -14,14 +14,13 @@ struct Deep_String
 	struct Deep_DynArray(char) str;
 };
 
-Deep_Inline struct Deep_String Deep_String_Create(const char* str)
+Deep_Inline void Deep_String_Create(struct Deep_String* string, const char* str)
 {
-	struct Deep_String string;
-	Deep_DynArray_Create(char)(&string.str);
-	size_t strLength = strlen(str);
-	Deep_DynArray_Reserve(char)(&string.str, strLength);
-	memcpy(string.str.values, str, strLength);
-	return string;
+	Deep_DynArray_Create(char)(&string->str);
+	size_t strLength = strlen(str) + 1;
+	Deep_DynArray_Reserve(char)(&string->str, strLength);
+	memcpy(string->str.values, str, strLength);
 }
 
 #endif
+

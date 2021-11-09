@@ -51,7 +51,7 @@ BOOL Deep_Network_Address_Equal(const struct Deep_Network_Address* lhs, const st
 
 unsigned short Deep_Network_socket_GetPort(const struct Deep_Network_Socket* deepSocket)
 {
-	return deepSocket->$port;
+	return deepSocket->port;
 }
 
 int Deep_Network_Socket_Open(struct Deep_Network_Socket* deepSocket)
@@ -119,8 +119,8 @@ int Deep_Network_Socket_Bind(struct Deep_Network_Socket* deepSocket, unsigned sh
 			printf("Failed to get socket details.\n");
 		else
 		{
-			deepSocket->$port = ntohs(assignedAddress.sa_in.sin_port);
-			printf("Socket bound to port %i.\n", deepSocket->$port);
+			deepSocket->port = ntohs(assignedAddress.sa_in.sin_port);
+			printf("Socket bound to port %i.\n", deepSocket->port);
 		}
 
 		//Set socket to be non-blocking
@@ -183,4 +183,5 @@ int Deep_Network_Socket_Receive(struct Deep_Network_Socket* deepSocket, char* bu
 
 	return BytesReceived;
 }
+
 #endif

@@ -62,7 +62,7 @@ BOOL Deep_Network_Address_Equal(const struct Deep_Network_Address* lhs, const st
 struct Deep_Network_Socket
 {
 	SOCKET socketFD;
-	unsigned short $port;
+	unsigned short port;
 };
 extern const struct Deep_Network_Socket Deep_Network_Socket_Default;
 
@@ -76,10 +76,10 @@ int Deep_Network_Socket_Bind(struct Deep_Network_Socket* deepSocket, unsigned sh
 int Deep_Network_Socket_GetRemainingBytes(struct Deep_Network_Socket* deepSocket);
 
 int Deep_Network_Socket_Send(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, union Deep_SocketAddr* address);
-Deep_ForceInline int Deep_Network_Socket_Send_DeepAddress(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, struct Deep_Network_Address* address)
+Deep_Inline int Deep_Network_Socket_Send_DeepAddress(struct Deep_Network_Socket* deepSocket, const char* data, int dataSize, struct Deep_Network_Address* address)
 {
 	return Deep_Network_Socket_Send(deepSocket, data, dataSize, &address->sockAddr);
-};
+}
 
 int Deep_Network_Socket_Receive(struct Deep_Network_Socket* deepSocket, char* buffer, int maxBufferSize, union Deep_SocketAddr* fromAddress);
 
@@ -97,17 +97,13 @@ struct Deep_Network_Server
 };
 extern const struct Deep_Network_Server Deep_Network_Server_Default;
 
-Deep_ForceInline unsigned short Deep_Network_Server_GetPort(struct Deep_Network_Server* const deepServer)
-{
-	return deepServer->socket.$port;
-};
 void Deep_Network_Server_Start(struct Deep_Network_Server* deepServer, unsigned short port);
 void Deep_Network_Server_Close(struct Deep_Network_Server* deepServer);
 void Deep_Network_Server_Tick(struct Deep_Network_Server* deepServer);
 
-Deep_ForceInline int Deep_Network_Server_Send(struct Deep_Network_Server* deepServer, const char* Data, int DataSize, union Deep_SocketAddr* Address)
+Deep_Inline int Deep_Network_Server_Send(struct Deep_Network_Server* deepServer, const char* Data, int DataSize, union Deep_SocketAddr* Address)
 {
 	return Deep_Network_Socket_Send(&deepServer->socket, Data, DataSize, Address);
-};
+}
 
 #endif

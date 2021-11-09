@@ -6,16 +6,24 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(__clang__)
+#define Deep_Compiler_Clang
+
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define Deep_Compiler_GCC
+
+#elif defined(_MSC_VER)
+#define Deep_Compiler_MSCV
+
+#endif
+
 /*
 * ============== /  Library Format  \ ==============
 * 
 * -> All Deep library functions are prefixed by "Deep"
 * 
-* -> Utilities such as function specifiers (e.g inline) are 
-*    prefixed by "Deep$" (e.g Deep$Inline)
-* 
 * -> Private library implementation functions / variables 
-*    are prefixed by "$Deep"
+*    are prefixed by "_Deep"
 * 
 * ============== | Templated Format | ==============
 * 
@@ -47,26 +55,37 @@
 * ============== \ ================ / ==============
 */
 
+/*
+* Deep Utilities
+*/
+
+#if defined(Deep_Compiler_Clang)
 #define Deep_Inline inline
+#define Deep_AlignOf(type) __alignof__(type)
 
-#if (defined _WIN32 || defined _WIN64)
-	#define Deep_ForceInline Deep_Inline
-#elif (defined __APPLE__ || defined _APPLE)
-	#define Deep_ForceInline __attribute__((always_inline))
-#else
-	#define Deep_ForceInline Deep_Inline
-#endif
+#elif defined(Deep_Compiler_GCC)
+#define Deep_Inline inline __attribute__((always_inline))
+#define Deep_AlignOf(type) __alignof__(type)
 
-#if (defined _WIN32 || defined _WIN64)
-	#define Deep_AlignOf(type) _Alignof(type)
+#elif defined(Deep_Compiler_MSCV)
+#define Deep_Inline inline
+#define Deep_AlignOf(type) _Alignof(type)
+
 #endif
 
 /*
 * Deep Macros
 */
 
-//#define Deep_SizeOf_SizeT 4
+#if INTPTR_MAX == INT64_MAX
 #define Deep_SizeOf_SizeT 8
+
+#elif INTPTR_MAX == INT32_MAX
+#define Deep_SizeOf_SizeT 4
+
+#else
+#error Unknown pointer size or missing size macros!
+#endif
 
 /*
 * Deep Utility Functions
@@ -75,3 +94,4 @@
 void Deep_CheckMaxAllocationSize();
 
 #endif
+

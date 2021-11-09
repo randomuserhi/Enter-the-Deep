@@ -80,9 +80,9 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	struct Deep_DynArray(raw) identityList;
 	Deep_DynArray_Create(raw)(&identityList, sizeof(struct Deep_ECS_Id));
 	struct Deep_ECS_Id identity;
-	strcpy_s(identity.name, 15, "ECS_COMPONENT");
+	identity.name = "ECS_COMPONENT";
 	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(&identityList) = identity;
-	strcpy_s(identity.name, 15, "ECS_ID");
+	identity.name = "ECS_ID";
 	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(&identityList) = identity;
 
 	*Deep_DynArray_Push(Deep_DynArray_raw)(&componentArchetype->components) = componentList;
