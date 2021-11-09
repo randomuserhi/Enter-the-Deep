@@ -3,7 +3,7 @@
 
 #include "Deep_Network.h"
 
-#if PLATFORM == PLATFORM_WINDOWS
+#if defined(DEEP_PLATFORM_WINDOWS)
 
 const struct Deep_Network_Server Deep_Network_Server_Default = {.maxBufferSize = 256, .OnReceiveHandle = NULL};
 

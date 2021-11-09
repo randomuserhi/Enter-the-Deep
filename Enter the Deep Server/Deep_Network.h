@@ -1,26 +1,16 @@
 #ifndef h_Deep_Network
 #define h_Deep_Network
 
-#define PLATFORM_WINDOWS  1
-#define PLATFORM_MAC      2
-#define PLATFORM_UNIX     3
+#include "Deep.h"
 
-#if defined(_WIN32)
-#define PLATFORM PLATFORM_WINDOWS
-#elif defined(__APPLE__)
-#define PLATFORM PLATFORM_MAC
-#else
-#define PLATFORM PLATFORM_UNIX
-#endif
-
-#if PLATFORM == PLATFORM_WINDOWS
+#if defined(DEEP_PLATFORM_WINDOWS)
 #include <winsock2.h>
-#elif PLATFORM == PLATFORM_MAC || 
-PLATFORM == PLATFORM_UNIX
 
+#elif defined(DEEP_PLATFORM_MAC) || defined(DEEP_PLATFORM_UNIX)
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
+
 #endif
 
 #include "Deep.h"
@@ -29,7 +19,7 @@ PLATFORM == PLATFORM_UNIX
 #define DEEP_NETWORK_NOERROR 0
 #define DEEP_NETWORK_ERROR -1
 
-#if PLATFORM == PLATFORM_WINDOWS
+#if defined(DEEP_PLATFORM_WINDOWS)
 
 typedef int socklen_t;
 

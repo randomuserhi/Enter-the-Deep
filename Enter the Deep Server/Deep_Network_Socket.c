@@ -6,7 +6,7 @@
 const struct Deep_Network_Address Deep_Network_Address_Default = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 0 };
 const struct Deep_Network_Socket Deep_Network_Socket_Default = { INVALID_SOCKET, DEEP_NETWORK_DEFAULTPORT };
 
-#if PLATFORM == PLATFORM_WINDOWS
+#if defined(DEEP_PLATFORM_WINDOWS)
 
 BOOL Deep_Network_IsBigEndian() //https://stackoverflow.com/questions/6136010/is-using-an-union-in-place-of-a-cast-well-defined
 {

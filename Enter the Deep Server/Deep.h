@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+* Compiler Macros
+*/
+
 #if defined(__clang__)
 #define Deep_Compiler_Clang
 
@@ -14,6 +18,21 @@
 
 #elif defined(_MSC_VER)
 #define Deep_Compiler_MSCV
+
+#endif
+
+/*
+* Platform Macros
+*/
+
+#if defined(_WIN32)
+#define DEEP_PLATFORM_WINDOWS
+
+#elif defined(__APPLE__)
+#define DEEP_PLATFORM_MAC
+
+#else
+#define DEEP_PLATFORM_UNIX
 
 #endif
 
