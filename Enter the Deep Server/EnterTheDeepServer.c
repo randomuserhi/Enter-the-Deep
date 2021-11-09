@@ -3,6 +3,7 @@
 #include "Deep_Math.h"
 #include "Deep_Engine.h"
 #include "Deep_Network.h"
+#include "Deep_String.h"
 
 #include <windows.h>
 #include <time.h>

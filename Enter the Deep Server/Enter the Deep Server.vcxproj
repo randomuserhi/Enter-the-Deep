@@ -173,6 +173,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Deep_String.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Deep_UnorderedMap.c">
       <SubType>
       </SubType>
@@ -204,6 +208,10 @@
     <ClInclude Include="Deep_Containers.h" />
     <ClInclude Include="Deep_DynArray.h" />
     <ClInclude Include="Deep_ECS.h" />
+    <ClInclude Include="Deep_String.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Deep_UnorderedMap.h" />
     <ClInclude Include="Deep.h" />
     <ClInclude Include="Deep_Engine.h" />

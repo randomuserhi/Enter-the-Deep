@@ -78,6 +78,9 @@
     <ClCompile Include="Deep_ECS.c">
       <Filter>Source Files\Deep\Engine\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="Deep_String.c">
+      <Filter>Source Files\Deep</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="Deep_Containers.h">
       <Filter>Header Files\Deep\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_String.h">
+      <Filter>Header Files\Deep</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
