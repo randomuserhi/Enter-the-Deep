@@ -92,6 +92,10 @@ printf:                                 # @printf
 	.section	.rdata,"dr"
 	.p2align	3                               # -- Begin function main
 .LCPI4_0:
+	.long	0x3fc00000                      # float 1.5
+.LCPI4_1:
+	.long	0x5f000000                      # float 9.22337203E+18
+.LCPI4_2:
 	.quad	0x4034000000000000              # double 20
 	.text
 	.globl	main
@@ -109,44 +113,100 @@ main:                                   # @main
 	.seh_pushreg %rdi
 	pushq	%rbx
 	.seh_pushreg %rbx
-	subq	$464, %rsp                      # imm = 0x1D0
-	.seh_stackalloc 464
+	subq	$448, %rsp                      # imm = 0x1C0
+	.seh_stackalloc 448
 	leaq	128(%rsp), %rbp
 	.seh_setframe %rbp, 128
+	movaps	%xmm7, 304(%rbp)                # 16-byte Spill
+	.seh_savexmm %xmm7, 432
+	movaps	%xmm6, 288(%rbp)                # 16-byte Spill
+	.seh_savexmm %xmm6, 416
 	.seh_endprologue
 	callq	__main
 	leaq	ExitHandler(%rip), %rcx
 	movl	$1, %edx
 	callq	*__imp_SetConsoleCtrlHandler(%rip)
 	testl	%eax, %eax
-	je	.LBB4_3
+	je	.LBB4_6
 # %bb.1:
+	xorl	%esi, %esi
+	movss	.LCPI4_0(%rip), %xmm6           # xmm6 = mem[0],zero,zero,zero
+	movss	.LCPI4_1(%rip), %xmm7           # xmm7 = mem[0],zero,zero,zero
+	xorl	%edi, %edi
+	xorl	%r14d, %r14d
+	xorl	%eax, %eax
+	jmp	.LBB4_2
+.LBB4_7:                                #   in Loop: Header=BB4_2 Depth=1
+	xorps	%xmm0, %xmm0
+	cvtsi2ss	%rdi, %xmm0
+.LBB4_8:                                #   in Loop: Header=BB4_2 Depth=1
+	mulss	%xmm6, %xmm0
+	cvttss2si	%xmm0, %r8
+	movq	%r8, %rdx
+	subss	%xmm7, %xmm0
+	cvttss2si	%xmm0, %rcx
+	sarq	$63, %rdx
+	andq	%rdx, %rcx
+	orq	%r8, %rcx
+	xorl	%r14d, %r14d
+	cmpq	%rcx, %rdi
+	sete	%r14b
+	addq	%rcx, %r14
+	leaq	(,%r14,4), %rdx
+	movq	%rax, %rcx
+	callq	realloc
+.LBB4_9:                                #   in Loop: Header=BB4_2 Depth=1
+	leaq	(%rax,%rdi,4), %rcx
+	addq	$1, %rdi
+	movl	%ebx, (%rcx)
+	addl	$1, %esi
+	cmpl	$100, %esi
+	je	.LBB4_12
+.LBB4_2:                                # =>This Inner Loop Header: Depth=1
+	movl	%esi, %ebx
+	imull	%esi, %ebx
+	testq	%rax, %rax
+	je	.LBB4_10
+# %bb.3:                                #   in Loop: Header=BB4_2 Depth=1
+	cmpq	%r14, %rdi
+	jne	.LBB4_9
+# %bb.4:                                #   in Loop: Header=BB4_2 Depth=1
+	testq	%rdi, %rdi
+	jns	.LBB4_7
+# %bb.5:                                #   in Loop: Header=BB4_2 Depth=1
+	movq	%rdi, %rcx
+	shrq	%rcx
+	movl	%edi, %edx
+	andl	$1, %edx
+	orq	%rcx, %rdx
+	xorps	%xmm0, %xmm0
+	cvtsi2ss	%rdx, %xmm0
+	addss	%xmm0, %xmm0
+	jmp	.LBB4_8
+	.p2align	4, 0x90
+.LBB4_10:                               #   in Loop: Header=BB4_2 Depth=1
+	movl	$4, %ecx
+	callq	malloc
+	movl	$1, %r14d
+	movl	$1, %edi
+	movq	%rax, %rcx
+	movl	%ebx, (%rcx)
+	addl	$1, %esi
+	cmpl	$100, %esi
+	jne	.LBB4_2
+.LBB4_12:
+	movl	8(%rax), %edx
 	leaq	.L.str.1(%rip), %rcx
-	movl	$10, %edx
 	callq	printf
-	pxor	%xmm0, %xmm0
-	movdqa	%xmm0, 288(%rbp)
-	movq	$0, 304(%rbp)
-	movq	$1, 320(%rbp)
-	movb	$1, 312(%rbp)
-	leaq	288(%rbp), %rcx
-	movl	$12, %edx
-	callq	_Deep_DynArray_Reserve
-	movq	304(%rbp), %rax
-	movabsq	$8022916924116329800, %rcx      # imm = 0x6F57206F6C6C6548
-	movq	%rcx, (%rax)
-	movl	$6581362, 8(%rax)               # imm = 0x646C72
-	movq	304(%rbp), %rcx
-	callq	puts
 	leaq	-96(%rbp), %rsi
 	movq	%rsi, %rcx
 	callq	Deep_ECS_Create
 	movq	%rsi, %rcx
 	callq	Deep_ECS_PrintHierarchy
 	callq	getchar
-	leaq	.L.str.4(%rip), %rcx
-	movq	.LCPI4_0(%rip), %xmm1           # xmm1 = mem[0],zero
-	pxor	%xmm0, %xmm0
+	leaq	.L.str.2(%rip), %rcx
+	movq	.LCPI4_2(%rip), %xmm1           # xmm1 = mem[0],zero
+	xorps	%xmm0, %xmm0
 	xorps	%xmm3, %xmm3
 	movq	%xmm1, %rdx
 	movq	%xmm1, %r8
@@ -154,7 +214,7 @@ main:                                   # @main
 	movq	%xmm0, %r9
 	callq	printf
 	callq	Deep_Network_IsBigEndian
-	leaq	.L.str.5(%rip), %rcx
+	leaq	.L.str.3(%rip), %rcx
 	movl	%eax, %edx
 	callq	printf
 	callq	Deep_Network_InitializeSockets
@@ -174,18 +234,18 @@ main:                                   # @main
 	movw	$-7849, %dx                     # imm = 0xE157
 	callq	Deep_Network_Server_Start
 	movzwl	200(%rbp), %edx
-	leaq	.L.str.6(%rip), %rcx
+	leaq	.L.str.4(%rip), %rcx
 	callq	printf
-	movl	$10, 332(%rbp)
+	movl	$10, 284(%rbp)
 	movq	.L__const.main.addr+16(%rip), %rax
 	movq	%rax, 272(%rbp)
 	movups	.L__const.main.addr(%rip), %xmm0
 	movaps	%xmm0, 256(%rbp)
 	leaq	264(%rbp), %r14
 	leaq	256(%rbp), %rbx
-	leaq	332(%rbp), %rdi
+	leaq	284(%rbp), %rdi
 	.p2align	4, 0x90
-.LBB4_2:                                # =>This Inner Loop Header: Depth=1
+.LBB4_13:                               # =>This Inner Loop Header: Depth=1
 	movq	%rsi, %rcx
 	callq	Deep_Network_Server_Tick
 	movq	%rbx, %rcx
@@ -195,10 +255,12 @@ main:                                   # @main
 	movl	$4, %r8d
 	movq	%r14, %r9
 	callq	Deep_Network_Socket_Send
-	jmp	.LBB4_2
-.LBB4_3:
+	jmp	.LBB4_13
+.LBB4_6:
 	movl	$1, %eax
-	addq	$464, %rsp                      # imm = 0x1D0
+	movaps	288(%rbp), %xmm6                # 16-byte Reload
+	movaps	304(%rbp), %xmm7                # 16-byte Reload
+	addq	$448, %rsp                      # imm = 0x1C0
 	popq	%rbx
 	popq	%rdi
 	popq	%rsi
@@ -215,15 +277,12 @@ main:                                   # @main
 	.asciz	"%i\n"
 
 .L.str.2:                               # @.str.2
-	.asciz	"Hello World"
-
-.L.str.4:                               # @.str.4
 	.asciz	"%f %f %f\n"
 
-.L.str.5:                               # @.str.5
+.L.str.3:                               # @.str.3
 	.asciz	"IsBigEndian: %i.\n"
 
-.L.str.6:                               # @.str.6
+.L.str.4:                               # @.str.4
 	.asciz	"Server started on port: %i.\n"
 
 	.p2align	2                               # @__const.main.addr
