@@ -1,32 +1,20 @@
 #include "Deep_ECS.h"
 
-//TODO:: Implement better GetComponent method, add wrapper using macros to convert reference to component struct
-//    :: Write code for strings to store for identity component
+//TODO:: Write code for strings to store for identity component
 //    :: Write obsidian file
 
-struct ComponentReference
-{
-	size_t index;
-	struct Deep_DynArray(raw)* components;
-};
-
-struct ComponentReference Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_Handle handle, Deep_ECS_Handle componentHandle)
+void* Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_Handle handle, Deep_ECS_Handle componentHandle)
 {
 	const struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
-	struct ComponentReference componentReference;
-	componentReference.index = 0;
-	componentReference.components = NULL;
 	for (size_t i = 0; i < reference->archetype->type.size; i++)
 	{
-		Deep_ECS_Handle h = ((Deep_ECS_Handle*)reference->archetype->type.values)[i];
+		Deep_ECS_Handle h = reference->archetype->type.values[i];
 		if (h == componentHandle)
 		{
-			componentReference.components = &((struct Deep_DynArray(raw)*)reference->archetype->components.values)[i];
-			componentReference.index = reference->index;
-			break;
+			return Deep_DynArray_Get(raw)(&((struct Deep_DynArray(raw)*)reference->archetype->components.values)[i], reference->index);
 		}
 	}
-	return componentReference;
+	return NULL;
 }
 
 void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
@@ -38,15 +26,15 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 
 		struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Value(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, slot);
 
-		struct ComponentReference componentReference = Deep_ECS_GetComponent(ECS, handle, DEEP_ECS_ID);
-		printf("%s : ", ((struct Deep_ECS_Id*)componentReference.components->values)[componentReference.index].name);
+		struct Deep_ECS_Id Id = *(struct Deep_ECS_Id*)Deep_ECS_GetComponent(ECS, handle, DEEP_ECS_ID);
+		printf("%s : ", Id.name);
 		
 		char seperator = '[';
 		for (size_t i = 0; i < reference->archetype->type.size; i++)
 		{
-			Deep_ECS_Handle componentHandle = ((Deep_ECS_Handle*)reference->archetype->type.values)[i];
-			componentReference = Deep_ECS_GetComponent(ECS, componentHandle,  DEEP_ECS_ID);
-			printf("%c %s", seperator, ((struct Deep_ECS_Id*)componentReference.components->values)[componentReference.index].name);
+			Deep_ECS_Handle componentHandle = reference->archetype->type.values[i];
+			Id = *(struct Deep_ECS_Id*)Deep_ECS_GetComponent(ECS, componentHandle,  DEEP_ECS_ID);
+			printf("%c %s", seperator, Id.name);
 			seperator = ',';
 		}
 
