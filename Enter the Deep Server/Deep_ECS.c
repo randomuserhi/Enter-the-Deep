@@ -61,8 +61,9 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	struct Deep_DynArray(raw) componentList;
 	Deep_DynArray_Create(raw)(&componentList, sizeof(struct Deep_ECS_Component));
 	struct Deep_ECS_Component component;
-	component.size = 0;
+	component.size = sizeof(struct Deep_ECS_Component);
 	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(&componentList) = component;
+	component.size = sizeof(struct Deep_ECS_Id);
 	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(&componentList) = component;
 
 	struct Deep_DynArray(raw) identityList;
