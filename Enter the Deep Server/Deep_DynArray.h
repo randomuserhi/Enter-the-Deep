@@ -162,7 +162,7 @@ Deep_Inline void Deep_DynArray_##tag##_Reserve(struct Deep_DynArray(tag)* arr, s
 Deep_Inline type* Deep_DynArray_##tag##_Push(struct Deep_DynArray(tag)* arr) \
 { \
 	if (arr->_arr.typeSize == sizeof(type)) return _Deep_DynArray_Push(&arr->_arr); \
-	else return NULL; \
+	else Deep_Unreachable; \
 } \
 Deep_Inline type* Deep_DynArray_##tag##_Get(struct Deep_DynArray(tag)* arr, size_t index) \
 { \

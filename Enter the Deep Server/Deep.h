@@ -82,13 +82,19 @@
 #define Deep_Inline inline
 #define Deep_AlignOf(type) __alignof__(type)
 
+#define Deep_Unreachable __builtin_unreachable()
+
 #elif defined(Deep_Compiler_GCC)
 #define Deep_Inline inline __attribute__((always_inline))
 #define Deep_AlignOf(type) __alignof__(type)
 
+#define Deep_Unreachable __builtin_unreachable()
+
 #elif defined(Deep_Compiler_MSCV)
 #define Deep_Inline inline
 #define Deep_AlignOf(type) _Alignof(type)
+
+#define Deep_Unreachable __assume(0)
 
 #endif
 

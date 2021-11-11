@@ -1,305 +1,235 @@
-	.text
-	.def	 @feat.00;
-	.scl	3;
-	.type	0;
-	.endef
-	.globl	@feat.00
-.set @feat.00, 0
 	.file	"EnterTheDeepServer.c"
-	.def	 Cleanup;
-	.scl	2;
-	.type	32;
-	.endef
-	.globl	Cleanup                         # -- Begin function Cleanup
-	.p2align	4, 0x90
-Cleanup:                                # @Cleanup
-# %bb.0:
-	jmp	Deep_Network_ShutdownSockets    # TAILCALL
-                                        # -- End function
-	.def	 ExitHandler;
-	.scl	2;
-	.type	32;
-	.endef
-	.globl	ExitHandler                     # -- Begin function ExitHandler
-	.p2align	4, 0x90
-ExitHandler:                            # @ExitHandler
-.seh_proc ExitHandler
-# %bb.0:
-	subq	$40, %rsp
-	.seh_stackalloc 40
-	.seh_endprologue
-	callq	Deep_Network_ShutdownSockets
-	xorl	%ecx, %ecx
-	callq	exit
-	int3
-	.seh_endproc
-                                        # -- End function
-	.def	 OnReceive;
-	.scl	2;
-	.type	32;
-	.endef
-	.globl	OnReceive                       # -- Begin function OnReceive
-	.p2align	4, 0x90
-OnReceive:                              # @OnReceive
-.seh_proc OnReceive
-# %bb.0:
-	subq	$40, %rsp
-	.seh_stackalloc 40
-	.seh_endprologue
-	movl	(%rcx), %edx
-	leaq	.L.str(%rip), %rcx
-	callq	printf
-	nop
-	addq	$40, %rsp
-	retq
-	.seh_endproc
-                                        # -- End function
-	.def	 printf;
-	.scl	3;
-	.type	32;
-	.endef
-	.p2align	4, 0x90                         # -- Begin function printf
-printf:                                 # @printf
-.seh_proc printf
-# %bb.0:
-	pushq	%rsi
-	.seh_pushreg %rsi
-	subq	$48, %rsp
-	.seh_stackalloc 48
-	.seh_endprologue
-	movq	%rcx, %rsi
-	movq	%rdx, 72(%rsp)
-	movq	%r8, 80(%rsp)
-	movq	%r9, 88(%rsp)
-	leaq	72(%rsp), %rax
-	movq	%rax, 40(%rsp)
-	movl	$1, %ecx
-	callq	*__imp___acrt_iob_func(%rip)
-	movq	40(%rsp), %r8
-	movq	%rax, %rcx
-	movq	%rsi, %rdx
-	callq	__mingw_vfprintf
-	nop
-	addq	$48, %rsp
-	popq	%rsi
-	retq
-	.seh_endproc
-                                        # -- End function
-	.def	 main;
-	.scl	2;
-	.type	32;
-	.endef
-	.section	.rdata,"dr"
-	.p2align	3                               # -- Begin function main
-.LCPI4_0:
-	.long	0x3fc00000                      # float 1.5
-.LCPI4_1:
-	.long	0x5f000000                      # float 9.22337203E+18
-.LCPI4_2:
-	.quad	0x4034000000000000              # double 20
+ # GNU C11 (Rev1, Built by MSYS2 project) version 11.2.0 (x86_64-w64-mingw32)
+ #	compiled by GNU C version 11.2.0, GMP version 6.2.1, MPFR version 4.1.0-p13, MPC version 1.2.1, isl version isl-0.24-GMP
+
+ # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ # options passed: -mtune=generic -march=x86-64 -O3 -std=c11
 	.text
-	.globl	main
-	.p2align	4, 0x90
-main:                                   # @main
-.seh_proc main
-# %bb.0:
-	pushq	%rbp
-	.seh_pushreg %rbp
-	pushq	%r14
-	.seh_pushreg %r14
-	pushq	%rsi
-	.seh_pushreg %rsi
-	pushq	%rdi
-	.seh_pushreg %rdi
-	pushq	%rbx
-	.seh_pushreg %rbx
-	subq	$448, %rsp                      # imm = 0x1C0
-	.seh_stackalloc 448
-	leaq	128(%rsp), %rbp
-	.seh_setframe %rbp, 128
-	movaps	%xmm7, 304(%rbp)                # 16-byte Spill
-	.seh_savexmm %xmm7, 432
-	movaps	%xmm6, 288(%rbp)                # 16-byte Spill
-	.seh_savexmm %xmm6, 416
+	.p2align 4
+	.globl	ExitHandler
+	.def	ExitHandler;	.scl	2;	.type	32;	.endef
+	.seh_proc	ExitHandler
+ExitHandler:
+	subq	$40, %rsp	 #,
+	.seh_stackalloc	40
 	.seh_endprologue
-	callq	__main
-	leaq	ExitHandler(%rip), %rcx
-	movl	$1, %edx
-	callq	*__imp_SetConsoleCtrlHandler(%rip)
-	testl	%eax, %eax
-	je	.LBB4_6
-# %bb.1:
-	xorl	%esi, %esi
-	movss	.LCPI4_0(%rip), %xmm6           # xmm6 = mem[0],zero,zero,zero
-	movss	.LCPI4_1(%rip), %xmm7           # xmm7 = mem[0],zero,zero,zero
-	xorl	%edi, %edi
-	xorl	%r14d, %r14d
-	xorl	%eax, %eax
-	jmp	.LBB4_2
-.LBB4_7:                                #   in Loop: Header=BB4_2 Depth=1
-	xorps	%xmm0, %xmm0
-	cvtsi2ss	%rdi, %xmm0
-.LBB4_8:                                #   in Loop: Header=BB4_2 Depth=1
-	mulss	%xmm6, %xmm0
-	cvttss2si	%xmm0, %r8
-	movq	%r8, %rdx
-	subss	%xmm7, %xmm0
-	cvttss2si	%xmm0, %rcx
-	sarq	$63, %rdx
-	andq	%rdx, %rcx
-	orq	%r8, %rcx
-	xorl	%r14d, %r14d
-	cmpq	%rcx, %rdi
-	sete	%r14b
-	addq	%rcx, %r14
-	leaq	(,%r14,4), %rdx
-	movq	%rax, %rcx
-	callq	realloc
-.LBB4_9:                                #   in Loop: Header=BB4_2 Depth=1
-	leaq	(%rax,%rdi,4), %rcx
-	addq	$1, %rdi
-	movl	%ebx, (%rcx)
-	addl	$1, %esi
-	cmpl	$100, %esi
-	je	.LBB4_12
-.LBB4_2:                                # =>This Inner Loop Header: Depth=1
-	movl	%esi, %ebx
-	imull	%esi, %ebx
-	testq	%rax, %rax
-	je	.LBB4_10
-# %bb.3:                                #   in Loop: Header=BB4_2 Depth=1
-	cmpq	%r14, %rdi
-	jne	.LBB4_9
-# %bb.4:                                #   in Loop: Header=BB4_2 Depth=1
-	testq	%rdi, %rdi
-	jns	.LBB4_7
-# %bb.5:                                #   in Loop: Header=BB4_2 Depth=1
-	movq	%rdi, %rcx
-	shrq	%rcx
-	movl	%edi, %edx
-	andl	$1, %edx
-	orq	%rcx, %rdx
-	xorps	%xmm0, %xmm0
-	cvtsi2ss	%rdx, %xmm0
-	addss	%xmm0, %xmm0
-	jmp	.LBB4_8
-	.p2align	4, 0x90
-.LBB4_10:                               #   in Loop: Header=BB4_2 Depth=1
-	movl	$4, %ecx
-	callq	malloc
-	movl	$1, %r14d
-	movl	$1, %edi
-	movq	%rax, %rcx
-	movl	%ebx, (%rcx)
-	addl	$1, %esi
-	cmpl	$100, %esi
-	jne	.LBB4_2
-.LBB4_12:
-	movl	8(%rax), %edx
-	leaq	.L.str.1(%rip), %rcx
-	callq	printf
-	leaq	-96(%rbp), %rsi
-	movq	%rsi, %rcx
-	callq	Deep_ECS_Create
-	movq	%rsi, %rcx
-	callq	Deep_ECS_PrintHierarchy
-	callq	getchar
-	leaq	.L.str.2(%rip), %rcx
-	movq	.LCPI4_2(%rip), %xmm1           # xmm1 = mem[0],zero
-	xorps	%xmm0, %xmm0
-	xorps	%xmm3, %xmm3
-	movq	%xmm1, %rdx
-	movq	%xmm1, %r8
-	movdqa	%xmm1, %xmm2
-	movq	%xmm0, %r9
-	callq	printf
-	callq	Deep_Network_IsBigEndian
-	leaq	.L.str.3(%rip), %rcx
-	movl	%eax, %edx
-	callq	printf
-	callq	Deep_Network_InitializeSockets
-	movq	.refptr.Deep_Network_Server_Default(%rip), %rax
-	movups	(%rax), %xmm0
-	movups	16(%rax), %xmm1
-	movups	32(%rax), %xmm2
-	movaps	%xmm2, 224(%rbp)
-	movaps	%xmm1, 208(%rbp)
-	movaps	%xmm0, 192(%rbp)
-	leaq	OnReceive(%rip), %rax
-	movq	%rax, 240(%rbp)
-	leaq	192(%rbp), %rsi
-	movq	%rsi, %rcx
-	callq	Deep_Network_Socket_Open
-	movq	%rsi, %rcx
-	movw	$-7849, %dx                     # imm = 0xE157
-	callq	Deep_Network_Server_Start
-	movzwl	200(%rbp), %edx
-	leaq	.L.str.4(%rip), %rcx
-	callq	printf
-	movl	$10, 284(%rbp)
-	movq	.L__const.main.addr+16(%rip), %rax
-	movq	%rax, 272(%rbp)
-	movups	.L__const.main.addr(%rip), %xmm0
-	movaps	%xmm0, 256(%rbp)
-	leaq	264(%rbp), %r14
-	leaq	256(%rbp), %rbx
-	leaq	284(%rbp), %rdi
-	.p2align	4, 0x90
-.LBB4_13:                               # =>This Inner Loop Header: Depth=1
-	movq	%rsi, %rcx
-	callq	Deep_Network_Server_Tick
-	movq	%rbx, %rcx
-	callq	Deep_Network_Address_Format
-	movq	%rsi, %rcx
-	movq	%rdi, %rdx
-	movl	$4, %r8d
-	movq	%r14, %r9
-	callq	Deep_Network_Socket_Send
-	jmp	.LBB4_13
-.LBB4_6:
-	movl	$1, %eax
-	movaps	288(%rbp), %xmm6                # 16-byte Reload
-	movaps	304(%rbp), %xmm7                # 16-byte Reload
-	addq	$448, %rsp                      # imm = 0x1C0
-	popq	%rbx
-	popq	%rdi
-	popq	%rsi
-	popq	%r14
-	popq	%rbp
-	retq
+ # EnterTheDeepServer.c:13: 	Deep_Network_ShutdownSockets();
+	call	Deep_Network_ShutdownSockets	 #
+ # EnterTheDeepServer.c:19: 	exit(0);
+	xorl	%ecx, %ecx	 #
+	call	exit	 #
+	nop	
 	.seh_endproc
-                                        # -- End function
-	.section	.rdata,"dr"
-.L.str:                                 # @.str
-	.asciz	"Message received: %i\n"
-
-.L.str.1:                               # @.str.1
-	.asciz	"%i\n"
-
-.L.str.2:                               # @.str.2
-	.asciz	"%f %f %f\n"
-
-.L.str.3:                               # @.str.3
-	.asciz	"IsBigEndian: %i.\n"
-
-.L.str.4:                               # @.str.4
-	.asciz	"Server started on port: %i.\n"
-
-	.p2align	2                               # @__const.main.addr
-.L__const.main.addr:
-	.byte	127                             # 0x7f
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.short	56732                           # 0xdd9c
-	.zero	2
-	.zero	16
-
-	.section	.rdata$.refptr.Deep_Network_Server_Default,"dr",discard,.refptr.Deep_Network_Server_Default
-	.p2align	3
+	.p2align 4
+	.def	printf;	.scl	3;	.type	32;	.endef
+	.seh_proc	printf
+printf:
+	pushq	%r12	 #
+	.seh_pushreg	%r12
+	pushq	%rbx	 #
+	.seh_pushreg	%rbx
+	subq	$56, %rsp	 #,
+	.seh_stackalloc	56
+	.seh_endprologue
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:371:   __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
+	leaq	88(%rsp), %rbx	 #, tmp86
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:369: {
+	movq	%rdx, 88(%rsp)	 #,
+	movq	%rcx, %r12	 # tmp89, __format
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:372:   __retval = __mingw_vfprintf( stdout, __format, __local_argv );
+	movl	$1, %ecx	 #,
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:369: {
+	movq	%r8, 96(%rsp)	 #,
+	movq	%r9, 104(%rsp)	 #,
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:371:   __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
+	movq	%rbx, 40(%rsp)	 # tmp86, MEM[(char * *)&__local_argv]
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:372:   __retval = __mingw_vfprintf( stdout, __format, __local_argv );
+	call	*__imp___acrt_iob_func(%rip)	 #
+	movq	%rbx, %r8	 # tmp86,
+	movq	%r12, %rdx	 # __format,
+	movq	%rax, %rcx	 # tmp90, _2
+	call	__mingw_vfprintf	 #
+ # C:/msys64/mingw64/x86_64-w64-mingw32/include/stdio.h:375: }
+	addq	$56, %rsp	 #,
+	popq	%rbx	 #
+	popq	%r12	 #
+	ret	
+	.seh_endproc
+	.section .rdata,"dr"
+.LC0:
+	.ascii "Message received: %i\12\0"
+	.text
+	.p2align 4
+	.globl	OnReceive
+	.def	OnReceive;	.scl	2;	.type	32;	.endef
+	.seh_proc	OnReceive
+OnReceive:
+	.seh_endprologue
+ # EnterTheDeepServer.c:26: 	printf("Message received: %i\n", *(const int*)Buffer);
+	movl	(%rcx), %edx	 # MEM[(const int *)Buffer_3(D)],
+	leaq	.LC0(%rip), %rcx	 #, tmp87
+ # EnterTheDeepServer.c:27: }
+ # EnterTheDeepServer.c:26: 	printf("Message received: %i\n", *(const int*)Buffer);
+	jmp	printf	 #
+	.seh_endproc
+	.p2align 4
+	.globl	Cleanup
+	.def	Cleanup;	.scl	2;	.type	32;	.endef
+	.seh_proc	Cleanup
+Cleanup:
+	.seh_endprologue
+ # EnterTheDeepServer.c:14: }
+ # EnterTheDeepServer.c:13: 	Deep_Network_ShutdownSockets();
+	jmp	Deep_Network_ShutdownSockets	 #
+	.seh_endproc
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.section .rdata,"dr"
+.LC1:
+	.ascii "%f %f %f\12\0"
+.LC2:
+	.ascii "IsBigEndian: %i.\12\0"
+.LC3:
+	.ascii "Server started on port: %i.\12\0"
+	.section	.text.startup,"x"
+	.p2align 4
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
+main:
+	pushq	%r12	 #
+	.seh_pushreg	%r12
+	pushq	%rbp	 #
+	.seh_pushreg	%rbp
+	pushq	%rdi	 #
+	.seh_pushreg	%rdi
+	pushq	%rsi	 #
+	.seh_pushreg	%rsi
+	pushq	%rbx	 #
+	.seh_pushreg	%rbx
+	subq	$432, %rsp	 #,
+	.seh_stackalloc	432
+	.seh_endprologue
+ # EnterTheDeepServer.c:30: {
+	call	__main	 #
+ # EnterTheDeepServer.c:31: 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
+	movl	$1, %edx	 #,
+	leaq	ExitHandler(%rip), %rcx	 #, tmp87
+	call	*__imp_SetConsoleCtrlHandler(%rip)	 #
+ # EnterTheDeepServer.c:31: 	if (!SetConsoleCtrlHandler(ExitHandler, TRUE)) return 1;
+	testl	%eax, %eax	 # tmp132
+	jne	.L10	 #,
+ # EnterTheDeepServer.c:67: }
+	movl	$1, %eax	 #,
+	addq	$432, %rsp	 #,
+	popq	%rbx	 #
+	popq	%rsi	 #
+	popq	%rdi	 #
+	popq	%rbp	 #
+	popq	%r12	 #
+	ret	
+.L10:
+ # EnterTheDeepServer.c:34: 	Deep_ECS_Create(&ECS);
+	leaq	144(%rsp), %r12	 #, tmp90
+ # EnterTheDeepServer.c:50: 	Deep_Network_Socket_Open(&server.socket);
+	leaq	80(%rsp), %rbx	 #, tmp131
+ # EnterTheDeepServer.c:34: 	Deep_ECS_Create(&ECS);
+	movq	%r12, %rcx	 # tmp90,
+ # EnterTheDeepServer.c:47: 	struct Deep_Network_Server server = Deep_Network_Server_Default;
+	leaq	80(%rsp), %rdi	 #, tmp110
+	leaq	56(%rsp), %rbp	 #, tmp128
+ # EnterTheDeepServer.c:34: 	Deep_ECS_Create(&ECS);
+	call	Deep_ECS_Create	 #
+ # EnterTheDeepServer.c:35: 	Deep_ECS_PrintHierarchy(&ECS);
+	movq	%r12, %rcx	 # tmp90,
+	call	Deep_ECS_PrintHierarchy	 #
+ # EnterTheDeepServer.c:37: 	getchar();
+	call	getchar	 #
+ # EnterTheDeepServer.c:41: 	printf("%f %f %f\n", vec3.x, vec3.y, vec3.z);
+	movl	$4109, %edx	 #, tmp97
+	xorl	%r9d, %r9d	 # tmp92
+	leaq	.LC1(%rip), %rcx	 #, tmp107
+	salq	$50, %rdx	 #, tmp97
+	movq	%r9, %xmm3	 # tmp95,
+	movq	%rdx, %xmm2	 # tmp100,
+	movq	%rdx, %r8	 # tmp100,
+	movq	%rdx, %xmm1	 # tmp100,
+	call	printf	 #
+ # EnterTheDeepServer.c:43: 	printf("IsBigEndian: %i.\n", Deep_Network_IsBigEndian());
+	call	Deep_Network_IsBigEndian	 #
+	leaq	.LC2(%rip), %rcx	 #, tmp108
+	movl	%eax, %edx	 # tmp133, _2
+	call	printf	 #
+ # EnterTheDeepServer.c:45:     Deep_Network_InitializeSockets();
+	call	Deep_Network_InitializeSockets	 #
+ # EnterTheDeepServer.c:47: 	struct Deep_Network_Server server = Deep_Network_Server_Default;
+	movq	.refptr.Deep_Network_Server_Default(%rip), %rsi	 #, tmp109
+	movl	$14, %ecx	 #, tmp112
+ # EnterTheDeepServer.c:48: 	server.OnReceiveHandle = &OnReceive;
+	leaq	OnReceive(%rip), %rax	 #, tmp135
+ # EnterTheDeepServer.c:47: 	struct Deep_Network_Server server = Deep_Network_Server_Default;
+	rep movsl
+ # EnterTheDeepServer.c:50: 	Deep_Network_Socket_Open(&server.socket);
+	movq	%rbx, %rcx	 # tmp131,
+ # EnterTheDeepServer.c:48: 	server.OnReceiveHandle = &OnReceive;
+	movq	%rax, 128(%rsp)	 # tmp135, server.OnReceiveHandle
+ # EnterTheDeepServer.c:57: 	struct Deep_Network_Address addr = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 56732 };
+	leaq	48(%rsp), %rsi	 #, tmp130
+ # EnterTheDeepServer.c:50: 	Deep_Network_Socket_Open(&server.socket);
+	call	Deep_Network_Socket_Open	 #
+ # EnterTheDeepServer.c:51: 	Deep_Network_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);
+	movl	$57687, %edx	 #,
+	movq	%rbx, %rcx	 # tmp131,
+ # EnterTheDeepServer.c:57: 	struct Deep_Network_Address addr = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 56732 };
+	movq	%rsi, %rdi	 # tmp130, tmp118
+ # EnterTheDeepServer.c:51: 	Deep_Network_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);
+	call	Deep_Network_Server_Start	 #
+ # EnterTheDeepServer.c:53: 	printf("Server started on port: %i.\n", server.socket.port);
+	movzwl	88(%rsp), %edx	 # server.socket.port, server.socket.port
+	leaq	.LC3(%rip), %rcx	 #, tmp117
+	call	printf	 #
+ # EnterTheDeepServer.c:57: 	struct Deep_Network_Address addr = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 56732 };
+	xorl	%eax, %eax	 # tmp119
+	movl	$6, %ecx	 #, tmp120
+ # EnterTheDeepServer.c:55: 	int data = 10;
+	movl	$10, 44(%rsp)	 #, data
+ # EnterTheDeepServer.c:57: 	struct Deep_Network_Address addr = { .a = 127, .b = 0, .c = 0, .d = 1, .port = 56732 };
+	rep stosl
+	leaq	44(%rsp), %rdi	 #, tmp129
+	movabsq	$243662101414015, %rax	 #, tmp137
+	movq	%rax, 48(%rsp)	 # tmp137, MEM <unsigned long long> [(void *)&addr]
+	.p2align 4,,10
+	.p2align 3
+.L8:
+ # EnterTheDeepServer.c:60: 		Deep_Network_Server_Tick(&server);
+	movq	%rbx, %rcx	 # tmp131,
+	call	Deep_Network_Server_Tick	 #
+ # EnterTheDeepServer.c:61: 		Deep_Network_Address_Format(&addr);
+	movq	%rsi, %rcx	 # tmp130,
+	call	Deep_Network_Address_Format	 #
+ # Deep_Network.h:96: 	return Deep_Network_Socket_Send(&deepServer->socket, Data, DataSize, Address);
+	movq	%rbp, %r9	 # tmp128,
+	movq	%rdi, %rdx	 # tmp129,
+	movq	%rbx, %rcx	 # tmp131,
+	movl	$4, %r8d	 #,
+	call	Deep_Network_Socket_Send	 #
+	jmp	.L8	 #
+	.seh_endproc
+	.ident	"GCC: (Rev1, Built by MSYS2 project) 11.2.0"
+	.def	Deep_Network_ShutdownSockets;	.scl	2;	.type	32;	.endef
+	.def	exit;	.scl	2;	.type	32;	.endef
+	.def	__mingw_vfprintf;	.scl	2;	.type	32;	.endef
+	.def	Deep_ECS_Create;	.scl	2;	.type	32;	.endef
+	.def	Deep_ECS_PrintHierarchy;	.scl	2;	.type	32;	.endef
+	.def	getchar;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_IsBigEndian;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_InitializeSockets;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_Socket_Open;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_Server_Start;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_Server_Tick;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_Address_Format;	.scl	2;	.type	32;	.endef
+	.def	Deep_Network_Socket_Send;	.scl	2;	.type	32;	.endef
+	.section	.rdata$.refptr.Deep_Network_Server_Default, "dr"
 	.globl	.refptr.Deep_Network_Server_Default
+	.linkonce	discard
 .refptr.Deep_Network_Server_Default:
 	.quad	Deep_Network_Server_Default
-	.addrsig
-	.addrsig_sym ExitHandler
-	.addrsig_sym OnReceive
