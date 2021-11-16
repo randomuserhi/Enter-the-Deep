@@ -16,7 +16,11 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 	Deep_DynArray_Create(Deep_ECS_Handle)(&archetype->type);
 	Deep_DynArray_Create(Deep_ECS_Handle)(&archetype->handles);
 	Deep_DynArray_Create(Deep_DynArray_raw)(&archetype->components);
+	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&archetype->edges, Deep_UnorderedMap_ByteCompare);
 
 	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_COMPONENT;
 	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_ID;
+
+	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Component));
+	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Id));
 }

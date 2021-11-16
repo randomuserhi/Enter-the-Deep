@@ -229,6 +229,28 @@ void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t 
 	}
 }
 
+void* _Deep_UnorderedMap_Find(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key)
+{
+	const size_t index = hash % unorderedMap->bucketSize;
+	if (unorderedMap->hashes[index] != NULL)
+	{
+		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
+		while (1)
+		{
+			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
+			{
+				return (unsigned char*)hashSlot + unorderedMap->valueOffset;
+			}
+
+			if (hashSlot->_next)
+				hashSlot = hashSlot->_next;
+			else
+				break;
+		}
+	}
+	return NULL;
+}
+
 void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key)
 {
 	const size_t index = hash % unorderedMap->bucketSize;

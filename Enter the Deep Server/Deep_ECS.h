@@ -83,14 +83,15 @@ struct Deep_ECS_Id
 struct Deep_ECS
 {
 	struct Deep_UnorderedMap(Deep_ECS_Handle, Deep_ECS_Reference) hierarchy;
-	struct Deep_UnorderedMap(Deep_ECS_ArchetypeHash, Deep_ECS_Archetype) archetypes;
-	struct Deep_UnorderedMap(Deep_ECS_Handle, Deep_ECS_Archetype_Ptr) components;
+	struct Deep_ECS_Archetype* root;
 };
 
 Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(const struct Deep_ECS_Archetype* archetype);
-void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype*);
+void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype);
 
 void Deep_ECS_Create(struct Deep_ECS* ECS);
+void Deep_ECS_Free(struct Deep_ECS* ECS);
+struct Deep_ECS_Archetype* Deep_ECS_CreateType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength);
 void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS);
 
 #endif

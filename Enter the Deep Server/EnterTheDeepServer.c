@@ -32,6 +32,23 @@ int main()
 
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
+
+	const Deep_ECS_Handle type[] = { 10, 11 };
+	struct Deep_ECS_Archetype* archetype = Deep_ECS_CreateType(&ECS, type, 1);
+	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
+	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
+	struct Deep_ECS_Component component;
+	component.size = 10;
+	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(archetype->components.values) = component;
+	struct Deep_ECS_Id identity;
+	identity.name = "BRUH";
+	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(archetype->components.values + 1) = identity;
+
+	Deep_ECS_Handle handle = 12;
+	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
+	entityReference->archetype = archetype;
+	entityReference->index = 0;
+
 	Deep_ECS_PrintHierarchy(&ECS);
 
 	getchar();
@@ -64,5 +81,7 @@ int main()
 
 	Deep_Network_Server_Close(&server);
     Deep_Network_ShutdownSockets();
+
+	Deep_ECS_Free(&ECS);
 }
 

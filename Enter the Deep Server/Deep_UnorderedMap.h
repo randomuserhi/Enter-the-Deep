@@ -60,6 +60,7 @@ Deep_Inline void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedM
 }
 void _Deep_UnorderedMap_Free(struct _Deep_UnorderedMap* unorderedMap);
 void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
+void* _Deep_UnorderedMap_Find(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
 void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
 
 #define Deep_UnorderedMap(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag
@@ -70,6 +71,7 @@ void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t ha
 
 #define Deep_UnorderedMap_Create(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Create
 #define Deep_UnorderedMap_Insert(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Insert
+#define Deep_UnorderedMap_Find(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Find
 #define Deep_UnorderedMap_Free(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Free
 #define Deep_UnorderedMap_Erase(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Erase
 #define Deep_UnorderedMap_Value(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Value
@@ -106,6 +108,10 @@ Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Free(struct Deep_U
 Deep_Inline valueType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Insert(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
 { \
 	return _Deep_UnorderedMap_Insert(&unorderedMap->_unorderedMap, hash, key); \
+} \
+Deep_Inline valueType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Find(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
+{ \
+	return _Deep_UnorderedMap_Find(&unorderedMap->_unorderedMap, hash, key); \
 } \
 Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Erase(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
 { \
