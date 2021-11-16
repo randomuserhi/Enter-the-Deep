@@ -107,10 +107,16 @@ struct Deep_ECS_Archetype* Deep_ECS_CreateType(struct Deep_ECS* ECS, const Deep_
 			struct Deep_ECS_Archetype* newArchetype = malloc(sizeof * newArchetype);
 			if (!newArchetype) return NULL;
 			Deep_ECS_Archetype_Create(newArchetype);
-			Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size);
+
+			/*Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size);
 			memcpy(newArchetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
-			//Slightly inefficient because push causes the array to realloc when it really doesnt need to...
-			*Deep_DynArray_Push(Deep_ECS_Handle)(&newArchetype->type) = *key;
+			// Slightly inefficient because push causes the array to realloc when it really doesnt need to...
+			// Maybe make another reserve function that reserves capacity or create a memcpy function like C# addrange
+			*Deep_DynArray_Push(Deep_ECS_Handle)(&newArchetype->type) = *key;*/
+			
+			Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size + 1);
+			memcpy(newArchetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
+			newArchetype->type.values[root->type.size] = *key;
 
 			Edge = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&root->edges, hash, key);
 			Edge->add = newArchetype;
