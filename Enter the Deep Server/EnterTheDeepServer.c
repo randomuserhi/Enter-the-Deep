@@ -33,10 +33,12 @@ int main()
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
 
-	const Deep_ECS_Handle type[] = { 10, 11 };
-	struct Deep_ECS_Archetype* archetype = Deep_ECS_CreateType(&ECS, type, 2);
-	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
-	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
+	Deep_ECS_CreateEntityComponent(&ECS, "Test", sizeof(int));
+
+	const Deep_ECS_Handle type[] = { 10, 11, 12 };
+	struct Deep_ECS_Archetype* archetype = Deep_ECS_GetType(&ECS, type, 3);
+	//Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
+	//Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
 	struct Deep_ECS_Component component;
 	component.size = 10;
 	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(archetype->components.values) = component;

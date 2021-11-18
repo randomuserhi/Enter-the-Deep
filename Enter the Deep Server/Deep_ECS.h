@@ -53,6 +53,7 @@ typedef uint64_t Deep_ECS_ArchetypeHash;
 struct Deep_ECS_Archetype
 {
 	Deep_ECS_Type type;
+	size_t size;
 	struct Deep_DynArray(Deep_ECS_Handle) handles;
 	struct Deep_DynArray(Deep_DynArray_raw) components;
 
@@ -91,7 +92,8 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype);
 
 void Deep_ECS_Create(struct Deep_ECS* ECS);
 void Deep_ECS_Free(struct Deep_ECS* ECS);
-struct Deep_ECS_Archetype* Deep_ECS_CreateType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength);
+void Deep_ECS_CreateEntityComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize);
+struct Deep_ECS_Archetype* Deep_ECS_GetType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength);
 void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS);
 
 #endif

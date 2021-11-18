@@ -45,6 +45,13 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 	}
 }
 
+Deep_Inline void Deep_ECS_AppendHierarchy(struct Deep_ECS* ECS, Deep_ECS_Handle handle, struct Deep_ECS_Archetype* archetype, size_t index)
+{
+	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
+	entityReference->archetype = archetype;
+	entityReference->index = index;
+}
+
 void Deep_ECS_Create(struct Deep_ECS* ECS)
 {
 	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_ByteCompare);
@@ -74,15 +81,10 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	identity.name = "ECS Id";
 	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(componentArchetype->components.values + 1) = identity;
 
-	handle = DEEP_ECS_COMPONENT;
-	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
-	entityReference->archetype = componentArchetype;
-	entityReference->index = 0;
+	Deep_ECS_AppendHierarchy(ECS, DEEP_ECS_COMPONENT, componentArchetype, 0);
+	Deep_ECS_AppendHierarchy(ECS, DEEP_ECS_ID, componentArchetype, 1);
 
-	handle = DEEP_ECS_ID;
-	entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
-	entityReference->archetype = componentArchetype;
-	entityReference->index = 1;
+	componentArchetype->size = 2;
 
 	ECS->root = componentArchetype; // Maybe add archetype to a main list ?
 }
@@ -93,20 +95,29 @@ void Deep_ECS_Free(struct Deep_ECS* ECS)
 	free(ECS->root); // Careful, root may not need to be freed if another Dict contains it and is freed.
 }
 
-struct Deep_ECS_Archetype* Deep_ECS_CreateType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength)
+void Deep_ECS_CreateEntityComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize)
+{
+	((struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(ECS->root->components.values))->size = componentSize;
+	((struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(ECS->root->components.values + 1))->name = name;
+
+	// Create method to get a new handle
+	Deep_ECS_AppendHierarchy(ECS, 10, ECS->root, ECS->root->size++);
+}
+
+struct Deep_ECS_Archetype* Deep_ECS_GetType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength)
 {
 	struct Deep_ECS_Archetype* root = ECS->root;
 	const Deep_ECS_Handle* key = type;
 	for (size_t i = 0; i < typeLength; ++i, ++key)
 	{
 		size_t hash = Deep_UnorderedMap_Hash(key, sizeof * key, DEEP_UNORDEREDMAP_SEED);
-		struct Deep_ECS_Archetype_Edge* Edge = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&root->edges, hash, key);
-		if (Edge == NULL)
+		struct Deep_ECS_Archetype_Edge* edge = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&root->edges, hash, key);
+		if (edge == NULL)
 		{
 			// Maybe add archetype to a main list so that it can be freed by Deep_ECS_Free()?
-			struct Deep_ECS_Archetype* newArchetype = malloc(sizeof * newArchetype);
-			if (!newArchetype) return NULL;
-			Deep_ECS_Archetype_Create(newArchetype);
+			struct Deep_ECS_Archetype* archetype = malloc(sizeof * archetype);
+			if (!archetype) return NULL;
+			Deep_ECS_Archetype_Create(archetype);
 
 			/*Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size);
 			memcpy(newArchetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
@@ -114,15 +125,25 @@ struct Deep_ECS_Archetype* Deep_ECS_CreateType(struct Deep_ECS* ECS, const Deep_
 			// Maybe make another reserve function that reserves capacity or create a memcpy function like C# addrange
 			*Deep_DynArray_Push(Deep_ECS_Handle)(&newArchetype->type) = *key;*/
 			
-			Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size + 1);
-			memcpy(newArchetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
-			newArchetype->type.values[root->type.size] = *key;
+			Deep_DynArray_Reserve(Deep_ECS_Handle)(&archetype->type, root->type.size + 1);
+			memcpy(archetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
+			archetype->type.values[root->type.size] = *key;
 
-			Edge = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&root->edges, hash, key);
-			Edge->add = newArchetype;
-			Edge->remove = NULL;
+			for (size_t j = 0; j < i + 1; j++)
+			{
+				struct Deep_ECS_Reference* typeReference = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, hash, key);
+				struct Deep_DynArray(raw)* componentArr = Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components);
+				if (typeReference != NULL)
+				{
+					Deep_DynArray_Create(raw)(componentArr, ((struct Deep_ECS_Component*)typeReference->archetype->components.values->values)->size);
+				}
+			}
+
+			edge = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&root->edges, hash, key);
+			edge->add = archetype;
+			edge->remove = NULL;
 		}
-		root = Edge->add;
+		root = edge->add;
 	}
 	return root;
 }

@@ -23,4 +23,6 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 
 	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Component));
 	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Id));
+
+	archetype->size = 0;
 }
