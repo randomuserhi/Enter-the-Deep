@@ -18,11 +18,29 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 	Deep_DynArray_Create(Deep_DynArray_raw)(&archetype->components);
 	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&archetype->edges, Deep_UnorderedMap_ByteCompare);
 
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_COMPONENT;
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&archetype->type) = DEEP_ECS_ID;
-
-	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Component));
-	Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(struct Deep_ECS_Id));
-
 	archetype->size = 0;
+}
+
+struct Deep_ECS_Reference Deep_ECS_Archetype_Push(struct Deep_ECS* ECS, struct Deep_ECS_Archetype* archetype)
+{
+	//TODO:: The checking here to see if the type exists can be done during archetype creation
+	//		 and stored in the archetype as an array alongside the type.
+	//       This should help performance specially when pushing lots of new entities to the archetype.
+
+	Deep_ECS_Handle* key = archetype->type.values;
+	for (size_t i = 0; i < archetype->type.size; ++i, ++key)
+	{
+		size_t hash = Deep_UnorderedMap_Hash(key, sizeof * key, DEEP_UNORDEREDMAP_SEED);
+		struct Deep_ECS_Reference* typeReference = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, hash, key);
+		
+		if (typeReference != NULL)
+		{
+			Deep_DynArray_Push(raw)(archetype->components.values + i);
+		}
+	}
+
+	struct Deep_ECS_Reference reference;
+	reference.archetype = archetype;
+	reference.index = archetype->size++;
+	return reference;
 }

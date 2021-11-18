@@ -33,24 +33,17 @@ int main()
 	struct Deep_ECS ECS;
 	Deep_ECS_Create(&ECS);
 
-	Deep_ECS_CreateEntityComponent(&ECS, "Test", sizeof(int));
+	Deep_ECS_CreateComponent(&ECS, "Component Test", sizeof(int));
 
-	const Deep_ECS_Handle type[] = { 10, 11, 12 };
-	struct Deep_ECS_Archetype* archetype = Deep_ECS_GetType(&ECS, type, 3);
-	//Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
-	//Deep_DynArray_Create(raw)(Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components), sizeof(int));
-	struct Deep_ECS_Component component;
-	component.size = 10;
-	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(archetype->components.values) = component;
-	struct Deep_ECS_Id identity;
-	identity.name = "BRUH";
-	*(struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(archetype->components.values + 1) = identity;
+	const Deep_ECS_Handle type[] = { DEEP_ECS_ID, 10, 11, 12 };
+	struct Deep_ECS_Archetype* archetype = Deep_ECS_GetArchetype(&ECS, type, 4);
+	struct Deep_ECS_Reference reference = Deep_ECS_Archetype_Push(&ECS, archetype);
+	((struct Deep_ECS_Id*)archetype->components.values->values)[reference.index].name = "Entity Test";
 
 	Deep_ECS_Handle handle = 11;
-	struct Deep_ECS_Reference* entityReference = Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle);
-	entityReference->archetype = archetype;
-	entityReference->index = 0;
-
+	*Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle)
+		= reference;
+	
 	Deep_ECS_PrintHierarchy(&ECS);
 
 	getchar();

@@ -89,11 +89,12 @@ struct Deep_ECS
 
 Deep_ECS_ArchetypeHash Deep_ECS_Archetype_Hash(const struct Deep_ECS_Archetype* archetype);
 void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype);
+struct Deep_ECS_Reference Deep_ECS_Archetype_Push(struct Deep_ECS* ECS, struct Deep_ECS_Archetype* archetype);
 
 void Deep_ECS_Create(struct Deep_ECS* ECS);
 void Deep_ECS_Free(struct Deep_ECS* ECS);
-void Deep_ECS_CreateEntityComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize);
-struct Deep_ECS_Archetype* Deep_ECS_GetType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength);
+void Deep_ECS_CreateComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize);
+struct Deep_ECS_Archetype* Deep_ECS_GetArchetype(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength);
 void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS);
 
 #endif

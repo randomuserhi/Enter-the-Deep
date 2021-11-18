@@ -27,10 +27,12 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 
 		struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Value(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, slot);
 
+		printf("[%i] ", reference->archetype->size);
+
 		struct Deep_ECS_Id* Id = (struct Deep_ECS_Id*)Deep_ECS_GetComponent(ECS, handle, DEEP_ECS_ID);
 		if (Id != NULL) printf("%s : ", Id->name);
 		else printf("UNDEFINED : ");
-		
+
 		char seperator = '[';
 		for (size_t i = 0; i < reference->archetype->type.size; i++)
 		{
@@ -64,12 +66,21 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	struct Deep_ECS_Archetype* componentArchetype = malloc(sizeof * componentArchetype);
 	if (!componentArchetype) return;
 	Deep_ECS_Archetype_Create(componentArchetype);
+	ECS->root = componentArchetype; // Maybe also add to a main list of archetypes for looking up
 
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_COMPONENT;
-	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_ID;
-	
+	//TODO:: since this type is quite prevelant, maybe make it a public array?
+	const Deep_ECS_Handle type[] = { DEEP_ECS_COMPONENT, DEEP_ECS_ID };
+	componentArchetype = Deep_ECS_GetArchetype(ECS, type, 2);
+
 	struct Deep_ECS_Component component;
 	struct Deep_ECS_Id identity;
+
+	Deep_DynArray_Create(raw)(componentArchetype->components.values, sizeof component);
+	Deep_DynArray_Create(raw)(componentArchetype->components.values + 1, sizeof identity);
+
+	//TODO:: these handles may be irrelevant
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_COMPONENT;
+	*Deep_DynArray_Push(Deep_ECS_Handle)(&componentArchetype->handles) = DEEP_ECS_ID;
 
 	component.size = sizeof component;
 	*(struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(componentArchetype->components.values) = component;
@@ -85,8 +96,6 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 	Deep_ECS_AppendHierarchy(ECS, DEEP_ECS_ID, componentArchetype, 1);
 
 	componentArchetype->size = 2;
-
-	ECS->root = componentArchetype; // Maybe add archetype to a main list ?
 }
 
 void Deep_ECS_Free(struct Deep_ECS* ECS)
@@ -95,17 +104,24 @@ void Deep_ECS_Free(struct Deep_ECS* ECS)
 	free(ECS->root); // Careful, root may not need to be freed if another Dict contains it and is freed.
 }
 
-void Deep_ECS_CreateEntityComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize)
+void Deep_ECS_CreateComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize)
 {
-	((struct Deep_ECS_Component*)Deep_DynArray_Push(raw)(ECS->root->components.values))->size = componentSize;
-	((struct Deep_ECS_Id*)Deep_DynArray_Push(raw)(ECS->root->components.values + 1))->name = name;
+	//TODO:: since this type is quite prevelant, maybe make it a public array?
+	const Deep_ECS_Handle type[] = { DEEP_ECS_COMPONENT, DEEP_ECS_ID };
+	struct Deep_ECS_Archetype* componentArchetype = Deep_ECS_GetArchetype(ECS, type, 2);
+	struct Deep_ECS_Reference reference = Deep_ECS_Archetype_Push(ECS, componentArchetype);
+	
+	((struct Deep_ECS_Component*)componentArchetype->components.values->values)[reference.index].size = componentSize;
+	((struct Deep_ECS_Id*)(componentArchetype->components.values + 1)->values)[reference.index].name = name;
 
 	// Create method to get a new handle
-	Deep_ECS_AppendHierarchy(ECS, 10, ECS->root, ECS->root->size++);
+	Deep_ECS_AppendHierarchy(ECS, 10, componentArchetype, reference.index);
 }
 
-struct Deep_ECS_Archetype* Deep_ECS_GetType(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength)
+struct Deep_ECS_Archetype* Deep_ECS_GetArchetype(struct Deep_ECS* ECS, const Deep_ECS_Handle* type, size_t typeLength)
 {
+	//TODO:: sort type variable so its in ascending order
+
 	struct Deep_ECS_Archetype* root = ECS->root;
 	const Deep_ECS_Handle* key = type;
 	for (size_t i = 0; i < typeLength; ++i, ++key)
@@ -121,19 +137,24 @@ struct Deep_ECS_Archetype* Deep_ECS_GetType(struct Deep_ECS* ECS, const Deep_ECS
 
 			/*Deep_DynArray_Reserve(Deep_ECS_Handle)(&newArchetype->type, root->type.size);
 			memcpy(newArchetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
+			
 			// Slightly inefficient because push causes the array to realloc when it really doesnt need to...
 			// Maybe make another reserve function that reserves capacity or create a memcpy function like C# addrange
+			
 			*Deep_DynArray_Push(Deep_ECS_Handle)(&newArchetype->type) = *key;*/
 			
 			Deep_DynArray_Reserve(Deep_ECS_Handle)(&archetype->type, root->type.size + 1);
 			memcpy(archetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
 			archetype->type.values[root->type.size] = *key;
 
+			//TODO:: reorganise this code, reuse of hash variable and the implementation of key is different
+			//	     to main loop with key++ vs type + j
 			for (size_t j = 0; j < i + 1; j++)
 			{
-				struct Deep_ECS_Reference* typeReference = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, hash, key);
+				size_t hash = Deep_UnorderedMap_Hash(type + j, sizeof * type, DEEP_UNORDEREDMAP_SEED);
+				struct Deep_ECS_Reference* typeReference = Deep_UnorderedMap_Find(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, hash, type + j);
 				struct Deep_DynArray(raw)* componentArr = Deep_DynArray_Push(Deep_DynArray_raw)(&archetype->components);
-				if (typeReference != NULL)
+				if (typeReference != NULL && *typeReference->archetype->type.values == DEEP_ECS_COMPONENT)
 				{
 					Deep_DynArray_Create(raw)(componentArr, ((struct Deep_ECS_Component*)typeReference->archetype->components.values->values)->size);
 				}
