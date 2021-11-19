@@ -14,59 +14,59 @@ struct Deep_DynArray_Options
 	char freeOnError; // If set, will free the contents of the array when an error is caught, otherwise the contents remain
 };
 
-struct _Deep_DynArray
+struct Deep_DynArray_raw
 {
 	size_t size; // Number of elements in array (to optimize out division)
 	size_t capacity; // Capacity of array (not number of elements in array)
-	unsigned char* data; // Pointer to data
+	unsigned char* values; // Pointer to data
 	struct Deep_DynArray_Options options; // Array options
 
 	size_t typeSize; // sizeof(type)
 };
 
-Deep_Inline void _Deep_DynArray_Create(struct _Deep_DynArray* arr, size_t typeSize)
+Deep_Inline void Deep_DynArray_raw_Create(struct Deep_DynArray_raw* arr, size_t typeSize)
 {
-	arr->data = DEEP_DYNARRAY_SIZE == 0 ? NULL : malloc(typeSize * DEEP_DYNARRAY_SIZE);
+	arr->values = DEEP_DYNARRAY_SIZE == 0 ? NULL : malloc(typeSize * DEEP_DYNARRAY_SIZE);
 	arr->size = 0;
 	arr->capacity = DEEP_DYNARRAY_SIZE;
 	arr->typeSize = typeSize;
 	arr->options.freeOnError = DEEP_DYNARRAY_FREE_ON_ERROR;
 }
-void _Deep_DynArray_Free(struct _Deep_DynArray* arr);
-Deep_Inline void _Deep_DynArray_ErrorFree(struct _Deep_DynArray* arr)
+void Deep_DynArray_raw_Free(struct Deep_DynArray_raw* arr);
+Deep_Inline void Deep_DynArray_raw_ErrorFree(struct Deep_DynArray_raw* arr)
 {
 	if (arr->options.freeOnError)
 	{
-		free(arr->data);
-		arr->data = NULL;
+		free(arr->values);
+		arr->values = NULL;
 	}
 }
-Deep_Inline void* _Deep_DynArray_Push(struct _Deep_DynArray* arr)
+Deep_Inline void* Deep_DynArray_raw_Push(struct Deep_DynArray_raw* arr)
 {
-	if (arr->data)
+	if (arr->values)
 	{
 		if (arr->size == arr->capacity)
 		{
 			size_t newCapacity = (size_t)(arr->capacity * DEEP_DYNARRAY_GROWTHRATE);
 			if (newCapacity == arr->capacity) ++newCapacity;
-			void* tmp = realloc(arr->data, arr->typeSize * newCapacity);
+			void* tmp = realloc(arr->values, arr->typeSize * newCapacity);
 			if (tmp)
 			{
-				arr->data = tmp;
+				arr->values = tmp;
 				arr->capacity = newCapacity;
 				++arr->size;
-				return arr->data + arr->typeSize * (arr->size - 1);
+				return arr->values + arr->typeSize * (arr->size - 1);
 			}
 			else
 			{
-				_Deep_DynArray_ErrorFree(arr);
+				Deep_DynArray_raw_ErrorFree(arr);
 				return NULL;
 			}
 		}
 		else
 		{
 			++arr->size;
-			return arr->data + arr->typeSize * (arr->size - 1);
+			return arr->values + arr->typeSize * (arr->size - 1);
 		}
 	}
 	else
@@ -74,18 +74,18 @@ Deep_Inline void* _Deep_DynArray_Push(struct _Deep_DynArray* arr)
 		void* tmp = malloc(DEEP_DYNARRAY_SIZE == 0 ? arr->typeSize : arr->typeSize * DEEP_DYNARRAY_SIZE);
 		if (tmp)
 		{
-			arr->data = tmp;
+			arr->values = tmp;
 			arr->size = 1;
 			arr->capacity = DEEP_DYNARRAY_SIZE == 0 ? 1 : DEEP_DYNARRAY_SIZE;
-			return arr->data;
+			return arr->values;
 		}
 		else return NULL;
 	}
 }
-void _Deep_DynArray_Pop(struct _Deep_DynArray* arr);
-void _Deep_DynArray_RemoveAt(struct _Deep_DynArray* arr, size_t index);
-void _Deep_DynArray_Shrink(struct _Deep_DynArray* arr);
-void _Deep_DynArray_Reserve(struct _Deep_DynArray* arr, size_t size);
+void Deep_DynArray_raw_Pop(struct Deep_DynArray_raw* arr);
+void Deep_DynArray_raw_RemoveAt(struct Deep_DynArray_raw* arr, size_t index);
+void Deep_DynArray_raw_Shrink(struct Deep_DynArray_raw* arr);
+void Deep_DynArray_raw_Reserve(struct Deep_DynArray_raw* arr, size_t size);
 
 /*
 * Defines a Deep_DynArray of type(tag).
@@ -107,20 +107,11 @@ void _Deep_DynArray_Reserve(struct _Deep_DynArray* arr, size_t size);
 #define Deep_DynArray_Get(tag) Deep_DynArray_##tag##_Get
 
 #define Deep_DynArray_Decl(type, tag) \
-_Deep_DynArray_Decl_Type(type, tag) \
-Deep_Inline void Deep_DynArray_##tag##_Create(struct Deep_DynArray(tag)* arr) \
-{ \
-	_Deep_DynArray_Create(&arr->_arr, sizeof(type)); \
-} \
-_Deep_DynArray_Decl_Func(type, tag) \
-_Deep_DynArray_Decl_PushGet(type, tag)
-
-#define _Deep_DynArray_Decl_Type(type, tag) \
 struct Deep_DynArray(tag) \
 { \
 	union \
 	{ \
-		struct _Deep_DynArray _arr; \
+		struct Deep_DynArray_raw raw; \
 		struct \
 		{  \
 			size_t size; \
@@ -129,9 +120,11 @@ struct Deep_DynArray(tag) \
 			struct Deep_DynArray_Options options; \
 		}; \
 	}; \
-};
-
-#define _Deep_DynArray_Decl_Func(type, tag) \
+}; \
+Deep_Inline void Deep_DynArray_##tag##_Create(struct Deep_DynArray(tag)* arr) \
+{ \
+	Deep_DynArray_raw_Create(&arr->raw, sizeof(type)); \
+} \
 Deep_Inline struct Deep_DynArray(tag) Deep_DynArray_##tag##_ReinterpretCast(void* arr) \
 { \
 	struct Deep_DynArray(tag) dst; \
@@ -140,52 +133,44 @@ Deep_Inline struct Deep_DynArray(tag) Deep_DynArray_##tag##_ReinterpretCast(void
 } \
 Deep_Inline void Deep_DynArray_##tag##_Free(struct Deep_DynArray(tag)* arr) \
 { \
-	_Deep_DynArray_Free(&arr->_arr); \
+	Deep_DynArray_raw_Free(&arr->raw); \
 } \
 Deep_Inline void Deep_DynArray_##tag##_Pop(struct Deep_DynArray(tag)* arr) \
 { \
-	_Deep_DynArray_Pop(&arr->_arr); \
+	Deep_DynArray_raw_Pop(&arr->raw); \
 } \
 Deep_Inline void Deep_DynArray_##tag##_RemoveAt(struct Deep_DynArray(tag)* arr, size_t index) \
 { \
-	_Deep_DynArray_RemoveAt(&arr->_arr, index); \
+	Deep_DynArray_raw_RemoveAt(&arr->raw, index); \
 } \
 Deep_Inline void Deep_DynArray_##tag##_Shrink(struct Deep_DynArray(tag)* arr) \
 { \
-	_Deep_DynArray_Shrink(&arr->_arr); \
+	Deep_DynArray_raw_Shrink(&arr->raw); \
 } \
 Deep_Inline void Deep_DynArray_##tag##_Reserve(struct Deep_DynArray(tag)* arr, size_t size) \
 { \
-	_Deep_DynArray_Reserve(&arr->_arr, size); \
-}
-#define _Deep_DynArray_Decl_PushGet(type, tag) \
+	Deep_DynArray_raw_Reserve(&arr->raw, size); \
+} \
 Deep_Inline type* Deep_DynArray_##tag##_Push(struct Deep_DynArray(tag)* arr) \
 { \
-	if (arr->_arr.typeSize == sizeof(type)) return _Deep_DynArray_Push(&arr->_arr); \
+	if (arr->raw.typeSize == sizeof(type)) return Deep_DynArray_raw_Push(&arr->raw); \
 	else Deep_Unreachable; \
 } \
-Deep_Inline type* Deep_DynArray_##tag##_Get(struct Deep_DynArray(tag)* arr, size_t index) \
+Deep_Inline type* Deep_DynArray_##tag##_Get(const struct Deep_DynArray(tag)* arr, size_t index) \
 { \
 	return arr->values + index; \
 }
 
-/*
-* The following is used to define the "raw" version of Deep_DynArray 
-* which uses a custom Create function to assign sizeof(type).
-*/
-_Deep_DynArray_Decl_Type(unsigned char, raw)
-Deep_Inline void Deep_DynArray_raw_Create(struct Deep_DynArray(raw)* arr, size_t typeSize)
+Deep_Inline struct Deep_DynArray_raw Deep_DynArray_raw_ReinterpretCast(void* arr)
 {
-	_Deep_DynArray_Create(&arr->_arr, typeSize);
+	struct Deep_DynArray(raw) dst;
+	memcpy(&dst, arr, sizeof dst);
+	return dst;
 }
-_Deep_DynArray_Decl_Func(unsigned char, raw)
-Deep_Inline void* Deep_DynArray_raw_Push(struct Deep_DynArray(raw)* arr)
+
+Deep_Inline void* Deep_DynArray_raw_Get(const struct Deep_DynArray_raw* arr, size_t index)
 {
-	return _Deep_DynArray_Push(&arr->_arr);
-}
-Deep_Inline void* Deep_DynArray_raw_Get(struct Deep_DynArray(raw)* arr, size_t index)
-{
-	return arr->values + arr->_arr.typeSize * index;
+	return arr->values + arr->typeSize * index;
 }
 
 #endif

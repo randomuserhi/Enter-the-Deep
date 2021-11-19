@@ -3,7 +3,7 @@
 
 #include "Deep.h"
 
-//TODO:: refactor to not use the strainge _next attribute and work with a flag similar to std::unorderedMap
+//TODO:: Refactor to not use the strainge _next attribute and work with a flag similar to std::unorderedMap
 
 //TODO:: make this be random everytime program boots / something (Should not be random per hash function)
 #define DEEP_UNORDEREDMAP_SEED 0xee448401
@@ -20,7 +20,7 @@ struct Deep_UnorderedMap_HashSlot
 	size_t hash;
 };
 
-struct _Deep_UnorderedMap
+struct Deep_UnorderedMap_raw_To_raw
 {
 	struct Deep_UnorderedMap_HashSlot** hashes;
 	struct Deep_UnorderedMap_HashSlot* start;
@@ -38,8 +38,9 @@ struct _Deep_UnorderedMap
 
 size_t Deep_UnorderedMap_Hash(const void* ptr, size_t len, size_t seed);
 int Deep_UnorderedMap_ByteCompare(const void* hashKey, const void* hey, size_t keyTypeSize);
+int Deep_UnorderedMap_DynArrayCompare(const void* hashKey, const void* hey, size_t keyTypeSize);
 
-Deep_Inline void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
+Deep_Inline void Deep_UnorderedMap_raw_To_raw_Create(struct Deep_UnorderedMap_raw_To_raw* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
 {
 	unorderedMap->keyCompareFunc = keyCompareFunc;
 	unorderedMap->keyTypeSize = keyTypeSize;
@@ -58,10 +59,10 @@ Deep_Inline void _Deep_UnorderedMap_Create(struct _Deep_UnorderedMap* unorderedM
 	unorderedMap->start = NULL;
 	unorderedMap->end = NULL;
 }
-void _Deep_UnorderedMap_Free(struct _Deep_UnorderedMap* unorderedMap);
-void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
-void* _Deep_UnorderedMap_Find(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
-void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t hash, const void* key);
+void Deep_UnorderedMap_raw_To_raw_Free(struct Deep_UnorderedMap_raw_To_raw* unorderedMap);
+void* Deep_UnorderedMap_raw_To_raw_Insert(struct Deep_UnorderedMap_raw_To_raw* unorderedMap, size_t hash, const void* key);
+void* Deep_UnorderedMap_raw_To_raw_Find(struct Deep_UnorderedMap_raw_To_raw* unorderedMap, size_t hash, const void* key);
+void Deep_UnorderedMap_raw_To_raw_Erase(struct Deep_UnorderedMap_raw_To_raw* unorderedMap, size_t hash, const void* key);
 
 #define Deep_UnorderedMap(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag
 
@@ -78,17 +79,11 @@ void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t ha
 #define Deep_UnorderedMap_Key(keyTag, valueTag) Deep_UnorderedMap_##keyTag##_To_##valueTag##_Key
 
 #define Deep_UnorderedMap_Decl(keyType, valueType, keyTag, valueTag) \
-Deep_UnorderedMap_Decl_Type(keyTag, valueTag) \
-Deep_UnorderedMap_Decl_Func(keyType, valueType, keyTag, valueTag) \
-Deep_UnorderedMap_Decl_Func_KeyValue(keyType, valueType, keyTag, valueTag) \
-Deep_UnorderedMap_Decl_Func_Create(keyType, valueType, keyTag, valueTag)
-
-#define Deep_UnorderedMap_Decl_Type(keyTag, valueTag) \
 struct Deep_UnorderedMap(keyTag, valueTag) \
 { \
 	union \
 	{ \
-		struct _Deep_UnorderedMap _unorderedMap; \
+		struct Deep_UnorderedMap_raw_To_raw raw; \
 		struct \
 		{  \
 			struct Deep_UnorderedMap_HashSlot** hashes; \
@@ -98,40 +93,34 @@ struct Deep_UnorderedMap(keyTag, valueTag) \
 			size_t size; \
 		}; \
 	}; \
-};
-
-#define Deep_UnorderedMap_Decl_Func(keyType, valueType, keyTag, valueTag) \
+}; \
 Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Free(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap) \
 { \
-	_Deep_UnorderedMap_Free(&unorderedMap->_unorderedMap); \
+	Deep_UnorderedMap_raw_To_raw_Free(&unorderedMap->raw); \
 } \
 Deep_Inline valueType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Insert(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
 { \
-	return _Deep_UnorderedMap_Insert(&unorderedMap->_unorderedMap, hash, key); \
+	return Deep_UnorderedMap_raw_To_raw_Insert(&unorderedMap->raw, hash, key); \
 } \
 Deep_Inline valueType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Find(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
 { \
-	return _Deep_UnorderedMap_Find(&unorderedMap->_unorderedMap, hash, key); \
+	return Deep_UnorderedMap_raw_To_raw_Find(&unorderedMap->raw, hash, key); \
 } \
 Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Erase(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, size_t hash, const keyType* key) \
 { \
-	_Deep_UnorderedMap_Erase(&unorderedMap->_unorderedMap, hash, key); \
-}
-
-#define Deep_UnorderedMap_Decl_Func_KeyValue(keyType, valueType, keyTag, valueTag) \
+	Deep_UnorderedMap_raw_To_raw_Erase(&unorderedMap->raw, hash, key); \
+} \
 Deep_Inline valueType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Value(const struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, const struct Deep_UnorderedMap_HashSlot* hashSlot) \
 { \
-	return (valueType*)((unsigned char*)hashSlot + unorderedMap->_unorderedMap.valueOffset); \
+	return (valueType*)((unsigned char*)hashSlot + unorderedMap->raw.valueOffset); \
 } \
 Deep_Inline keyType* Deep_UnorderedMap_##keyTag##_To_##valueTag##_Key(const struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, const struct Deep_UnorderedMap_HashSlot* hashSlot) \
 { \
-	return (keyType*)((unsigned char*)hashSlot + unorderedMap->_unorderedMap.keyOffset); \
-}
-
-#define Deep_UnorderedMap_Decl_Func_Create(keyType, valueType, keyTag, valueTag) \
+	return (keyType*)((unsigned char*)hashSlot + unorderedMap->raw.keyOffset); \
+} \
 Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Create(struct Deep_UnorderedMap(keyTag, valueTag)* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t)) \
 { \
-	_Deep_UnorderedMap_Create(&unorderedMap->_unorderedMap, keyCompareFunc, sizeof(keyType), Deep_AlignOf(keyType), sizeof(valueType), Deep_AlignOf(valueType)); \
+	Deep_UnorderedMap_raw_To_raw_Create(&unorderedMap->raw, keyCompareFunc, sizeof(keyType), Deep_AlignOf(keyType), sizeof(valueType), Deep_AlignOf(valueType)); \
 }
 
 /*
@@ -139,19 +128,13 @@ Deep_Inline void Deep_UnorderedMap_##keyTag##_To_##valueTag##_Create(struct Deep
 * which uses a custom Create function to assign sizeof(type).
 */
 
-Deep_UnorderedMap_Decl_Type(raw, raw)
-Deep_UnorderedMap_Decl_Func(void, void, raw, raw)
-Deep_Inline void Deep_UnorderedMap_raw_To_raw_Create(struct Deep_UnorderedMap(raw, raw)* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment)
-{
-	_Deep_UnorderedMap_Create(&unorderedMap->_unorderedMap, keyCompareFunc, keyTypeSize, keyTypeAlignment, valueTypeSize, valueTypeAlignment);
-}
 Deep_Inline void* Deep_UnorderedMap_raw_To_raw_Value(const struct Deep_UnorderedMap(raw, raw)* unorderedMap, const struct Deep_UnorderedMap_HashSlot* hashSlot) \
 {
-	return (unsigned char*)hashSlot + unorderedMap->_unorderedMap.valueOffset;
+	return (unsigned char*)hashSlot + unorderedMap->valueOffset;
 }
 Deep_Inline void* Deep_UnorderedMap_raw_To_raw_Key(const struct Deep_UnorderedMap(raw, raw)* unorderedMap, const struct Deep_UnorderedMap_HashSlot* hashSlot) \
 {
-	return (unsigned char*)hashSlot + unorderedMap->_unorderedMap.keyOffset;
+	return (unsigned char*)hashSlot + unorderedMap->keyOffset;
 }
 
 #endif

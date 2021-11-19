@@ -21,6 +21,18 @@ void Deep_ECS_Archetype_Create(struct Deep_ECS_Archetype* archetype)
 	archetype->size = 0;
 }
 
+void Deep_ECS_Archetype_Free(struct Deep_ECS_Archetype* archetype)
+{
+	Deep_DynArray_Free(Deep_ECS_Handle)(&archetype->type);
+	Deep_DynArray_Free(Deep_ECS_Handle)(&archetype->handles);
+	for (size_t i = 0; i < archetype->components.size; i++)
+	{
+		Deep_DynArray_Free(raw)(archetype->components.values + i);
+	}
+	Deep_DynArray_Free(Deep_DynArray_raw)(&archetype->components);
+	Deep_UnorderedMap_Free(Deep_ECS_Handle, Deep_ECS_Archetype_Edge)(&archetype->edges);
+}
+
 struct Deep_ECS_Reference Deep_ECS_Archetype_Push(struct Deep_ECS* ECS, struct Deep_ECS_Archetype* archetype)
 {
 	//TODO:: The checking here to see if the type exists can be done during archetype creation

@@ -2,6 +2,7 @@
 
 //TODO:: Write code for strings to store for identity component
 //    :: Write obsidian file
+//	  :: Implement Archetype unordered map functionality
 
 void* Deep_ECS_GetComponent(struct Deep_ECS* ECS, Deep_ECS_Handle handle, Deep_ECS_Handle componentHandle)
 {
@@ -57,7 +58,7 @@ Deep_Inline void Deep_ECS_AppendHierarchy(struct Deep_ECS* ECS, Deep_ECS_Handle 
 void Deep_ECS_Create(struct Deep_ECS* ECS)
 {
 	Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, Deep_UnorderedMap_ByteCompare);
-	//Deep_UnorderedMap_Create(Deep_ECS_ArchetypeHash, Deep_ECS_Archetype)(&ECS->archetypes, Deep_UnorderedMap_ByteCompare);
+	Deep_UnorderedMap_Create(Deep_ECS_Type, Deep_ECS_Archetype)(&ECS->archetypes, Deep_UnorderedMap_DynArrayCompare);
 	//Deep_UnorderedMap_Create(Deep_ECS_Handle, Deep_ECS_Archetype_Ptr)(&ECS->components, Deep_UnorderedMap_ByteCompare);
 
 	Deep_ECS_Handle handle = DEEP_ECS_NULL;
@@ -101,7 +102,7 @@ void Deep_ECS_Create(struct Deep_ECS* ECS)
 void Deep_ECS_Free(struct Deep_ECS* ECS)
 {
 	Deep_UnorderedMap_Free(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy);
-	free(ECS->root); // Careful, root may not need to be freed if another Dict contains it and is freed.
+	Deep_ECS_Archetype_Free(ECS->root); // Careful, root may not need to be freed if another Dict contains it and is freed.
 }
 
 void Deep_ECS_CreateComponent(struct Deep_ECS* ECS, const char* name, size_t componentSize)
