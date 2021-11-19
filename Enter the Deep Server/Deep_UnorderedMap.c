@@ -175,7 +175,9 @@ void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t 
 			unorderedMap->hashes[index]->prev = unorderedMap->end;
 			unorderedMap->size++;
 			if (unorderedMap->end != NULL)
+			{
 				unorderedMap->end->next = unorderedMap->hashes[index];
+			}
 			unorderedMap->end = unorderedMap->hashes[index];
 			if (unorderedMap->start == NULL)
 				unorderedMap->start = unorderedMap->hashes[index];
@@ -214,7 +216,8 @@ void* _Deep_UnorderedMap_Insert(struct _Deep_UnorderedMap* unorderedMap, size_t 
 			hashSlot->_next->_next = NULL;
 			hashSlot->_next->prev = unorderedMap->end;
 			unorderedMap->size++;
-			unorderedMap->end->next = hashSlot->_next;
+			if (unorderedMap->end != NULL)
+				unorderedMap->end->next = hashSlot->_next;
 			unorderedMap->end = hashSlot->_next;
 
 			//Set key
@@ -271,6 +274,8 @@ void _Deep_UnorderedMap_Erase(struct _Deep_UnorderedMap* unorderedMap, size_t ha
 					hashSlot->prev->next = hashSlot->next;
 				if (hashSlot->next)
 					hashSlot->next->prev = hashSlot->prev;
+				else // If next is null, then we are altering last element and the end of linked list needs to be reset
+					unorderedMap->end = hashSlot->prev;
 
 				free(hashSlot);
 				unorderedMap->size--;

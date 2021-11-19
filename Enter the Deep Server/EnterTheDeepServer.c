@@ -41,9 +41,23 @@ int main()
 	((struct Deep_ECS_Id*)archetype->components.values->values)[reference.index].name = "Entity Test";
 
 	Deep_ECS_Handle handle = 11;
-	*Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED), &handle)
+	size_t hash = Deep_UnorderedMap_Hash(&handle, sizeof handle, DEEP_UNORDEREDMAP_SEED);
+	*Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, hash, &handle)
 		= reference;
 	
+	Deep_ECS_PrintHierarchy(&ECS);
+
+	Deep_UnorderedMap_Erase(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, hash, &handle);
+
+	printf("\n");
+
+	Deep_ECS_PrintHierarchy(&ECS);
+
+	*Deep_UnorderedMap_Insert(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS.hierarchy, hash, &handle)
+		= reference;
+
+	printf("\n");
+
 	Deep_ECS_PrintHierarchy(&ECS);
 
 	getchar();

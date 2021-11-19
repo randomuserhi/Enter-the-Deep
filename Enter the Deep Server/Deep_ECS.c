@@ -27,23 +27,23 @@ void Deep_ECS_PrintHierarchy(struct Deep_ECS* ECS)
 
 		struct Deep_ECS_Reference* reference = Deep_UnorderedMap_Value(Deep_ECS_Handle, Deep_ECS_Reference)(&ECS->hierarchy, slot);
 
-		printf("[%i] ", reference->archetype->size);
+		printf("[%zu] ", reference->archetype->size);
 
 		struct Deep_ECS_Id* Id = (struct Deep_ECS_Id*)Deep_ECS_GetComponent(ECS, handle, DEEP_ECS_ID);
-		if (Id != NULL) printf("%s : ", Id->name);
-		else printf("UNDEFINED : ");
+		if (Id != NULL) printf("%s : [", Id->name);
+		else printf("UNDEFINED : [");
 
-		char seperator = '[';
+		char seperator = ',';
 		for (size_t i = 0; i < reference->archetype->type.size; i++)
 		{
 			Deep_ECS_Handle componentHandle = reference->archetype->type.values[i];
 			Id = (struct Deep_ECS_Id*)Deep_ECS_GetComponent(ECS, componentHandle,  DEEP_ECS_ID);
-			if (Id != NULL) printf("%c %s", seperator, Id->name);
-			else printf("%c UNDEFINED", seperator);
-			seperator = ',';
+			if (i == reference->archetype->type.size - 1) seperator = ' ';
+			if (Id != NULL) printf(" %s%c", Id->name, seperator);
+			else printf(" UNDEFINED%c", seperator);
 		}
 
-		printf(" ]\n");
+		printf("]\n");
 	}
 }
 
@@ -147,8 +147,10 @@ struct Deep_ECS_Archetype* Deep_ECS_GetArchetype(struct Deep_ECS* ECS, const Dee
 			memcpy(archetype->type.values, root->type.values, sizeof * root->type.values * root->type.size);
 			archetype->type.values[root->type.size] = *key;
 
-			//TODO:: reorganise this code, reuse of hash variable and the implementation of key is different
+			//TODO:: Reorganise this code, reuse of hash variable and the implementation of key is different
 			//	     to main loop with key++ vs type + j
+			//		 This loop is also inefficient as it has repeated hash checks for values that could be
+			//		 cached.
 			for (size_t j = 0; j < i + 1; j++)
 			{
 				size_t hash = Deep_UnorderedMap_Hash(type + j, sizeof * type, DEEP_UNORDEREDMAP_SEED);
