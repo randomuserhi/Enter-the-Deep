@@ -169,6 +169,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Deep_Debug_Memory.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Deep_DynArray.c">
       <SubType>
       </SubType>
@@ -181,40 +185,46 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep_ECS_Archetype.c">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Deep_ECS.c">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Deep.c" />
-    <ClCompile Include="Deep_Engine.c">
+    <ClCompile Include="Deep_Network_Windows_Server.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep_Network_Server.c">
+    <ClCompile Include="Deep_Network_Windows_Socket.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep_Network_Socket.c">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="EnterTheDeepServer.c" />
+    <ClCompile Include="Enter_the_Deep_Server.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep_Containers.h" />
+    <ClInclude Include="Deep_Debug.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Deep_DynArray.h" />
-    <ClInclude Include="Deep_ECS.h" />
+    <ClInclude Include="Deep_Modules.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Posix.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Windows.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Deep_String.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="Deep_UnorderedMap.h" />
     <ClInclude Include="Deep.h" />
-    <ClInclude Include="Deep_Engine.h" />
     <ClInclude Include="Deep_Vector.h" />
     <ClInclude Include="Deep_Math.h" />
     <ClInclude Include="Deep_Network.h" />

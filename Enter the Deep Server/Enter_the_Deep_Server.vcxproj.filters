@@ -43,21 +43,24 @@
     <Filter Include="Source Files\Deep\Containers">
       <UniqueIdentifier>{5d902b70-50b3-4dd9-8d3f-00c3f75b22f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Deep\Engine\ECS">
-      <UniqueIdentifier>{b1a76edd-2f3c-486e-8b81-aeb778108c8e}</UniqueIdentifier>
+    <Filter Include="Header Files\Deep\Network\Deep_Network_OS">
+      <UniqueIdentifier>{cb5ee2b7-d5a6-4e63-b4d8-dc2b16aa42c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Deep\Engine\ECS">
-      <UniqueIdentifier>{cbedee14-5bc7-4f85-a37d-c656cc45fbe1}</UniqueIdentifier>
+    <Filter Include="Source Files\Deep\Network\Deep_Network_OS">
+      <UniqueIdentifier>{7094e367-a1ed-420e-a14d-64f4a057931b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Debug">
+      <UniqueIdentifier>{b152dd33-21bb-4b9c-a6d5-71d1e21446c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Debug">
+      <UniqueIdentifier>{851be91d-ab6a-4bae-88e0-c419967aaae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{2690167c-4533-445a-ad9c-2d876950ecbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Deep_Network_Server.c">
-      <Filter>Source Files\Deep\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Deep_Network_Socket.c">
-      <Filter>Source Files\Deep\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="EnterTheDeepServer.c">
+    <ClCompile Include="Enter_the_Deep_Server.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deep_DynArray.c">
@@ -69,25 +72,22 @@
     <ClCompile Include="Deep.c">
       <Filter>Source Files\Deep</Filter>
     </ClCompile>
-    <ClCompile Include="Deep_Engine.c">
-      <Filter>Source Files\Deep\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Deep_ECS_Archetype.c">
-      <Filter>Source Files\Deep\Engine\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Deep_ECS.c">
-      <Filter>Source Files\Deep\Engine\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="Deep_String.c">
       <Filter>Source Files\Deep</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Network_Windows_Socket.c">
+      <Filter>Source Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Network_Windows_Server.c">
+      <Filter>Source Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Debug_Memory.c">
+      <Filter>Source Files\Deep\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">
       <Filter>Header Files\Deep</Filter>
-    </ClInclude>
-    <ClInclude Include="Deep_Engine.h">
-      <Filter>Header Files\Deep\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Deep_Network.h">
       <Filter>Header Files\Deep\Network</Filter>
@@ -104,14 +104,26 @@
     <ClInclude Include="Deep_Vector.h">
       <Filter>Header Files\Deep\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Deep_ECS.h">
-      <Filter>Header Files\Deep\Engine\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="Deep_Containers.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Deep_String.h">
       <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Windows.h">
+      <Filter>Header Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Posix.h">
+      <Filter>Header Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Modules.h">
+      <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory.h">
+      <Filter>Header Files\Deep\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
