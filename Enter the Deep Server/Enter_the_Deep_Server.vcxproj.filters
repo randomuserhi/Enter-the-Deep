@@ -58,6 +58,21 @@
     <Filter Include="Header Files\Engine">
       <UniqueIdentifier>{2690167c-4533-445a-ad9c-2d876950ecbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{a1e9b65d-7d87-4b25-abf0-cc259a5d5715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Network">
+      <UniqueIdentifier>{b5c5164a-61c7-4a07-875f-162e688c800e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Network">
+      <UniqueIdentifier>{965e4e01-96dd-4cb4-9281-176ded31b3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Physics">
+      <UniqueIdentifier>{444a6745-e06a-4266-afa5-3a4a538faae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Physics">
+      <UniqueIdentifier>{8177e27e-6d9d-4b07-be6e-9951855b2547}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enter_the_Deep_Server.c">
@@ -83,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="Deep_Debug_Memory.c">
       <Filter>Source Files\Deep\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine_Network_Server.c">
+      <Filter>Source Files\Engine\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine_Physics.c">
+      <Filter>Source Files\Engine\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="Deep_Debug_Memory.h">
       <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine_Network_Server.h">
+      <Filter>Header Files\Engine\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine_Physics.h">
+      <Filter>Header Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

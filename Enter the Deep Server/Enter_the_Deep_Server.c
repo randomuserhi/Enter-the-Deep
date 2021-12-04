@@ -4,6 +4,8 @@
 #include "Deep_Network.h"
 #include "Deep_String.h"
 
+#include "Engine.h"
+
 #include <time.h>
 #include <signal.h>
 
@@ -11,11 +13,6 @@ static volatile int running = DEEP_TRUE;
 
 void closeSignalHandler(int dummy) {
 	running = DEEP_FALSE;
-}
-
-void OnReceive(const char* Buffer, int BytesReceived, unsigned int FromAddress, unsigned int FromPort)
-{
-	printf("Message received: %i\n", *(const int*)Buffer);
 }
 
 int main()
@@ -35,7 +32,7 @@ int main()
     Deep_Network_InitializeSockets();
 
 	struct Deep_Network_Server server = Deep_Network_Server_Default;
-	server.OnReceiveHandle = &OnReceive;
+	server.OnReceiveHandle = &Engine_Network_Server_OnReceive;
 
 	Deep_Network_Socket_Open(&server.socket);
 	Deep_Network_Server_Start(&server, DEEP_NETWORK_DEFAULTPORT);

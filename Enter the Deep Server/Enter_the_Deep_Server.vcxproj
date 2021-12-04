@@ -195,6 +195,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Enter_the_Deep_Server.c" />
+    <ClCompile Include="Engine_Physics.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Engine_Network_Server.c">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep_Containers.h" />
@@ -228,6 +236,18 @@
     <ClInclude Include="Deep_Vector.h" />
     <ClInclude Include="Deep_Math.h" />
     <ClInclude Include="Deep_Network.h" />
+    <ClInclude Include="Engine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine_Physics.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine_Network_Server.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
