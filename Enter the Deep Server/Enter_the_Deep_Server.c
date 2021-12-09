@@ -11,7 +11,8 @@
 
 static volatile int running = DEEP_TRUE;
 
-void closeSignalHandler(int dummy) {
+void closeSignalHandler(int dummy) 
+{
 	running = DEEP_FALSE;
 }
 
