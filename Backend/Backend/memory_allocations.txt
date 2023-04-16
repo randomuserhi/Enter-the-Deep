@@ -1,4 +1,2 @@
-::operator new[] => D:\Git\Enter-the-Deep\Backend\Backend\Backend.cpp > main : line(12) { 00000214AF4BEA90 }
-::operator delete[] => D:\Git\Enter-the-Deep\Backend\Backend\Backend.cpp > main : line(13) { 00000214AF4BEA90 }
 
 Remaining pointers: [0] { }

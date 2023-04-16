@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Deep\Debug">
       <UniqueIdentifier>{2e9a2daf-ab44-4b94-8c46-9af9802e4565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Deep\Net">
+      <UniqueIdentifier>{7779b1db-3f7f-4eaa-9388-de7360604a2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Net">
+      <UniqueIdentifier>{6026bd7b-607e-4085-9fe1-89a8ff9f2b32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Backend.cpp">
@@ -32,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="Deep\Debug\Memory.cpp">
       <Filter>Source Files\Deep\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep\Net\Net_Windows.cpp">
+      <Filter>Source Files\Deep\Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="Deep\Debug\Memory_Undef.h">
       <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Net\Net_Windows.h">
+      <Filter>Header Files\Deep\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Net.h">
+      <Filter>Header Files\Deep</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
