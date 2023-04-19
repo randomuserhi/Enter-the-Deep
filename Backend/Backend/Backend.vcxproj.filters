@@ -25,11 +25,11 @@
     <Filter Include="Source Files\Deep\Debug">
       <UniqueIdentifier>{2e9a2daf-ab44-4b94-8c46-9af9802e4565}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Deep\Net">
-      <UniqueIdentifier>{6026bd7b-607e-4085-9fe1-89a8ff9f2b32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Deep\Net">
+    <Filter Include="Header Files\Deep\Sock">
       <UniqueIdentifier>{4254b2c4-507a-4195-aa30-1358ffe49ecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Sock">
+      <UniqueIdentifier>{6026bd7b-607e-4085-9fe1-89a8ff9f2b32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,14 +39,17 @@
     <ClCompile Include="Deep\Debug\Memory.cpp">
       <Filter>Source Files\Deep\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Net\Net_Windows.cpp">
-      <Filter>Source Files\Deep\Net</Filter>
+    <ClCompile Include="Deep\Sock\Sock_Windows.cpp">
+      <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Net\Net_Posix.cpp">
-      <Filter>Source Files\Deep\Net</Filter>
+    <ClCompile Include="Deep\Sock\Sock_Posix.cpp">
+      <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Net\Net.cpp">
-      <Filter>Source Files\Deep\Net</Filter>
+    <ClCompile Include="Deep\Sock\Sock.cpp">
+      <Filter>Source Files\Deep\Sock</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep\Sock\IPv4.cpp">
+      <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,11 +65,17 @@
     <ClInclude Include="Deep\Debug\Memory_Undef.h">
       <Filter>Header Files\Deep\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net.h">
+    <ClInclude Include="Deep\Sock.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net\Net_Windows.h">
-      <Filter>Header Files\Deep\Net</Filter>
+    <ClInclude Include="Deep\Sock\Sock_Windows.h">
+      <Filter>Header Files\Deep\Sock</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Sock\AF_INET.h">
+      <Filter>Header Files\Deep\Sock</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Sock\IPv4.h">
+      <Filter>Header Files\Deep\Sock</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

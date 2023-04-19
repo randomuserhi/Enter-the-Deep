@@ -141,17 +141,20 @@
   <ItemGroup>
     <ClCompile Include="Backend.cpp" />
     <ClCompile Include="Deep\Debug\Memory.cpp" />
-    <ClCompile Include="Deep\Net\Net.cpp" />
-    <ClCompile Include="Deep\Net\Net_Posix.cpp" />
-    <ClCompile Include="Deep\Net\Net_Windows.cpp" />
+    <ClCompile Include="Deep\Sock\IPv4.cpp" />
+    <ClCompile Include="Deep\Sock\Sock.cpp" />
+    <ClCompile Include="Deep\Sock\Sock_Posix.cpp" />
+    <ClCompile Include="Deep\Sock\Sock_Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep\Debug\Memory.h" />
     <ClInclude Include="Deep\Debug\Memory_Def.h" />
     <ClInclude Include="Deep\Debug\Memory_Undef.h" />
     <ClInclude Include="Deep\Deep.h" />
-    <ClInclude Include="Deep\Net.h" />
-    <ClInclude Include="Deep\Net\Net_Windows.h" />
+    <ClInclude Include="Deep\Sock.h" />
+    <ClInclude Include="Deep\Sock\AF_INET.h" />
+    <ClInclude Include="Deep\Sock\IPv4.h" />
+    <ClInclude Include="Deep\Sock\Sock_Windows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

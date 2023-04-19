@@ -34,6 +34,11 @@
 * Deep Utilities
 */
 
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
+
 #if defined(Deep_Compiler_Clang)
 #define Deep_Inline inline
 #define Deep_AlignOf(type) __alignof__(type)

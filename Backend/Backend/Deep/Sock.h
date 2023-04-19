@@ -2,33 +2,24 @@
 
 #include "Deep.h"
 
-#define DEEP_NETWORK_DEFAULTPORT 57687
+#define DEEP_NETWORK_DEFAULTPORT (57687)
 
-#define DEEP_SOCKET_NOERROR 0
-#define DEEP_SOCKET_ERROR -1
+#define DEEP_SOCKET_NOERROR (0)
+#define DEEP_SOCKET_ERROR (-1)
+#define DEEP_SOCKET_UNKNOWN_ADDRESS_FAMILY (-2)
+#define DEEP_SOCKET_INCOMPATIBLE_ADDRESS_FAMILY (-3)
+
+#include "Sock/AF_INET.h"
+
+#if defined(DEEP_PLATFORM_WINDOWS)
+
+#include "Sock/Sock_Windows.h"
+
+#endif
 
 namespace Deep
 {
     bool IsBigEndian();
-
-    struct IPv4
-    {
-        unsigned char a;
-        unsigned char b;
-        unsigned char c;
-        unsigned char d;
-        unsigned short port;
-
-        friend bool operator==(const IPv4& sockA, const IPv4& sockB);
-    };
-    Deep_Inline bool operator==(const IPv4& lhs, const IPv4& rhs)
-    {
-        return lhs.a == rhs.a &&
-               lhs.b == rhs.b &&
-               lhs.c == rhs.c &&
-               lhs.d == rhs.d &&
-               lhs.port == rhs.port;
-    }
 
     // This namespace is used for storing OS implementation specifics
     // NOTE(randomuserhi): They can still be accessed by the user via __impl__ to allow them to write 
@@ -47,20 +38,18 @@ namespace Deep
         __impl__::Socket __impl__;
 
     public:
+        Socket() : __impl__() {}
+
         int GetSockName(IPv4& address);
+        
+        int GetPeerName(IPv4& address);
 
         int Open();
         int Close();
-        int Bind(unsigned short port);
+        int Bind(u_short port = 0);
         int Connect(const IPv4 address);
-        int Send(const char* data, int dataSize);
-        int SendTo(const char* data, int dataSize, const IPv4 address);
-        int Receive(const char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
+        //int Send(const char* data, int dataSize);
+        //int SendTo(const char* data, int dataSize, const IPv4 address);
+        //int Receive(const char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
     };
 }
-
-#if defined(DEEP_PLATFORM_WINDOWS)
-
-#include "Net/Net_Windows.h"
-
-#endif
