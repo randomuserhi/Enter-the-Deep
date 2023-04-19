@@ -35,9 +35,11 @@ namespace Deep
     //                     OS specific code.
     //                     It is ill-advised to rely on this in normal use-cases as it may change 
     //                     between compilation on different OS.
+    //                     Only specific definitions that MUST be visible or that are useful to be exposed
+    //                     for OS specific reasons will be found under __impl__ in this header
     namespace __impl__
     {
-        struct Socket;
+        struct Socket; // Stores implementation specific socket information such as Handles etc...
     }
 
     class Socket
