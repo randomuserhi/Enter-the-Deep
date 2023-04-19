@@ -1,2 +1,0 @@
-
-Remaining pointers: [0] { }

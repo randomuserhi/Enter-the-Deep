@@ -15,7 +15,7 @@ namespace Deep
         sockaddr_in sa_in;
     };
 
-    typedef int socketlen_t;
+    typedef int socklen_t;
 
     Deep_Inline SocketAddr ToSocketAddr(const IPv4 ip)
     {
@@ -65,7 +65,7 @@ namespace Deep
     int Socket::GetSockName(IPv4& address)
     {
         SocketAddr sockAddr;
-        socketlen_t assignedAddressLen = sizeof sockAddr;
+        socklen_t assignedAddressLen = sizeof sockAddr;
         if (getsockname(__impl__.socketFD, &sockAddr.sa, &assignedAddressLen) != NO_ERROR)
             return DEEP_SOCKET_ERROR;
         return FromSocketAddr(sockAddr, address);
@@ -74,7 +74,7 @@ namespace Deep
     int Socket::GetPeerName(IPv4& address)
     {
         SocketAddr sockAddr;
-        socketlen_t assignedAddressLen = sizeof sockAddr;
+        socklen_t assignedAddressLen = sizeof sockAddr;
         if (getpeername(__impl__.socketFD, &sockAddr.sa, &assignedAddressLen) != NO_ERROR)
             return DEEP_SOCKET_ERROR;
         return FromSocketAddr(sockAddr, address);
@@ -146,13 +146,53 @@ namespace Deep
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
-        const socketlen_t addressLength = sizeof(struct sockaddr);
         const SocketAddr sockAddr = ToSocketAddr(address);
-        if (connect(socketFD, &sockAddr.sa, addressLength) != NO_ERROR)
+        if (connect(socketFD, &sockAddr.sa, sizeof sockAddr) != NO_ERROR)
         {
             // Failed to connect socket with error
             return DEEP_SOCKET_ERROR;
         }
+        return DEEP_SOCKET_NOERROR;
+    }
+
+    int Socket::Send(const char* data, int dataSize)
+    {
+        const SOCKET& socketFD = __impl__.socketFD;
+        const int sentBytes = send(socketFD, data, dataSize, 0);
+        if (sentBytes == SOCKET_ERROR)
+        {
+            return DEEP_SOCKET_ERROR;
+        }
+        return DEEP_SOCKET_NOERROR;
+    }
+
+    int Socket::SendTo(const char* data, int dataSize, const IPv4 address)
+    {
+        const SOCKET& socketFD = __impl__.socketFD;
+        
+        const SocketAddr sockAddr = ToSocketAddr(address);
+        const int sentBytes = sendto(socketFD, data, dataSize, 0, &sockAddr.sa, sizeof sockAddr);
+        if (sentBytes == SOCKET_ERROR)
+        {
+            return DEEP_SOCKET_ERROR;
+        }
+        return DEEP_SOCKET_NOERROR;
+    }
+
+    int Socket::Receive(char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress)
+    {
+        const SOCKET& socketFD = __impl__.socketFD;
+
+        SocketAddr fromSockAddr = ToSocketAddr(fromAddress);
+        socklen_t fromLength = sizeof fromSockAddr;
+
+        bytesReceived = recvfrom(socketFD, buffer, maxBufferSize, 0, &fromSockAddr.sa, &fromLength);
+
+        if (bytesReceived < 0)
+        {
+            return DEEP_SOCKET_ERROR;
+        }
+
         return DEEP_SOCKET_NOERROR;
     }
 }

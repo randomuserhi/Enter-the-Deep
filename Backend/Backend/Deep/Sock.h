@@ -48,8 +48,8 @@ namespace Deep
         int Close();
         int Bind(u_short port = 0);
         int Connect(const IPv4 address);
-        //int Send(const char* data, int dataSize);
-        //int SendTo(const char* data, int dataSize, const IPv4 address);
-        //int Receive(const char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
+        int Send(const char* data, int dataSize);
+        int SendTo(const char* data, int dataSize, const IPv4 address);
+        int Receive(char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
     };
 }
