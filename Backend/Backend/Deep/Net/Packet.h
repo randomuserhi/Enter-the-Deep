@@ -10,9 +10,11 @@ namespace Deep
         std::vector<byte> buffer;
 
     public:
-        const byte* Data();
-
+        Deep_Inline const byte* Data();
         Deep_Inline size_t Size();
+        
+        void Write(byte byte);
+        void Write(const byte* bytes, size_t numBytes);
         void Write(int value);
     };
     Deep_Inline const byte* Packet::Data()

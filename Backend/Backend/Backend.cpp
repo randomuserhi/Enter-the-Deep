@@ -40,8 +40,9 @@ int main()
     {
         Deep::Packet packet;
         packet.Write(10);
+        packet.Write(data, sizeof data);
 
-        socket.Send(packet.Data(), static_cast<int>(packet.Size()));
+        socket.Send(packet.Data(), packet.Size());
 
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(100ms);

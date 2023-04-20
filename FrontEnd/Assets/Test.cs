@@ -15,4 +15,9 @@ class Test : MonoBehaviour
         test.Open();
         test.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, 1000));
     }
+
+    private void OnApplicationQuit()
+    {
+        test.Dispose();
+    }
 }
