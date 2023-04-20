@@ -9,7 +9,7 @@ namespace Deep
 
     namespace __impl__
     {
-        struct Socket
+        struct UDPSocket
         {
             SOCKET socketFD;
         };

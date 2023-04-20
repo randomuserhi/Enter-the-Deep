@@ -30,15 +30,15 @@ namespace Deep
     //                     for OS specific reasons will be found under __impl__ in this header
     namespace __impl__
     {
-        struct Socket; // Stores implementation specific socket information such as Handles etc...
+        struct UDPSocket; // Stores implementation specific socket information such as Handles etc...
     }
 
-    class Socket
+    class UDPSocket
     {
-        __impl__::Socket __impl__;
+        __impl__::UDPSocket __impl__;
 
     public:
-        Socket() : __impl__() {}
+        UDPSocket() : __impl__() {}
 
         int GetSockName(IPv4& address);
         

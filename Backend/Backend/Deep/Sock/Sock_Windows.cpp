@@ -62,7 +62,7 @@ namespace Deep
                                       : DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::GetSockName(IPv4& address)
+    int UDPSocket::GetSockName(IPv4& address)
     {
         SocketAddr sockAddr;
         socklen_t assignedAddressLen = sizeof sockAddr;
@@ -71,7 +71,7 @@ namespace Deep
         return FromSocketAddr(sockAddr, address);
     }
 
-    int Socket::GetPeerName(IPv4& address)
+    int UDPSocket::GetPeerName(IPv4& address)
     {
         SocketAddr sockAddr;
         socklen_t assignedAddressLen = sizeof sockAddr;
@@ -80,7 +80,7 @@ namespace Deep
         return FromSocketAddr(sockAddr, address);
     }
 
-    int Socket::Open()
+    int UDPSocket::Open()
     {
         SOCKET& socketFD = __impl__.socketFD;
         socketFD = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -99,7 +99,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Close()
+    int UDPSocket::Close()
     {
         SOCKET& socketFD = __impl__.socketFD;
         if (socketFD == INVALID_SOCKET)
@@ -117,7 +117,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Bind(u_short port)
+    int UDPSocket::Bind(u_short port)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
@@ -142,7 +142,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Connect(const IPv4 address)
+    int UDPSocket::Connect(const IPv4 address)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
@@ -155,7 +155,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Send(const char* data, int dataSize)
+    int UDPSocket::Send(const char* data, int dataSize)
     {
         const SOCKET& socketFD = __impl__.socketFD;
         const int sentBytes = send(socketFD, data, dataSize, 0);
@@ -166,7 +166,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::SendTo(const char* data, int dataSize, const IPv4 address)
+    int UDPSocket::SendTo(const char* data, int dataSize, const IPv4 address)
     {
         const SOCKET& socketFD = __impl__.socketFD;
         
@@ -179,7 +179,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Receive(char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress)
+    int UDPSocket::Receive(char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 

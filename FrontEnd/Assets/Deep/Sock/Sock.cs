@@ -8,13 +8,13 @@ using UnityEngine; // Temporary for logging
 
 namespace Deep.Sock
 {
-    public class Socket
+    public class UDPSocket
     {
         private byte[] buffer;
         private EndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
-        private System.Net.Sockets.Socket socket = null;
+        private Socket socket = null;
 
-        public Socket(int bufferSize) 
+        public UDPSocket(int bufferSize) 
         {
             buffer = new byte[bufferSize];
         }
@@ -22,7 +22,7 @@ namespace Deep.Sock
         public void Open()
         {
             if (socket != null) socket.Dispose();
-            socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, true);
 
             //https://stackoverflow.com/questions/38191968/c-sharp-udp-an-existing-connection-was-forcibly-closed-by-the-remote-host

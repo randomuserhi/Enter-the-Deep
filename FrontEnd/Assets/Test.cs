@@ -8,7 +8,7 @@ using Deep.Sock;
 
 class Test : MonoBehaviour 
 {
-    Socket test = new Socket(1024);
+    UDPSocket test = new UDPSocket(1024);
     
     private void Start()
     {

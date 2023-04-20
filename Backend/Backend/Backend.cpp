@@ -21,7 +21,7 @@ int main()
 
     std::cout << "Hello World!" << std::endl;
     Deep::InitializeSockets();
-    Deep::Socket socket;
+    Deep::UDPSocket socket;
     socket.Open();
     socket.Connect(Deep::IPv4(127, 0, 0, 1, 1000));
     Deep::IPv4 address;
