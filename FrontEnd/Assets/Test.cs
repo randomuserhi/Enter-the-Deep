@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Deep;
-using Deep.Sock;
+using Deep.Net;
 
 class Test : MonoBehaviour 
 {
-    UDPSocket test = new UDPSocket(1024);
+    Channel test = new Channel(1024);
     
     private void Start()
     {

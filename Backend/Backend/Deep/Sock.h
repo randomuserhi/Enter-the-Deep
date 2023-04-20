@@ -2,8 +2,6 @@
 
 #include "Deep.h"
 
-#define DEEP_NETWORK_DEFAULTPORT (57687)
-
 #define DEEP_SOCKET_NOERROR (0)
 #define DEEP_SOCKET_ERROR (-1)
 #define DEEP_SOCKET_UNKNOWN_ADDRESS_FAMILY (-2)
@@ -48,8 +46,8 @@ namespace Deep
         int Close();
         int Bind(u_short port = 0);
         int Connect(const IPv4 address);
-        int Send(const char* data, int dataSize);
-        int SendTo(const char* data, int dataSize, const IPv4 address);
-        int Receive(char* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
+        int Send(const byte* data, int dataSize);
+        int SendTo(const byte* data, int dataSize, const IPv4 address);
+        int Receive(byte* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress);
     };
 }

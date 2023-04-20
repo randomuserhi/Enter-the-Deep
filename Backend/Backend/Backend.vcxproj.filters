@@ -51,6 +51,9 @@
     <ClCompile Include="Deep\Sock\IPv4.cpp">
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
+    <ClCompile Include="Deep\Net\Channel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep\Deep.h">
@@ -76,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="Deep\Sock\IPv4.h">
       <Filter>Header Files\Deep\Sock</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Net.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Net\Channel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

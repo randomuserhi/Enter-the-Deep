@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 
-using UnityEngine; // Temporary for logging
-
 namespace Deep.Sock
 {
     public class UDPSocket
     {
         private byte[] buffer;
         private EndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
-        private Socket socket = null;
+        private Socket socket;
 
-        public UDPSocket(int bufferSize) 
+        public AsyncCallback onreceive;
+
+        public UDPSocket(byte[] buffer, AsyncCallback onreceive)
         {
-            buffer = new byte[bufferSize];
+            this.buffer = buffer;
+            this.onreceive = onreceive;
         }
 
         public void Open()
@@ -64,11 +65,12 @@ namespace Deep.Sock
 
         private void ReceiveCallback(IAsyncResult result)
         {
-            int numBytes = socket.EndReceiveFrom(result, ref endPoint);
+            onreceive.Invoke(result);
             socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref endPoint, ReceiveCallback, null);
-            
-            Debug.Log($"Recieved {numBytes} bytes.");
         }
+
+        public int EndReceiveFrom(IAsyncResult asyncResult, ref EndPoint endPoint) 
+            => socket.EndReceiveFrom(asyncResult, ref endPoint);
 
         public void Send(byte[] data)
         {

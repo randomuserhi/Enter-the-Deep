@@ -11,7 +11,7 @@ namespace Deep
     {
         struct UDPSocket
         {
-            SOCKET socketFD;
+            SOCKET socketFD = INVALID_SOCKET;
         };
 
         Deep_Inline int GetWSAError()

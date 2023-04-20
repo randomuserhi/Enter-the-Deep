@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Deep.h"
-#include "Sock.h"
+#include "Net.h"
 
 // https://stackoverflow.com/a/62047818/9642458
 #include <chrono>
@@ -25,20 +25,20 @@ int main()
     socket.Open();
     socket.Connect(Deep::IPv4(127, 0, 0, 1, 1000));
     Deep::IPv4 address;
-    socket.GetSockName(address);
+    socket.GetPeerName(address);
     std::cout << static_cast<u_int>(address.a)
         << ":" << static_cast<u_int>(address.b)
         << ":" << static_cast<u_int>(address.c)
         << ":" << static_cast<u_int>(address.d)
         << ":" << address.port << std::endl;
 
-    const char data[] = "That's crazy";
+    const byte data[] = "That's crazy";
 
     std::cout << sizeof data << std::endl;
 
     while (true)
     {
-        socket.Send(data, sizeof data);
+        socket.Send(reinterpret_cast<const byte*>(data), sizeof data);
 
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(100ms);
