@@ -19,7 +19,7 @@ namespace Deep
 
     Deep_Inline SocketAddr ToSocketAddr(const IPv4 ip)
     {
-        const unsigned int bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
+        const u_int bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
 
         SocketAddr address;
         address.sa_in.sin_family = AF_INET;
@@ -32,7 +32,7 @@ namespace Deep
     {
         if (sockAddr.sa.sa_family == AF_INET)
         {
-            const unsigned int bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
+            const u_int bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
             format.a = (bitAddress & 0xFF000000) >> 24;
             format.b = (bitAddress & 0x00FF0000) >> 16;
             format.c = (bitAddress & 0x0000FF00) >> 8;
@@ -117,7 +117,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int Socket::Bind(unsigned short port)
+    int Socket::Bind(u_short port)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 

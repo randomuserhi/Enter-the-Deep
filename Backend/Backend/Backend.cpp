@@ -23,7 +23,7 @@ int main()
     Deep::InitializeSockets();
     Deep::Socket socket;
     socket.Open();
-    socket.Bind();
+    socket.Connect(Deep::IPv4(127, 0, 0, 1, 1000));
     Deep::IPv4 address;
     socket.GetSockName(address);
     std::cout << static_cast<u_int>(address.a)
