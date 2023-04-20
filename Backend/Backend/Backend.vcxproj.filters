@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Deep\Sock">
       <UniqueIdentifier>{6026bd7b-607e-4085-9fe1-89a8ff9f2b32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Deep\Net">
+      <UniqueIdentifier>{0a7fbe32-fec7-4841-afab-dccae5561e3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Net">
+      <UniqueIdentifier>{b04212ce-61bb-4248-9628-15cfc090236a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Backend.cpp">
@@ -52,7 +58,10 @@
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
     <ClCompile Include="Deep\Net\Channel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Deep\Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep\Net\Packet.cpp">
+      <Filter>Source Files\Deep\Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +92,11 @@
     <ClInclude Include="Deep\Net.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Deep\Net\Packet.h">
+      <Filter>Header Files\Deep\Net</Filter>
+    </ClInclude>
     <ClInclude Include="Deep\Net\Channel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Deep\Net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

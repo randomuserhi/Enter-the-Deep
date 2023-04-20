@@ -2,6 +2,7 @@
 
 #if defined(DEEP_PLATFORM_WINDOWS)
 
+#include <cassert>
 #include "Sock_Windows.h"
 
 namespace Deep
@@ -161,10 +162,12 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Send(const byte* data, int dataSize)
+    int UDPSocket::Send(const byte* data, size_t dataSize)
     {
+        assert(dataSize < INT_MAX);
+
         const SOCKET& socketFD = __impl__.socketFD;
-        const int sentBytes = send(socketFD, reinterpret_cast<const char*>(data), dataSize, 0);
+        const int sentBytes = send(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0);
         if (sentBytes == SOCKET_ERROR)
         {
             return DEEP_SOCKET_ERROR;
@@ -172,12 +175,14 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::SendTo(const byte* data, int dataSize, const IPv4 address)
+    int UDPSocket::SendTo(const byte* data, size_t dataSize, const IPv4 address)
     {
+        assert(dataSize < INT_MAX);
+
         const SOCKET& socketFD = __impl__.socketFD;
         
         const SocketAddr sockAddr = ToSocketAddr(address);
-        const int sentBytes = sendto(socketFD, reinterpret_cast<const char*>(data), dataSize, 0, &sockAddr.sa, sizeof sockAddr);
+        const int sentBytes = sendto(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0, &sockAddr.sa, sizeof sockAddr);
         if (sentBytes == SOCKET_ERROR)
         {
             return DEEP_SOCKET_ERROR;
@@ -185,14 +190,16 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Receive(byte* buffer, const int maxBufferSize, int& bytesReceived, IPv4& fromAddress)
+    int UDPSocket::Receive(byte* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
     {
+        assert(maxBufferSize < INT_MAX);
+
         const SOCKET& socketFD = __impl__.socketFD;
 
         SocketAddr fromSockAddr = ToSocketAddr(fromAddress);
         socklen_t fromLength = sizeof fromSockAddr;
 
-        bytesReceived = recvfrom(socketFD, reinterpret_cast<char*>(buffer), maxBufferSize, 0, &fromSockAddr.sa, &fromLength);
+        bytesReceived = recvfrom(socketFD, reinterpret_cast<char*>(buffer), static_cast<int>(maxBufferSize), 0, &fromSockAddr.sa, &fromLength);
 
         if (bytesReceived < 0)
         {

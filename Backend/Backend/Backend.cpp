@@ -38,7 +38,10 @@ int main()
 
     while (true)
     {
-        socket.Send(reinterpret_cast<const byte*>(data), sizeof data);
+        Deep::Packet packet;
+        packet.Write(10);
+
+        socket.Send(packet.Data(), static_cast<int>(packet.Size()));
 
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(100ms);
