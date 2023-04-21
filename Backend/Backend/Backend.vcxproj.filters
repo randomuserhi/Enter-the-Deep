@@ -16,9 +16,6 @@
     <Filter Include="Header Files\Deep">
       <UniqueIdentifier>{bb569d22-05a2-405c-ae95-11a53faf13ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Deep\Debug">
-      <UniqueIdentifier>{607965c4-a384-421f-a10e-742240568511}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Deep">
       <UniqueIdentifier>{92012665-6c37-4d43-8ec7-77bbe755ba90}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,9 @@
     </Filter>
     <Filter Include="Source Files\Deep\Net">
       <UniqueIdentifier>{b04212ce-61bb-4248-9628-15cfc090236a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\DebugUtil">
+      <UniqueIdentifier>{607965c4-a384-421f-a10e-742240568511}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,13 +69,13 @@
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
     <ClInclude Include="Deep\DebugUtil\Memory.h">
-      <Filter>Header Files\Deep\Debug</Filter>
+      <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
     <ClInclude Include="Deep\DebugUtil\Memory_Def.h">
-      <Filter>Header Files\Deep\Debug</Filter>
+      <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
     <ClInclude Include="Deep\DebugUtil\Memory_Undef.h">
-      <Filter>Header Files\Deep\Debug</Filter>
+      <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Sock.h">
       <Filter>Header Files\Deep</Filter>
