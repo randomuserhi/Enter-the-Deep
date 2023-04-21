@@ -1,0 +1,303 @@
+/**
+ * TODO(randomuserhi): Insert default variable definitions into :root
+ */
+
+:root
+{
+    --Navbar_height: 80px;
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    :root
+    {
+        --Navbar_height: 60px;
+    }
+}
+
+.Navbar
+{
+    display: flex;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 100%;
+    height: var(--Navbar_height);
+    padding: 7px 70px;
+
+    background-color: var(--js-Navbar_bgColor);
+    color: var(--js-Navbar-Controls_color);
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar
+    {
+        padding: 7px 30px;
+    }
+}
+
+.Navbar-Margin
+{
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    display: flex;
+}
+
+.Navbar *
+{
+    user-select: none;
+}
+
+.Navbar_spacer
+{
+    position: relative;
+
+    width: 100%;
+    height: var(--Navbar_height);
+}
+
+.Navbar-Logo
+{
+    height: 100%; 
+    padding: 15px 70px 15px 0;
+    color: var(--js-DefaultColor);
+    transition: 
+        color 100ms ease-out,
+        background-color 100ms ease-out
+        ;
+}
+.Navbar-Logo:hover
+{
+    color: rgba(255, 255, 255, 1);
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar-Logo
+    {
+        padding: 15px 0;
+        max-width: 80px;
+    }
+}
+
+/* Navbar-Menu */
+.Navbar-Menu
+{
+    display: none;
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar-Menu
+    {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.Navbar-Menu_button
+{
+    display: block;
+    position: relative;
+    width: 40px;
+    height: 75%;
+    z-index: 1;
+    transform: translateY(8px);
+    transition: transform 1s cubic-bezier(0.86, 0, 0.07, 1),transform-origin 1s cubic-bezier(0.86, 0, 0.07, 1);
+}
+.Navbar-Menu_button.js-active
+{
+    transform: translateY(0px);
+}
+
+.Navbar-Menu_button:before
+{
+    content: "";
+    display: block;
+    box-sizing: content-box;
+    position: absolute;
+    top: 13px;
+    width: 11px;
+    height: 1px;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.86, 0, 0.07, 1),transform-origin 1s cubic-bezier(0.86, 0, 0.07, 1);
+    background: white;
+
+    transform-origin: 100% 100%;
+    transform: rotate(40deg) scaleY(1.1);
+
+    right: 50%;
+    border-radius: 0.5px 0 0 0.5px;
+}
+.Navbar-Menu_button.js-active:before
+{
+    transform-origin: 100% 0%;
+    transform: rotate(-40deg) scaleY(1.1);
+}
+.Navbar-Menu_button:after
+{
+    content: "";
+    display: block;
+    box-sizing: content-box;
+    position: absolute;
+    top: 13px;
+    width: 11px;
+    height: 1px;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.86, 0, 0.07, 1),transform-origin 1s cubic-bezier(0.86, 0, 0.07, 1);
+    background: white;
+
+    transform-origin: 0% 100%;
+    transform: rotate(-40deg) scaleY(1.1);
+
+    left: 50%;
+    border-radius: 0 0.5px 0.5px 0;
+}
+.Navbar-Menu_button.js-active:after
+{
+    transform-origin: 0% 0%;
+    transform: rotate(40deg) scaleY(1.1);
+}
+
+/* Navbar controls */
+.Navbar-Controls-Login,
+.Navbar-Controls
+{
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    min-width: 100px;
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar-Controls-Login,
+    .Navbar-Controls
+    {
+        display: none;
+    }
+}
+.Navbar-Controls a
+{
+    cursor: pointer;
+    transition: color 100ms ease-out;
+}
+.Navbar-Controls a:hover
+{
+    color: var(--js-Navbar-Controls_hoverColor);
+}
+
+.Navbar-Controls-Login.js-signedIn
+{
+    display: none;
+}
+
+/* Features button, generalised to dropdown */
+.Navbar-Controls-DropDown
+{
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+
+    padding: 5px;
+    padding-left: 10px;
+    border-radius: 5px;
+
+    color: inherit;
+    transition: 
+        color 100ms ease-out,
+        background-color 100ms ease-out
+        ;
+}
+.Navbar-Controls-DropDown:hover
+{
+    background-color: var(--js-Navbar-Controls-DropDown_hoverBgColor);
+    color: var(--js-Navbar-Controls_hoverColor);
+}
+
+/* Default buttons */
+.Navbar-Controls-Button
+{
+    padding: 3px 7px;
+    flex-shrink: 0;
+    color: var(--js-Navbar-Controls-Button_color);
+    background-color: var(--js-Navbar-Controls-Button_bgColor);
+
+    transition: 
+        color 100ms ease-out,
+        background-color 100ms ease-out
+        ;
+}
+.Navbar-Controls-Button:hover
+{
+    color: var(--js-Navbar-Controls-Button_hoverColor);
+    background-color: var(--js-Navbar-Controls-Button_hoverBgColor);
+}
+
+.Navbar-ProfileMenu_dropdown
+{
+    display: inline;
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar-ProfileMenu_dropdown
+    {
+        display: none;
+    }
+}
+
+.Navbar-ProfileMenu>div
+{
+    display:flex;
+    gap: 5px;
+    align-items: center;
+    color: var(--js-Navbar-Controls-Profile_color);
+}
+.Navbar-ProfileMenu:hover>div
+{
+    color: var(--js-Navbar-Controls-Profile_hoverColor);
+}
+
+.Navbar-Avatar
+{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+@media screen and (max-width: 780px) /* if width <= 780 */
+{
+    .Navbar-Avatar
+    {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;       
+    }
+}
+
+.Navbar-Avatar-Notif
+{
+    display: none;
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 50%;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 13px;
+    height: 13px;
+
+    background-image: linear-gradient(#54a3ff, #006eed);
+
+    transform: translate(25%, -25%);
+}
+.Navbar-Avatar-Notif.js-active
+{
+    display: inline;
+}

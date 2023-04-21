@@ -1,6 +1,6 @@
 Copyright (C) 2023 randomuserhi
 
-This source code is released purely for educational purposes and no part of it is to be redistributed. 
+This source code is released purely for educational purposes and no part of it is to be redistributed.
 
 # Enter the Deep
 
