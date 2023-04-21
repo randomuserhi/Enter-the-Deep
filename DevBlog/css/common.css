@@ -1,0 +1,11 @@
+:root
+{
+    --font-family: "IBM Plex Sans";
+    --font-size: 1rem;
+}
+
+body
+{
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+}
