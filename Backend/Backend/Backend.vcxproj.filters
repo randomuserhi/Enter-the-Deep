@@ -42,7 +42,7 @@
     <ClCompile Include="Backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Debug\Memory.cpp">
+    <ClCompile Include="Deep\DebugUtil\Memory.cpp">
       <Filter>Source Files\Deep\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Deep\Sock\Sock_Windows.cpp">
@@ -68,13 +68,13 @@
     <ClInclude Include="Deep\Deep.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Debug\Memory.h">
+    <ClInclude Include="Deep\DebugUtil\Memory.h">
       <Filter>Header Files\Deep\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Debug\Memory_Def.h">
+    <ClInclude Include="Deep\DebugUtil\Memory_Def.h">
       <Filter>Header Files\Deep\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Debug\Memory_Undef.h">
+    <ClInclude Include="Deep\DebugUtil\Memory_Undef.h">
       <Filter>Header Files\Deep\Debug</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Sock.h">

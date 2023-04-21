@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Backend.cpp" />
-    <ClCompile Include="Deep\Debug\Memory.cpp" />
+    <ClCompile Include="Deep\DebugUtil\Memory.cpp" />
     <ClCompile Include="Deep\Net\Channel.cpp" />
     <ClCompile Include="Deep\Net\Packet.cpp" />
     <ClCompile Include="Deep\Sock\IPv4.cpp" />
@@ -149,9 +149,9 @@
     <ClCompile Include="Deep\Sock\Sock_Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Deep\Debug\Memory.h" />
-    <ClInclude Include="Deep\Debug\Memory_Def.h" />
-    <ClInclude Include="Deep\Debug\Memory_Undef.h" />
+    <ClInclude Include="Deep\DebugUtil\Memory.h" />
+    <ClInclude Include="Deep\DebugUtil\Memory_Def.h" />
+    <ClInclude Include="Deep\DebugUtil\Memory_Undef.h" />
     <ClInclude Include="Deep\Deep.h" />
     <ClInclude Include="Deep\Net.h" />
     <ClInclude Include="Deep\Net\Channel.h" />
