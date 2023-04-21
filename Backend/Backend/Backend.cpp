@@ -10,7 +10,7 @@
 // NOTE(randomuserhi): Needs to be included after all standard library includes to 
 //                     prevent overwritting malloc and new in their code.
 #define DEEP_DEBUG_MEMORY
-#include "Debug/Memory.h"
+#include "DebugUtil/Memory.h"
 
 // TODO(randomuserhi): Documentation, I need to stay on top of documentation
 //                     in code docs along side doc website
