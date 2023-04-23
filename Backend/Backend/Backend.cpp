@@ -27,10 +27,10 @@ int main()
     Deep::IPv4 address;
     socket.GetPeerName(address);
     std::cout << static_cast<u_int>(address.a)
-        << ":" << static_cast<u_int>(address.b)
-        << ":" << static_cast<u_int>(address.c)
-        << ":" << static_cast<u_int>(address.d)
-        << ":" << address.port << std::endl;
+       << ":" << static_cast<u_int>(address.b)
+       << ":" << static_cast<u_int>(address.c)
+       << ":" << static_cast<u_int>(address.d)
+       << ":" << address.port << std::endl;
 
     const byte data[] = "That's crazy";
 

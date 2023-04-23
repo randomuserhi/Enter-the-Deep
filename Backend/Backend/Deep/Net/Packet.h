@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Deep.h"
+#include "Math/Core.h"
 
 namespace Deep
 {
@@ -16,6 +17,7 @@ namespace Deep
         void Write(byte byte);
         void Write(const byte* bytes, size_t numBytes);
         void Write(int value);
+        void Write(Vec3 value);
     };
     Deep_Inline const byte* Packet::Data()
     {

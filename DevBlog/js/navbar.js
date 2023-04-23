@@ -3,7 +3,7 @@
 
     let RHU = window.RHU;
     if (RHU === null || RHU === undefined) throw new Error("No RHU found. Did you import RHU before running?");
-    RHU.module({ module: "main", hard: ["RHU.Macro"], trace: new Error() }, function()
+    RHU.module({ module: "navbar-content", hard: ["RHU.Macro"], trace: new Error() }, function()
     {
         let navbar = function()
         {

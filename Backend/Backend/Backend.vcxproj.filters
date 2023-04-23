@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Deep\DebugUtil">
       <UniqueIdentifier>{607965c4-a384-421f-a10e-742240568511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Deep\Math">
+      <UniqueIdentifier>{69d53ffa-8e87-421d-af37-83a85595b841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Math">
+      <UniqueIdentifier>{3debcdfb-0362-4cca-8133-8e69704b5761}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Backend.cpp">
@@ -62,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="Deep\Net\Packet.cpp">
       <Filter>Source Files\Deep\Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep\Math\Vec3.cpp">
+      <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,14 +98,20 @@
     <ClInclude Include="Deep\Sock\IPv4.h">
       <Filter>Header Files\Deep\Sock</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Deep\Net\Packet.h">
       <Filter>Header Files\Deep\Net</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Net\Channel.h">
       <Filter>Header Files\Deep\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Net.h">
+      <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Math\Vec3.h">
+      <Filter>Header Files\Deep\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Math\Core.h">
+      <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
