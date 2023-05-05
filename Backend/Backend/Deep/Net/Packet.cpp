@@ -1,7 +1,6 @@
 #include <winsock2.h>
 
 #include "Packet.h"
-//#include "../Math.h"
 
 namespace Deep
 {
@@ -25,15 +24,32 @@ namespace Deep
         memcpy(buffer.data() + old, bytes, numBytes);
     }
 
+    // Fairly sure the below below reinterpret_cast's are UB to the abstract Cpp machine, 
+    // since we are constructing an int object instead of an array of char objects, 
+    // so access to the char objects via the vector is UB.
+    // 
+    // Reasonable compilers shouldn't care, but by the cpp standard this is UB
+
     void Packet::Write(int value)
     {
         size_t old = buffer.size();
-        buffer.resize(buffer.size() + sizeof(int));
-        // Fairly sure this is UB to the abstract Cpp machine, since we are 
-        // constructing an int object instead of an array of char objects, 
-        // so access to the char objects via the vector is UB.
-        // 
-        // Reasonable compilers shouldn't care, but by the cpp standard this is UB
+        buffer.resize(buffer.size() + sizeof value);
         *reinterpret_cast<int*>(buffer.data() + old) = htonl(value);
+    }
+
+    // TODO(randomuserhi): Need to compress float values instead of just writing them to packet
+   
+    void Packet::Write(Vec3 value)
+    {
+        size_t old = buffer.size();
+        buffer.resize(buffer.size() + sizeof value);
+        *reinterpret_cast<Vec3*>(buffer.data() + old) = value;
+    }
+
+    void Packet::Write(Vec4 value)
+    {
+        size_t old = buffer.size();
+        buffer.resize(buffer.size() + sizeof value);
+        *reinterpret_cast<Vec4*>(buffer.data() + old) = value;
     }
 }

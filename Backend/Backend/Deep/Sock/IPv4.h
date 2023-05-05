@@ -6,7 +6,6 @@ namespace Deep
 {
     struct IPv4
     {
-    public:
         IPv4() :
             a(0), b(0), c(0), d(0), port(0)
         {}
