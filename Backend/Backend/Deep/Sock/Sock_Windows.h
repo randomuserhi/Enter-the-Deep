@@ -11,6 +11,7 @@ namespace Deep
     {
         struct UDPSocket
         {
+        public:
             SOCKET socketFD = INVALID_SOCKET;
         };
 

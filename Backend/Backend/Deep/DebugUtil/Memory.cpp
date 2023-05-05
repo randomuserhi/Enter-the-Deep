@@ -58,6 +58,7 @@ namespace Deep
 
     struct DebugPtrInfo
     {
+    public:
         const char* file;
         int line;
         const char* function;

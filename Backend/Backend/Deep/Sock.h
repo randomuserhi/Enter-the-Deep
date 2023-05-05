@@ -33,8 +33,6 @@ namespace Deep
 
     class UDPSocket
     {
-        __impl__::UDPSocket __impl__;
-
     public:
         UDPSocket() : __impl__() {}
 
@@ -49,5 +47,8 @@ namespace Deep
         int Send(const byte* data, size_t dataSize);
         int SendTo(const byte* data, size_t dataSize, const IPv4 address);
         int Receive(byte* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
+        
+    private:
+        __impl__::UDPSocket __impl__;
     };
 }

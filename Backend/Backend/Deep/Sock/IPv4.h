@@ -6,14 +6,7 @@ namespace Deep
 {
     struct IPv4
     {
-        static const IPv4 any;
-
-        u_char a;
-        u_char b;
-        u_char c;
-        u_char d;
-        u_short port;
-
+    public:
         IPv4() :
             a(0), b(0), c(0), d(0), port(0)
         {}
@@ -23,6 +16,15 @@ namespace Deep
         {}
 
         friend bool operator==(const IPv4& sockA, const IPv4& sockB);
+
+    public:
+        static const IPv4 any;
+
+        u_char a;
+        u_char b;
+        u_char c;
+        u_char d;
+        u_short port;
     };
     Deep_Inline bool operator==(const IPv4& lhs, const IPv4& rhs)
     {
