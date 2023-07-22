@@ -34,11 +34,7 @@
 * Deep Utilities
 */
 
-typedef unsigned char byte;
-typedef unsigned char u_char;
-typedef unsigned short u_short;
-typedef unsigned int u_int;
-typedef unsigned long u_long;
+#include "Deep_Types.h"
 
 #if defined(Deep_Compiler_Clang)
 #define Deep_Inline inline

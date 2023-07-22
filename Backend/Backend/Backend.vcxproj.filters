@@ -113,5 +113,8 @@
     <ClInclude Include="Deep\Math\Core.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Deep\Deep_Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

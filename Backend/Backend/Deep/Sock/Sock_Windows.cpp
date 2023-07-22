@@ -20,7 +20,7 @@ namespace Deep
 
     Deep_Inline SocketAddr ToSocketAddr(const IPv4 ip)
     {
-        const u_int bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
+        const uint bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
 
         SocketAddr address;
         address.sa_in.sin_family = AF_INET;
@@ -33,7 +33,7 @@ namespace Deep
     {
         if (sockAddr.sa.sa_family == AF_INET)
         {
-            const u_int bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
+            const uint bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
             format.a = (bitAddress & 0xFF000000) >> 24;
             format.b = (bitAddress & 0x00FF0000) >> 16;
             format.c = (bitAddress & 0x0000FF00) >> 8;
@@ -124,14 +124,14 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Bind(u_short port)
+    int UDPSocket::Bind(uint16 port)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
         struct sockaddr_in address;
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY;
-        address.sin_port = htons(port);
+        address.sin_port = htons((u_short)port);
 
         if (bind(socketFD, (struct sockaddr*)&address, sizeof address) == SOCKET_ERROR)
         {
@@ -162,7 +162,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Send(const byte* data, size_t dataSize)
+    int UDPSocket::Send(const uint8_t* data, size_t dataSize)
     {
         assert(dataSize < INT_MAX);
 
@@ -175,7 +175,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::SendTo(const byte* data, size_t dataSize, const IPv4 address)
+    int UDPSocket::SendTo(const uint8_t* data, size_t dataSize, const IPv4 address)
     {
         assert(dataSize < INT_MAX);
 
@@ -190,7 +190,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Receive(byte* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
+    int UDPSocket::Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
     {
         assert(maxBufferSize < INT_MAX);
 

@@ -154,6 +154,7 @@
     <ClInclude Include="Deep\DebugUtil\Memory_Def.h" />
     <ClInclude Include="Deep\DebugUtil\Memory_Undef.h" />
     <ClInclude Include="Deep\Deep.h" />
+    <ClInclude Include="Deep\Deep_Types.h" />
     <ClInclude Include="Deep\Math\Core.h" />
     <ClInclude Include="Deep\Math\Vec3.h" />
     <ClInclude Include="Deep\Net.h" />

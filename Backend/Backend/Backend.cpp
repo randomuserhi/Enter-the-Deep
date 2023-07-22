@@ -26,13 +26,13 @@ int main()
     socket.Connect(Deep::IPv4(127, 0, 0, 1, 1000));
     Deep::IPv4 address;
     socket.GetPeerName(address);
-    std::cout << static_cast<u_int>(address.a)
-       << ":" << static_cast<u_int>(address.b)
-       << ":" << static_cast<u_int>(address.c)
-       << ":" << static_cast<u_int>(address.d)
+    std::cout << static_cast<uint>(address.a)
+       << ":" << static_cast<uint>(address.b)
+       << ":" << static_cast<uint>(address.c)
+       << ":" << static_cast<uint>(address.d)
        << ":" << address.port << std::endl;
 
-    const byte data[] = "That's crazy";
+    const uint8 data[] = "That's crazy";
 
     std::cout << sizeof data << std::endl;
 

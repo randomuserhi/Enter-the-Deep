@@ -17,7 +17,7 @@
 
 namespace Deep
 {
-    bool IsBigEndian();
+    bool IsBigEndian(); // Consider moving somewhere else? => maybe into Net.h
 
     // This namespace is used for storing OS implementation specifics
     // NOTE(randomuserhi): They can still be accessed by the user via __impl__ to allow them to write 
@@ -42,11 +42,11 @@ namespace Deep
 
         int Open();
         int Close();
-        int Bind(u_short port = 0);
+        int Bind(uint16 port = 0);
         int Connect(const IPv4 address);
-        int Send(const byte* data, size_t dataSize);
-        int SendTo(const byte* data, size_t dataSize, const IPv4 address);
-        int Receive(byte* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
+        int Send(const uint8_t* data, size_t dataSize);
+        int SendTo(const uint8_t* data, size_t dataSize, const IPv4 address);
+        int Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
         
     private:
         __impl__::UDPSocket __impl__;
