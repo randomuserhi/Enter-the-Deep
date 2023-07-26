@@ -131,7 +131,10 @@ namespace Deep
         struct sockaddr_in address;
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY;
-        address.sin_port = htons((u_short)port);
+        // NOTE(randomuserhi): handle uint16 not guaranteed to be a 16 bit integer -> refer to Deep_Types.h
+        //                     could use uint16_t instead.
+        assert(port < USHRT_MAX);
+        address.sin_port = htons(static_cast<u_short>(port));
 
         if (bind(socketFD, (struct sockaddr*)&address, sizeof address) == SOCKET_ERROR)
         {

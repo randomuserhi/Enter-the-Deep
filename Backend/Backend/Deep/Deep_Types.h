@@ -45,8 +45,13 @@ typedef unsigned long long ulonglong;
 
 typedef unsigned short half;
 
-/// Same as above, except explicitly shows bit length for readability
-/// E.g int8 guarantees that the size of the type is atleast 8 bits
+/// Loose definitions => short hand for int_fastXX_t
+/// Like above the type is atleast XX number of bits large
+/// The types are optimized for speed and performance and thus be careful for gotchas
+/// such as int16 being represented as a 32 bit integer instead of 16bit since 32bit is faster for most systems.
+/// 
+/// We prefer to use these for performance, however for space concern -> for example in writing cache friendly types
+/// utilize intXX_t types as they guarantee specific bit lengths
 
 typedef int_fast8_t int8;
 typedef int_fast16_t int16;
