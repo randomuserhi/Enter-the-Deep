@@ -20,14 +20,11 @@ namespace Deep
 
     Deep_Inline SocketAddr ToSocketAddr(const IPv4 ip)
     {
-        const uint bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
+        const uint32 bitAddress = (ip.a << 24) | (ip.b << 16) | (ip.c << 8) | ip.d;
 
         SocketAddr address;
         address.sa_in.sin_family = AF_INET;
         address.sa_in.sin_addr.s_addr = htonl(bitAddress);
-        // NOTE(randomuserhi): handle uint16 not guaranteed to be a 16 bit integer -> refer to Deep_Types.h
-        //                     could use uint16_t instead.
-        assert(ip.port < USHRT_MAX);
         address.sa_in.sin_port = htons(ip.port);
 
         return address;
@@ -36,7 +33,7 @@ namespace Deep
     {
         if (sockAddr.sa.sa_family == AF_INET)
         {
-            const uint bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
+            const uint32 bitAddress = ntohl(sockAddr.sa_in.sin_addr.s_addr);
             format.a = (bitAddress & 0xFF000000) >> 24;
             format.b = (bitAddress & 0x00FF0000) >> 16;
             format.c = (bitAddress & 0x0000FF00) >> 8;
