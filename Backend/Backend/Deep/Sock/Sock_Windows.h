@@ -4,8 +4,8 @@
 
 namespace Deep
 {
-    int InitializeSockets();
-    int ShutdownSockets();
+    int32 InitializeSockets();
+    int32 ShutdownSockets();
 
     namespace __impl__
     {
@@ -14,7 +14,7 @@ namespace Deep
             SOCKET socketFD = INVALID_SOCKET;
         };
 
-        Deep_Inline int GetWSAError()
+        Deep_Inline int32 GetWSAError()
         {
             return WSAGetLastError();
         }

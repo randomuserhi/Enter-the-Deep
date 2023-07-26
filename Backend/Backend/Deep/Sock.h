@@ -36,17 +36,17 @@ namespace Deep
     public:
         UDPSocket() : __impl__() {}
 
-        int GetSockName(IPv4& address);
+        int32 GetSockName(IPv4& address);
         
-        int GetPeerName(IPv4& address);
+        int32 GetPeerName(IPv4& address);
 
-        int Open();
-        int Close();
-        int Bind(uint16 port = 0);
-        int Connect(const IPv4 address);
-        int Send(const uint8_t* data, size_t dataSize);
-        int SendTo(const uint8_t* data, size_t dataSize, const IPv4 address);
-        int Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
+        int32 Open();
+        int32 Close();
+        int32 Bind(uint16 port = 0);
+        int32 Connect(const IPv4 address);
+        int32 Send(const uint8_t* data, size_t dataSize);
+        int32 SendTo(const uint8_t* data, size_t dataSize, const IPv4 address);
+        int32 Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
         
     private:
         __impl__::UDPSocket __impl__;

@@ -16,7 +16,7 @@ namespace Deep
         sockaddr_in sa_in;
     };
 
-    typedef int socklen_t;
+    typedef int32 socklen_t;
 
     Deep_Inline SocketAddr ToSocketAddr(const IPv4 ip)
     {
@@ -29,7 +29,7 @@ namespace Deep
 
         return address;
     }
-    int FromSocketAddr(const SocketAddr sockAddr, IPv4& format)
+    int32 FromSocketAddr(const SocketAddr sockAddr, IPv4& format)
     {
         if (sockAddr.sa.sa_family == AF_INET)
         {
@@ -46,7 +46,7 @@ namespace Deep
         return DEEP_SOCKET_INCOMPATIBLE_ADDRESS_FAMILY;
     }
 
-    int InitializeSockets()
+    int32 InitializeSockets()
     {
         WSADATA wsaData;
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) == NO_ERROR)
@@ -56,14 +56,14 @@ namespace Deep
         return DEEP_SOCKET_ERROR;
     }
 
-    int ShutdownSockets()
+    int32 ShutdownSockets()
     {
         const int result = WSACleanup();
         return result == SOCKET_ERROR ? DEEP_SOCKET_ERROR 
                                       : DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::GetSockName(IPv4& address)
+    int32 UDPSocket::GetSockName(IPv4& address)
     {
         SocketAddr sockAddr;
         socklen_t assignedAddressLen = sizeof sockAddr;
@@ -72,7 +72,7 @@ namespace Deep
         return FromSocketAddr(sockAddr, address);
     }
 
-    int UDPSocket::GetPeerName(IPv4& address)
+    int32 UDPSocket::GetPeerName(IPv4& address)
     {
         SocketAddr sockAddr;
         socklen_t assignedAddressLen = sizeof sockAddr;
@@ -81,7 +81,7 @@ namespace Deep
         return FromSocketAddr(sockAddr, address);
     }
 
-    int UDPSocket::Open()
+    int32 UDPSocket::Open()
     {
         SOCKET& socketFD = __impl__.socketFD;
         
@@ -106,7 +106,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Close()
+    int32 UDPSocket::Close()
     {
         SOCKET& socketFD = __impl__.socketFD;
         if (socketFD == INVALID_SOCKET)
@@ -115,7 +115,7 @@ namespace Deep
             return DEEP_SOCKET_NOERROR;
         }
 
-        const int result = closesocket(socketFD);
+        const int32 result = closesocket(socketFD);
         if (result == SOCKET_ERROR)
         {
             return DEEP_SOCKET_ERROR;
@@ -124,7 +124,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Bind(uint16 port)
+    int32 UDPSocket::Bind(uint16 port)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
@@ -149,7 +149,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Connect(const IPv4 address)
+    int32 UDPSocket::Connect(const IPv4 address)
     {
         const SOCKET& socketFD = __impl__.socketFD;
 
@@ -162,12 +162,12 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Send(const uint8_t* data, size_t dataSize)
+    int32 UDPSocket::Send(const uint8_t* data, size_t dataSize)
     {
         assert(dataSize < INT_MAX);
 
         const SOCKET& socketFD = __impl__.socketFD;
-        const int sentBytes = send(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0);
+        const int32 sentBytes = send(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0);
         if (sentBytes == SOCKET_ERROR)
         {
             return DEEP_SOCKET_ERROR;
@@ -175,14 +175,14 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::SendTo(const uint8_t* data, size_t dataSize, const IPv4 address)
+    int32 UDPSocket::SendTo(const uint8_t* data, size_t dataSize, const IPv4 address)
     {
         assert(dataSize < INT_MAX);
 
         const SOCKET& socketFD = __impl__.socketFD;
         
         const SocketAddr sockAddr = ToSocketAddr(address);
-        const int sentBytes = sendto(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0, &sockAddr.sa, sizeof sockAddr);
+        const int32 sentBytes = sendto(socketFD, reinterpret_cast<const char*>(data), static_cast<int>(dataSize), 0, &sockAddr.sa, sizeof sockAddr);
         if (sentBytes == SOCKET_ERROR)
         {
             return DEEP_SOCKET_ERROR;
@@ -190,7 +190,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int UDPSocket::Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
+    int32 UDPSocket::Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
     {
         assert(maxBufferSize < INT_MAX);
 

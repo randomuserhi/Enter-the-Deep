@@ -4,14 +4,17 @@
 
 /// Explicit Width writing rules:
 /// - If something requires a specified bit width use types like uint32_t/int32_t etc...
-/// - If something requires atleast 32 bits use int/uint 
-///   - This is fine since we are targetting 32/64 bit systems (otherwise we would opt to use int32/uint32)
+/// - If a built-in function uses unspecified int type / long type, implict/explicit casting to the built-in function is allowed
+///     - Use of static_cast<> for explicit casting may be used
+///     - Compilers will throw warnings for mismatch in types if a given system has one
 /// - Otherwise if something requires atleast X bits use intX/uintX
 /// 
 /// By this guideline we prefer:
 /// - int8/uint8 over char type
 /// - int16/uint16 over short type
+/// - int32/uint32 over int type
 /// - int64/uint64 over longlong type
+///
 /// 
 /// Notes on "Byte":
 /// - When on a 32/64 bit system it is safe to assume a byte is 8 bits and thus terminology like numBytes is synonymous with number
