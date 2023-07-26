@@ -25,6 +25,9 @@ namespace Deep
         SocketAddr address;
         address.sa_in.sin_family = AF_INET;
         address.sa_in.sin_addr.s_addr = htonl(bitAddress);
+        // NOTE(randomuserhi): handle uint16 not guaranteed to be a 16 bit integer -> refer to Deep_Types.h
+        //                     could use uint16_t instead.
+        assert(ip.port < USHRT_MAX);
         address.sa_in.sin_port = htons(ip.port);
 
         return address;
@@ -134,7 +137,7 @@ namespace Deep
         // NOTE(randomuserhi): handle uint16 not guaranteed to be a 16 bit integer -> refer to Deep_Types.h
         //                     could use uint16_t instead.
         assert(port < USHRT_MAX);
-        address.sin_port = htons(static_cast<u_short>(port));
+        address.sin_port = htons(port);
 
         if (bind(socketFD, (struct sockaddr*)&address, sizeof address) == SOCKET_ERROR)
         {
