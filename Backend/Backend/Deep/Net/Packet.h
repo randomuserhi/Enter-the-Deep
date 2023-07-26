@@ -8,10 +8,10 @@ namespace Deep
 {
     struct PacketReader
     {
-        PacketReader(const uint8* const data) : data(data) {}
+        PacketReader(const uint8_t* const data) : data(data) {}
 
     private:
-        const uint8* const data;
+        const uint8_t* const data;
     };
 
     struct Packet
