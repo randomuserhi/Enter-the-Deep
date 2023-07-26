@@ -31,7 +31,7 @@ namespace Deep
         memcpy(buffer.data() + old, bytes, numBytes);
     }
 
-    // Fairly sure the below below reinterpret_cast's are UB to the abstract Cpp machine, 
+    // Fairly sure the below reinterpret_cast's are UB to the abstract Cpp machine, 
     // since we are constructing an int object instead of an array of uint8 objects, 
     // so access to the uint8 objects via the vector is UB.
     // 
