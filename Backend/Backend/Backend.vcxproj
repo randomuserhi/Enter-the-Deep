@@ -144,6 +144,7 @@
     <ClCompile Include="Deep\Math\Vec3.cpp" />
     <ClCompile Include="Deep\Net\Channel.cpp" />
     <ClCompile Include="Deep\Net\Packet.cpp" />
+    <ClCompile Include="Deep\Physics\Physics.cpp" />
     <ClCompile Include="Deep\Sock\IPv4.cpp" />
     <ClCompile Include="Deep\Sock\Sock.cpp" />
     <ClCompile Include="Deep\Sock\Sock_Posix.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Deep\Net.h" />
     <ClInclude Include="Deep\Net\Channel.h" />
     <ClInclude Include="Deep\Net\Packet.h" />
+    <ClInclude Include="Deep\Physics.h" />
     <ClInclude Include="Deep\Sock.h" />
     <ClInclude Include="Deep\Sock\AF_INET.h" />
     <ClInclude Include="Deep\Sock\IPv4.h" />

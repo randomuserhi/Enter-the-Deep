@@ -15,6 +15,8 @@
 
 #endif
 
+// TODO(randomuserhi): TCPSocket -> Note not TCPServer -> thats handled elsewhere
+
 namespace Deep
 {
     bool IsBigEndian(); // Consider moving somewhere else? => maybe into Net.h
