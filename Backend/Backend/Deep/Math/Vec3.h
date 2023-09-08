@@ -4,10 +4,6 @@
 
 namespace Deep
 {
-    Vec3 operator+ (Vec3 a, const Vec3& b);
-    Vec3 operator- (Vec3 a, const Vec3& b);
-    float operator* (const Vec3& a, const Vec3& b);
-
     struct Vec3
     {
         Vec3& operator+= (const Vec3& other);
@@ -46,4 +42,8 @@ namespace Deep
         };
     };
     typedef Vec4 Quaternion;
+
+    Vec3 operator+ (Vec3 a, const Vec3& b);
+    Vec3 operator- (Vec3 a, const Vec3& b);
+    float operator* (const Vec3& a, const Vec3& b);
 }
