@@ -46,9 +46,9 @@ namespace Deep
         int32 Close();
         int32 Bind(uint16 port = 0);
         int32 Connect(const IPv4 address);
-        int32 Send(const uint8_t* data, size_t dataSize);
-        int32 SendTo(const uint8_t* data, size_t dataSize, const IPv4 address);
-        int32 Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
+        int32 Send(const uint8* data, size_t dataSize);
+        int32 SendTo(const uint8* data, size_t dataSize, const IPv4 address);
+        int32 Receive(uint8* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress);
         
     private:
         __impl__::UDPSocket __impl__;

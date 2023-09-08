@@ -8,12 +8,12 @@ namespace Deep
     {
     public:
         Channel(size_t bufferSize)
-            : bufferSize(bufferSize), buffer(new uint8_t[bufferSize])
+            : bufferSize(bufferSize), buffer(new uint8[bufferSize])
         {}
 
     private:
         size_t bufferSize;
-        uint8_t* const buffer;
+        uint8* const buffer;
         UDPSocket socket;
     };
 }

@@ -3,11 +3,12 @@
 #include <cstdint>
 
 /// Explicit Width writing rules:
-/// - If something requires a specified bit width use types like uint32_t/int32_t etc...
+/// - If performance is super tight and the alignment of memory isn't to bad you can use int_fastXX_t / uint_fastXX_t
+///     - Very rare that this is the case though
 /// - If a built-in function uses unspecified int type / long type, implict/explicit casting to the built-in function is allowed
 ///     - Use of static_cast<> for explicit casting may be used
 ///     - Compilers will throw warnings for mismatch in types if a given system has one
-/// - Otherwise if something requires atleast X bits use intX/uintX
+/// - Otherwise if something requires X bits use intX/uintX
 /// 
 /// By this guideline we prefer:
 /// - int8/uint8 over char type
@@ -45,23 +46,20 @@ typedef unsigned long long ulonglong;
 
 typedef unsigned short half;
 
-/// Loose definitions => short hand for int_fastXX_t
+/// strict definitions => short hand for intXX_t
 /// Like above the type is atleast XX number of bits large
-/// The types are optimized for speed and performance and thus be careful for gotchas
-/// such as int16 being represented as a 32 bit integer instead of 16bit since 32bit is faster for most systems.
-/// 
-/// We prefer to use these for performance, however for space concern -> for example in writing cache friendly types
-/// utilize intXX_t types as they guarantee specific bit lengths
+///
+/// int_fastXX_t can be used for loose definitions.
 
-typedef int_fast8_t int8;
-typedef int_fast16_t int16;
-typedef int_fast32_t int32;
-typedef int_fast64_t int64;
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
 
-typedef uint_fast8_t uint8;
-typedef uint_fast16_t uint16;
-typedef uint_fast32_t uint32;
-typedef uint_fast64_t uint64;
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 /// Floating point explicit width definitions
 /// 

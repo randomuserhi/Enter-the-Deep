@@ -131,8 +131,6 @@ namespace Deep
         struct sockaddr_in address;
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY;
-        // NOTE(randomuserhi): handle uint16 not guaranteed to be a 16 bit integer -> refer to Deep_Types.h
-        //                     could use uint16_t instead.
         assert(port < USHRT_MAX);
         address.sin_port = htons(port);
 
@@ -165,7 +163,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int32 UDPSocket::Send(const uint8_t* data, size_t dataSize)
+    int32 UDPSocket::Send(const uint8* data, size_t dataSize)
     {
         assert(dataSize < INT_MAX);
 
@@ -178,7 +176,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int32 UDPSocket::SendTo(const uint8_t* data, size_t dataSize, const IPv4 address)
+    int32 UDPSocket::SendTo(const uint8* data, size_t dataSize, const IPv4 address)
     {
         assert(dataSize < INT_MAX);
 
@@ -193,7 +191,7 @@ namespace Deep
         return DEEP_SOCKET_NOERROR;
     }
 
-    int32 UDPSocket::Receive(uint8_t* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
+    int32 UDPSocket::Receive(uint8* buffer, const size_t maxBufferSize, size_t& bytesReceived, IPv4& fromAddress)
     {
         assert(maxBufferSize < INT_MAX);
 

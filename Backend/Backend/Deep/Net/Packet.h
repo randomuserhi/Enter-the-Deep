@@ -8,10 +8,10 @@ namespace Deep
 {
     struct PacketReader
     {
-        PacketReader(const uint8_t* const data) : data(data) {}
+        PacketReader(const uint8* const data) : data(data) {}
 
     private:
-        const uint8_t* const data;
+        const uint8* const data;
     };
 
     struct Packet
@@ -23,7 +23,7 @@ namespace Deep
         }
          
         // TODO(randomuserhi): https://stackoverflow.com/a/51615364/9642458
-        Deep_Inline const uint8_t* Data();
+        Deep_Inline const uint8* Data();
         Deep_Inline size_t Size();
 
         void Write(uint8 byte);
@@ -38,9 +38,9 @@ namespace Deep
         //void WriteHalf(Quaternion value);
 
     private:
-        std::vector<uint8_t> buffer;
+        std::vector<uint8> buffer;
     };
-    Deep_Inline const uint8_t* Packet::Data()
+    Deep_Inline const uint8* Packet::Data()
     {
         return buffer.data();
     }
