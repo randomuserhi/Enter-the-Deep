@@ -14,21 +14,19 @@ declare namespace RHU {
 interface navbar extends HTMLDivElement
 {
 }
-interface navbarConstructor extends RHU.Macro.Constructor<navbar>
-{
-    
-}
 
 RHU.module(new Error(), "navbar",
-    { Macro: "rhu/macro", Style: "rhu/style", style: "navbar/style" },
-    function({ Macro, Style, style })
+    { Macro: "rhu/macro", style: "navbar/style" },
+    function({ Macro, style })
     {
-        const _navbar = function(this: appmount)
-        {
-            
-        } as appmountConstructor;
-        
-        const navbar = Macro(_navbar, "navbar", //html
+        const navbar = Macro((() => {
+            const navbar = function(this: appmount)
+            {
+                
+            } as RHU.Macro.Constructor<navbar>;
+
+            return navbar
+        })(), "navbar", //html
             `
             <nav class="${style.margin}">
                 <!-- LOGO -->

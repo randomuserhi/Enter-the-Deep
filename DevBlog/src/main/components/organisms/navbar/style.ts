@@ -21,14 +21,6 @@ declare namespace RHU {
     }
 }
 
-interface navbar extends HTMLDivElement
-{
-}
-interface navbarConstructor extends RHU.Macro.Constructor<navbar>
-{
-    
-}
-
 RHU.module(new Error(), "navbar/style",
     { Style: "rhu/style", theme: "main/theme" },
     function({ Style, theme })
