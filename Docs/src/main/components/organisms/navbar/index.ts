@@ -14,21 +14,19 @@ declare namespace RHU {
 interface navbar extends HTMLDivElement
 {
 }
-interface navbarConstructor extends RHU.Macro.Constructor<navbar>
-{
-    
-}
 
 RHU.module(new Error(), "navbar",
-    { Macro: "rhu/macro", Style: "rhu/style", style: "navbar/style" },
-    function({ Macro, Style, style })
+    { Macro: "rhu/macro", style: "navbar/style" },
+    function({ Macro, style })
     {
-        const _navbar = function(this: appmount)
-        {
-            
-        } as appmountConstructor;
-        
-        const navbar = Macro(_navbar, "navbar", //html
+        const navbar = Macro((() => {
+            const navbar = function(this: appmount)
+            {
+                
+            } as RHU.Macro.Constructor<navbar>;
+
+            return navbar
+        })(), "navbar", //html
             `
             <nav class="${style.margin}">
                 <!-- LOGO -->
@@ -38,13 +36,13 @@ RHU.module(new Error(), "navbar",
                 <nav class="${style.controls}">
                     <div>
                         <button class="${style.controls.dropdown}">
-                            Docs
+                            Blogs
                             <svg style="height: 1.3rem;" viewBox="0 0 24 24" fill="currentColor">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5303 15.5303C12.2374 15.8232 11.7626 15.8232 11.4697 15.5303L5.46967 9.53033C5.17678 9.23744 5.17678 8.76256 5.46967 8.46967C5.76256 8.17678 6.23744 8.17678 6.53033 8.46967L12 13.9393L17.4697 8.46967C17.7626 8.17678 18.2374 8.17678 18.5303 8.46967C18.8232 8.76256 18.8232 9.23744 18.5303 9.53033L12.5303 15.5303Z"/>
                             </svg>
                         </button>
                     </div>
-                    <a>Readme</a>
+                    <a>What's New</a>
                 </nav>
                 <!-- Spacer -->
                 <div style="flex: 1;"></div>
