@@ -47,7 +47,7 @@ RHU.module(new Error(), "main",
         const appmount = Macro((() => {
             const appmount = function(this: appmount)
             {
-                
+                this.classList.toggle(`${theme}`, true);   
             } as RHU.Macro.Constructor<appmount>;
 
             return appmount
