@@ -1,1 +1,75 @@
-!function(){"use strict";let e=window.RHU;if(null==e)throw new Error("No RHU found. Did you import RHU before running?");e.module({module:"rhu/websockets",trace:new Error,hard:["WebSocket","RHU.eventTarget"]},(function(){e.exists(e.WebSockets)&&console.warn("Overwriting RHU.WebSockets...");let t=e.WebSockets={};e.definePublicAccessors(t,{CONNECTING:{get:function(){return WebSocket.CONNECTING}},OPEN:{get:function(){return WebSocket.OPEN}},CLOSING:{get:function(){return WebSocket.CLOSING}},CLOSED:{get:function(){return WebSocket.CLOSED}}});let o=e.reflectConstruct(WebSocket,"RHU.ws",(function(e,t=[]){this.queue=[],this.addEventListener("open",(()=>{for(;this.queue.length;)WebSocket.prototype.send.call(this,this.queue.shift())}))}));o.__args__=function(e,t=[]){return[e,t]},o.prototype.send=function(t){this.readyState===e.WebSockets.OPEN?WebSocket.prototype.send.call(this,t):this.queue.push(t)},e.inherit(o,WebSocket),t.ws=o,t.wsClient=function(t,o){if(void 0===new.target)throw new TypeError("Constructor Component requires 'new'.");if(WebSocket!==t&&!Object.isPrototypeOf.call(WebSocket,t))throw new TypeError("WebSocket must be inherited from or of type 'WebSocket'.");let s=function(...s){this.args=s,e.eventTarget.call(this);let n={url:void 0,protocols:[]},r=o.call(this,...s);e.parseOptions(n,r),this.ws=new t(n.url,n.protocols),this.ws.addEventListener("close",(t=>{this.dispatchEvent(e.CustomEvent("close",t)),e.exists(this.onclose)&&this.onclose(t)})),this.ws.addEventListener("error",(t=>{this.dispatchEvent(e.CustomEvent("error",t)),e.exists(this.onerror)&&this.onerror(t)})),this.ws.addEventListener("message",(t=>{this.dispatchEvent(e.CustomEvent("message",t)),e.exists(this.onmessage)&&this.onmessage(t)})),this.ws.addEventListener("open",(t=>{this.dispatchEvent(e.CustomEvent("open",t)),e.exists(this.onopen)&&this.onopen(t)}))};return s.prototype.reconnect=function(...e){s.call(this,...0===e.length?this.args:e)},s.prototype.send=function(e){this.ws.send(e)},s.prototype.close=function(...e){this.ws.close(...e)},s}}))}();
+(function () {
+    let RHU = window.RHU;
+    if (RHU === null || RHU === undefined)
+        throw new Error("No RHU found. Did you import RHU before running?");
+    RHU.module(new Error(), "rhu/websockets", { eventTarget: "rhu/event" }, function ({ eventTarget }) {
+        let WebSockets = {};
+        RHU.definePublicAccessors(WebSockets, {
+            CONNECTING: {
+                get: function () { return WebSocket.CONNECTING; }
+            },
+            OPEN: {
+                get: function () { return WebSocket.OPEN; }
+            },
+            CLOSING: {
+                get: function () { return WebSocket.CLOSING; }
+            },
+            CLOSED: {
+                get: function () { return WebSocket.CLOSED; }
+            }
+        });
+        let ws = RHU.reflectConstruct(WebSocket, "RHU.ws", function (url, protocols = []) {
+            this.queue = [];
+            this.addEventListener("open", () => {
+                while (this.queue.length)
+                    WebSocket.prototype.send.call(this, this.queue.shift());
+            });
+        });
+        ws.__args__ = function (url, protocols = []) {
+            return [url, protocols];
+        };
+        ws.prototype.send = function (data) {
+            if (this.readyState === WebSockets.OPEN)
+                WebSocket.prototype.send.call(this, data);
+            else
+                this.queue.push(data);
+        };
+        RHU.inherit(ws, WebSocket);
+        WebSockets.ws = ws;
+        WebSockets.wsClient = function (webSocket, constructor) {
+            if (new.target === undefined)
+                throw new TypeError("Constructor Component requires 'new'.");
+            if (WebSocket !== webSocket && !Object.isPrototypeOf.call(WebSocket, webSocket))
+                throw new TypeError("WebSocket must be inherited from or of type 'WebSocket'.");
+            let construct = function (...args) {
+                this.args = args;
+                eventTarget.call(this);
+                let params = {
+                    url: "",
+                    protocols: []
+                };
+                RHU.parseOptions(params, constructor.call(this, ...args));
+                this.ws = new webSocket(params.url, params.protocols);
+                this.ws.addEventListener("close", (e) => { this.dispatchEvent(RHU.CustomEvent("close", e)); if (RHU.exists(this.onclose))
+                    this.onclose(e); });
+                this.ws.addEventListener("error", (e) => { this.dispatchEvent(RHU.CustomEvent("error", e)); if (RHU.exists(this.onerror))
+                    this.onerror(e); });
+                this.ws.addEventListener("message", (e) => { this.dispatchEvent(RHU.CustomEvent("message", e)); if (RHU.exists(this.onmessage))
+                    this.onmessage(e); });
+                this.ws.addEventListener("open", (e) => { this.dispatchEvent(RHU.CustomEvent("open", e)); if (RHU.exists(this.onopen))
+                    this.onopen(e); });
+            };
+            construct.prototype.reconnect = function (...args) {
+                construct.call(this, ...(args.length === 0 ? this.args : args));
+            };
+            construct.prototype.send = function (data) {
+                this.ws.send(data);
+            };
+            construct.prototype.close = function (code, reason) {
+                this.ws.close(code, reason);
+            };
+            return construct;
+        };
+        return WebSockets;
+    });
+})();

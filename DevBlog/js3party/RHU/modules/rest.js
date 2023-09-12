@@ -1,1 +1,92 @@
-!function(){"use strict";let r=window.RHU;if(null==r)throw new Error("No RHU found. Did you import RHU before running?");r.module({module:"rhu/rest",trace:new Error,hard:[]},(function(){r.exists(r.Rest)&&console.warn("Overwriting RHU.Rest...");let e=r.Rest={};e.fetch=function(e){let t={url:void 0,fetch:void 0,callback:void 0,parser:void 0};if(r.parseOptions(t,e),!r.exists(t.url))throw new SyntaxError("No fetch url was provided.");if(!r.exists(t.fetch))throw new SyntaxError("No fetch options were provided.");if(!r.exists(t.callback))throw new SyntaxError("No callback was provided.");let o={urlParams:{},body:void 0};return r.exists(t.parser)?async function(...e){let s=t.parser(...e);for(let e in o)r.exists(s[e])&&(o[e]=s[e]);t.fetch.body=o.body;let a=new URL(t.url);for(let r in o.urlParams)a.searchParams.append(r,o.urlParams[r]);const i=await fetch(a,t.fetch);return await t.callback(i)}:async function(e){for(let t in o)r.exists(e[t])&&(o[t]=e[t]);t.fetch.body=o.body;let s=new URL(t.url);for(let r in o.urlParams)s.searchParams.append(r,o.urlParams[r]);const a=await fetch(s,t.fetch);return await t.callback(a)}},e.fetchJSON=function(t){let o={url:void 0,fetch:void 0,callback:void 0,parser:void 0};if(r.parseOptions(o,t),!r.exists(o.url))throw new SyntaxError("No fetch url was provided.");if(!r.exists(o.fetch))throw new SyntaxError("No fetch options were provided.");if(!r.exists(o.callback))throw new SyntaxError("No callback was provided.");if(r.exists(o.fetch.headers)||(o.fetch.headers={}),o.fetch.headers["Content-Type"]="application/json",r.exists(o.parser)){let e=o.parser;o.parser=function(...t){let o=e(...t);return r.exists(o.body)&&(o.body=JSON.stringify(o.body)),o}}else o.parser=function(e){return r.exists(e.body)&&(e.body=JSON.stringify(e.body)),e};return e.fetch(o)}}))}();
+(function () {
+    let RHU = window.RHU;
+    if (RHU === null || RHU === undefined)
+        throw new Error("No RHU found. Did you import RHU before running?");
+    RHU.module(new Error(), "rhu/rest", {}, function () {
+        let Rest = {
+            fetch: function (options) {
+                let partialOpt = {
+                    url: "",
+                    fetch: undefined,
+                    callback: undefined,
+                    parser: undefined
+                };
+                RHU.parseOptions(partialOpt, options);
+                if (!RHU.exists(partialOpt.fetch))
+                    throw new SyntaxError("No fetch options were provided.");
+                if (!RHU.exists(partialOpt.callback))
+                    throw new SyntaxError("No callback was provided.");
+                let opt = partialOpt;
+                if (RHU.exists(opt.parser)) {
+                    return (async function (...params) {
+                        let payload = {
+                            urlParams: {},
+                            body: null
+                        };
+                        RHU.parseOptions(payload, opt.parser(...params));
+                        let init = RHU.clone(opt.fetch);
+                        init.body = payload.body;
+                        let url = new URL(opt.url);
+                        for (let key in payload.urlParams)
+                            url.searchParams.append(key, payload.urlParams[key]);
+                        const response = await fetch(url, init);
+                        return await opt.callback(response);
+                    });
+                }
+                else {
+                    return (async function (payload) {
+                        let parsedPayload = {
+                            urlParams: {},
+                            body: null
+                        };
+                        RHU.parseOptions(parsedPayload, payload);
+                        let init = RHU.clone(opt.fetch);
+                        init.body = payload.body;
+                        let url = new URL(opt.url);
+                        for (let key in parsedPayload.urlParams)
+                            url.searchParams.append(key, parsedPayload.urlParams[key]);
+                        const response = await fetch(url, init);
+                        return await opt.callback(response);
+                    });
+                }
+            },
+            fetchJSON: function (options) {
+                let partialOpt = {
+                    url: undefined,
+                    fetch: undefined,
+                    callback: undefined,
+                    parser: undefined
+                };
+                RHU.parseOptions(partialOpt, options);
+                if (!RHU.exists(partialOpt.url))
+                    throw new SyntaxError("No fetch url was provided.");
+                if (!RHU.exists(partialOpt.fetch))
+                    throw new SyntaxError("No fetch options were provided.");
+                if (!RHU.exists(partialOpt.callback))
+                    throw new SyntaxError("No callback was provided.");
+                let headers = new Headers(partialOpt.fetch.headers);
+                headers.set("Content-Type", "application/json");
+                partialOpt.fetch.headers = headers;
+                let opt = partialOpt;
+                if (RHU.exists(opt.parser)) {
+                    let parser = opt.parser;
+                    opt.parser = function (...params) {
+                        let payload = parser(...params);
+                        if (RHU.exists(payload.body))
+                            payload.body = JSON.stringify(payload.body);
+                        return payload;
+                    };
+                }
+                else {
+                    opt.parser = function (payload) {
+                        if (RHU.exists(payload.body))
+                            payload.body = JSON.stringify(payload.body);
+                        return payload;
+                    };
+                }
+                return Rest.fetch(opt);
+            }
+        };
+        return Rest;
+    });
+})();

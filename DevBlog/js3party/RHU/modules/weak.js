@@ -1,1 +1,102 @@
-!function(){"use strict";let e=window.RHU;if(null==e)throw new Error("");e.module({module:"weak",trace:new Error,hard:["Map","WeakRef","WeakSet","FinalizationRegistry"]},(function(){let t=Map.prototype.set,i=Map.prototype.keys,o=Map.prototype.get;e.WeakRefMap=e.reflectConstruct(Map,"WeakRefMap",(function(){this._registry=new FinalizationRegistry((e=>{this.delete(e)}))})),e.WeakRefMap.prototype.set=function(e,i){return this._registry.register(i,e),t.call(this,e,new WeakRef(i))},e.WeakRefMap.prototype.get=function(t){let i=o.call(this,t);if(!e.exists(i))return;let l=i.deref();return e.exists(l)?l:void 0},e.WeakRefMap.prototype.values=function*(){for(let t of i.call(this)){let i=o.call(this,t).deref();e.exists(i)?yield i:this.delete(t)}},e.WeakRefMap.prototype[Symbol.iterator]=function*(){for(let t of i.call(this)){let i=o.call(this,t).deref();e.exists(i)?yield[t,i]:this.delete(t)}},e.inherit(e.WeakRefMap,Map);let l=WeakSet.prototype.add,r=WeakSet.prototype.delete;e.WeakCollection=e.reflectConstruct(WeakSet,"RHU.WeakCollection",(function(){this._collection=[],this._registry=new FinalizationRegistry((()=>{this._collection=this._collection.filter((t=>e.exists(t.deref())))}))})),e.WeakCollection.prototype.add=function(...e){for(let t of e)this.has(t)||(this._collection.push(new WeakRef(t)),l.call(this,t),this._registry.register(t))},e.WeakCollection.prototype.delete=function(...t){for(let e of t)r.call(this,e);this._collection=this._collection.filter((i=>(i=i.deref(),e.exists(i)&&!t.includes(i))))},e.WeakCollection.prototype[Symbol.iterator]=function*(){let t=this._collection;this._collection=[];for(let i of t)i=i.deref(),e.exists(i)&&(this._collection.push(new WeakRef(i)),yield i)},e.inherit(e.WeakCollection,WeakSet)}))}();
+(function () {
+    let RHU = window.RHU;
+    if (RHU === null || RHU === undefined)
+        throw new Error("No RHU found. Did you import RHU before running?");
+    RHU.module(new Error(), "rhu/weak", {}, function () {
+        let Map_set = Map.prototype.set;
+        let Map_keys = Map.prototype.keys;
+        let Map_get = Map.prototype.get;
+        const WeakRefMap = RHU.reflectConstruct(Map, "WeakRefMap", function () {
+            this._registry = new FinalizationRegistry((key) => {
+                this.delete(key);
+            });
+        });
+        WeakRefMap.prototype.set = function (key, value) {
+            this._registry.register(value, key);
+            return Map_set.call(this, key, new WeakRef(value));
+        };
+        WeakRefMap.prototype.get = function (key) {
+            let raw = Map_get.call(this, key);
+            if (!RHU.exists(raw))
+                return undefined;
+            let value = raw.deref();
+            if (!RHU.exists(value))
+                return undefined;
+            return value;
+        };
+        WeakRefMap.prototype.values = function* () {
+            for (let key of Map_keys.call(this)) {
+                let value = Map_get.call(this, key).deref();
+                if (RHU.exists(value))
+                    yield value;
+                else
+                    this.delete(key);
+            }
+        };
+        WeakRefMap.prototype[Symbol.iterator] = function* () {
+            for (let key of Map_keys.call(this)) {
+                let value = Map_get.call(this, key).deref();
+                if (RHU.exists(value))
+                    yield [key, value];
+                else
+                    this.delete(key);
+            }
+        };
+        RHU.inherit(WeakRefMap, Map);
+        let WeakSet_add = WeakSet.prototype.add;
+        let WeakSet_delete = WeakSet.prototype.delete;
+        const WeakCollection = RHU.reflectConstruct(WeakSet, "WeakCollection", function () {
+            this._collection = [];
+            this._registry = new FinalizationRegistry(() => {
+                this._collection = this._collection.filter((i) => {
+                    return RHU.exists(i.deref());
+                });
+            });
+        });
+        WeakCollection.prototype.add = function (...items) {
+            if (items.length === 1) {
+                this._collection.push(new WeakRef(items[0]));
+                this._registry.register(items[0], undefined);
+                return WeakSet_add.call(this, items[0]);
+            }
+            for (let item of items) {
+                if (!this.has(item)) {
+                    this._collection.push(new WeakRef(item));
+                    WeakSet_add.call(this, item);
+                    this._registry.register(item, undefined);
+                }
+            }
+        };
+        WeakCollection.prototype.delete = function (...items) {
+            if (items.length === 1) {
+                this._collection = this._collection.filter((ref) => {
+                    let item = ref.deref();
+                    return RHU.exists(item) && !items.includes(item);
+                });
+                return WeakSet_delete.call(this, items[0]);
+            }
+            for (let item of items)
+                WeakSet_delete.call(this, item);
+            this._collection = this._collection.filter((ref) => {
+                let item = ref.deref();
+                return RHU.exists(item) && !items.includes(item);
+            });
+        };
+        WeakCollection.prototype[Symbol.iterator] = function* () {
+            let collection = this._collection;
+            this._collection = [];
+            for (let ref of collection) {
+                let item = ref.deref();
+                if (RHU.exists(item)) {
+                    this._collection.push(new WeakRef(item));
+                    yield item;
+                }
+            }
+        };
+        RHU.inherit(WeakCollection, WeakSet);
+        return {
+            WeakRefMap,
+            WeakCollection,
+        };
+    });
+})();

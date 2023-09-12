@@ -1,1 +1,24 @@
-!function(){"use strict";let e=window.RHU;if(null==e)throw new Error("No RHU found. Did you import RHU before running?");e.module({module:"rhu/event",trace:new Error,hard:[]},(function(){e.exists(e.eventTarget)&&console.warn("Overwriting RHU.EventTarget..."),e.eventTarget=function(e){let n=document.createTextNode(null),t=n.addEventListener.bind(n);e.addEventListener=function(e,n,r){t(e,(e=>{n(e.detail)}),r)},e.removeEventListener=n.removeEventListener.bind(n),e.dispatchEvent=n.dispatchEvent.bind(n)},e.CustomEvent=function(e,n){return new CustomEvent(e,{detail:n})}}))}();
+(function () {
+    let RHU = window.RHU;
+    if (RHU === null || RHU === undefined)
+        throw new Error("No RHU found. Did you import RHU before running?");
+    RHU.module(new Error(), "rhu/event", {}, function () {
+        let isEventListener = function (callback) {
+            return callback instanceof Function;
+        };
+        const eventTarget = function (target) {
+            let node = document.createTextNode("");
+            let addEventListener = node.addEventListener.bind(node);
+            target.addEventListener = function (type, callback, options) {
+                let context = target;
+                if (isEventListener(callback))
+                    addEventListener(type, ((e) => { callback.call(context, e.detail); }), options);
+                else
+                    addEventListener(type, ((e) => { callback.handleEvent.call(context, e.detail); }), options);
+            };
+            target.removeEventListener = node.removeEventListener.bind(node);
+            target.dispatchEvent = node.dispatchEvent.bind(node);
+        };
+        return eventTarget;
+    });
+})();

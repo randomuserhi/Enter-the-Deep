@@ -1,1 +1,78 @@
-!function(){"use strict";let e=window.RHU;if(null==e)throw new Error("No RHU found. Did you import RHU before running?");e.module({module:"file",trace:new Error,hard:["FileReader","Promise"]},(function(){e.exists(e.File)&&console.warn("Overwriting RHU.File...");let n=e.File={},r=n.Type={unknown:"unknown",png:"png",gif:"gif",jpg:"jpg",txt:"txt",js:"text/javascript",mp4:"video/mp4",mkv:"video/x-matroska"};r.toType=function(e){let n;switch(e){case"text/javascript":n=r.js;break;case"video/mp4":n=r.mp4;break;case"image/png":n=r.png;break;case"video/x-matroska":n=r.mkv;break;default:console.warn(`Unknown blob type: ${e}`),n=r.unknown}return n},n.getType=function(e){return new Promise(((n,t)=>{let o=new FileReader;o.onloadend=function(t){let o,a=new Uint8Array(t.target.result).subarray(0,4),f="";for(let e=0;e<a.length;e++)f+=a[e].toString(16);switch(f){case"89504e47":o=r.png;break;case"47494638":o=r.gif;break;case"ffd8ffe0":case"ffd8ffe1":case"ffd8ffe2":case"ffd8ffe3":case"ffd8ffe8":o=r.jpg;break;default:o=r.unknown}n(r.toType(e.type),o)},o.onerror=function(e){t(e)},o.readAsArrayBuffer(e)}))}}))}();
+(function () {
+    let RHU = window.RHU;
+    if (RHU === null || RHU === undefined)
+        throw new Error("No RHU found. Did you import RHU before running?");
+    RHU.module(new Error(), "rhu/file", {}, function () {
+        let File = {
+            Type: {
+                unknown: "unknown",
+                png: "png",
+                gif: "gif",
+                jpg: "jpg",
+                txt: "txt",
+                js: "text/javascript",
+                mp4: "video/mp4",
+                mkv: "video/x-matroska",
+                toType: function (blobType) {
+                    let type;
+                    switch (blobType) {
+                        case "text/javascript":
+                            type = this.js;
+                            break;
+                        case "video/mp4":
+                            type = this.mp4;
+                            break;
+                        case "image/png":
+                            type = this.png;
+                            break;
+                        case "video/x-matroska":
+                            type = this.mkv;
+                            break;
+                        default:
+                            console.warn(`Unknown blob type: ${blobType}`);
+                            type = this.unknown;
+                            break;
+                    }
+                    return type;
+                }
+            },
+        };
+        let Type = File.Type;
+        File.getType = function (blob) {
+            return new Promise((resolve, reject) => {
+                let fr = new FileReader();
+                fr.onloadend = function (e) {
+                    let arr = (new Uint8Array(e.target.result)).subarray(0, 4);
+                    let header = "";
+                    for (let i = 0; i < arr.length; i++)
+                        header += arr[i].toString(16);
+                    let type;
+                    switch (header) {
+                        case "89504e47":
+                            type = Type.png;
+                            break;
+                        case "47494638":
+                            type = Type.gif;
+                            break;
+                        case "ffd8ffe0":
+                        case "ffd8ffe1":
+                        case "ffd8ffe2":
+                        case "ffd8ffe3":
+                        case "ffd8ffe8":
+                            type = Type.jpg;
+                            break;
+                        default:
+                            type = Type.unknown;
+                            break;
+                    }
+                    resolve([Type.toType(blob.type), type]);
+                };
+                fr.onerror = function (e) {
+                    reject(e);
+                };
+                fr.readAsArrayBuffer(blob);
+            });
+        };
+        return File;
+    });
+})();
