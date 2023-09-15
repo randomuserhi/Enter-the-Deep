@@ -5,17 +5,17 @@ declare namespace RHU {
 
     namespace Macro {
         interface TemplateMap {
-            "appmount": appmount;
+            "App": App;
         }
     }
 }
 
-interface appmount extends HTMLDivElement {
+interface App extends HTMLDivElement {
 }
 
 RHU.module(new Error(), "main", { 
     Macro: "rhu/macro", Style: "rhu/style", 
-    theme: "main/theme", navbar: "navbar" 
+    theme: "main/theme", navbar: "components/organisms/navbar" 
 }, function({ Macro, Style, theme, navbar }) {
     const style = Style(({ style }) => {
         const spacer = style.class`
@@ -43,14 +43,14 @@ RHU.module(new Error(), "main", {
     });
     
     const appmount = Macro((() => {
-        const appmount = function(this: appmount) {
+        const appmount = function(this: App) {
             this.classList.toggle(`${theme}`, true);   
-        } as RHU.Macro.Constructor<appmount>;
+        } as RHU.Macro.Constructor<App>;
 
         return appmount
-    })(), "appmount", //html
+    })(), "App", //html
         `
-        <rhu-macro rhu-type="${navbar}"></rhu-macro>
+        <rhu-macro rhu-type="${navbar}" />
         <div class="${style.spacer}"></div>
         <div>
             Go deep,
@@ -58,6 +58,6 @@ RHU.module(new Error(), "main", {
         </div>
         `, {
             element: //html
-            `<body class="${theme}"></body>`
+            `<div class="${theme}"></div>`
         });
 });

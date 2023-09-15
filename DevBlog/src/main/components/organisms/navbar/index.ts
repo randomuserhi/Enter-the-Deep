@@ -1,28 +1,34 @@
 declare namespace RHU {
     interface Modules {
-        "navbar": "navbar";
+        "components/organisms/navbar": "organisms/navbar";
     }
 
     namespace Macro {
         interface TemplateMap {
-            "navbar": navbar;
+            "organisms/navbar": Organisms.Navbar;
         }
     }
 }
 
-interface navbar extends HTMLDivElement {
+declare namespace Organisms {
+    interface Navbar extends HTMLDivElement {
+    }
 }
 
-RHU.module(new Error(), "navbar", { 
-    Macro: "rhu/macro", style: "navbar/style" 
-}, function({ Macro, style }) {
+RHU.module(new Error(), "components/organisms/navbar", { 
+    Macro: "rhu/macro", style: "components/organsisms/navbar/style",
+    arrowDown: "components/atoms/icons/arrowDown",
+}, function({ 
+    Macro, style,
+    arrowDown, 
+}) {
     const navbar = Macro((() => {
-        const navbar = function(this: appmount) {
+        const navbar = function(this: Organisms.Navbar) {
             
-        } as RHU.Macro.Constructor<navbar>;
+        } as RHU.Macro.Constructor<Organisms.Navbar>;
 
         return navbar
-    })(), "navbar", //html
+    })(), "organisms/navbar", //html
         `
         <nav class="${style.margin}">
             <!-- LOGO -->
@@ -33,9 +39,7 @@ RHU.module(new Error(), "navbar", {
                 <div>
                     <button class="${style.controls.dropdown}">
                         Blogs
-                        <svg style="height: 1.3rem;" viewBox="0 0 24 24" fill="currentColor">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5303 15.5303C12.2374 15.8232 11.7626 15.8232 11.4697 15.5303L5.46967 9.53033C5.17678 9.23744 5.17678 8.76256 5.46967 8.46967C5.76256 8.17678 6.23744 8.17678 6.53033 8.46967L12 13.9393L17.4697 8.46967C17.7626 8.17678 18.2374 8.17678 18.5303 8.46967C18.8232 8.76256 18.8232 9.23744 18.5303 9.53033L12.5303 15.5303Z"/>
-                        </svg>
+                        <rhu-macro rhu-type="${arrowDown}" style="height: 1.3rem;" fill="currentColor" />
                     </button>
                 </div>
                 <a>What's New</a>
@@ -54,9 +58,7 @@ RHU.module(new Error(), "navbar", {
                         <span rhu-id="notif" class="${style.profile.avatar.notif}"></span>
                     </div>
                     <!-- dropdown -->
-                    <svg class="${style.profile.dropdown}" style="height: 1.3rem;" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5303 15.5303C12.2374 15.8232 11.7626 15.8232 11.4697 15.5303L5.46967 9.53033C5.17678 9.23744 5.17678 8.76256 5.46967 8.46967C5.76256 8.17678 6.23744 8.17678 6.53033 8.46967L12 13.9393L17.4697 8.46967C17.7626 8.17678 18.2374 8.17678 18.5303 8.46967C18.8232 8.76256 18.8232 9.23744 18.5303 9.53033L12.5303 15.5303Z"/>
-                    </svg>
+                    <rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;" fill="currentColor" />
                 </div>
             </button>
         </nav>
