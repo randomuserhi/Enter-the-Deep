@@ -1,5 +1,5 @@
 (function () {
-    let RHU = window.RHU;
+    const RHU = window.RHU;
     if (RHU === null || RHU === undefined)
         throw new Error("No RHU found. Did you import RHU before running?");
     RHU.module(new Error(), "rhu/macro", { Weak: "rhu/weak" }, function ({ Weak: { WeakRefMap, WeakCollection } }) {
@@ -199,12 +199,17 @@
                 }
                 Object.setPrototypeOf(target, proxy);
             }
-            let doc = Macro.parseDomString(RHU.exists(definition.source) ? definition.source : "");
+            let doc;
+            let source = RHU.exists(definition.source) ? definition.source : "";
             if (!options.floating) {
                 slot = document.createElement("div");
                 element.replaceWith(slot);
-                element.append(...doc.childNodes);
+                element.innerHTML = source;
+                doc = new DocumentFragment();
                 doc.append(element);
+            }
+            else {
+                doc = Macro.parseDomString(source);
             }
             let properties = {};
             let checkProperty = (identifier) => {
