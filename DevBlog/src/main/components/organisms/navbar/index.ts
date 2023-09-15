@@ -39,7 +39,7 @@ RHU.module(new Error(), "components/organisms/navbar", {
                 <div>
                     <button class="${style.controls.dropdown}">
                         Blogs
-                        <rhu-macro rhu-type="${arrowDown}" style="height: 1.3rem;" fill="currentColor" />
+                        <rhu-macro rhu-type="${arrowDown}" style="height: 1.3rem;" />
                     </button>
                 </div>
                 <a>What's New</a>
@@ -58,7 +58,7 @@ RHU.module(new Error(), "components/organisms/navbar", {
                         <span rhu-id="notif" class="${style.profile.avatar.notif}"></span>
                     </div>
                     <!-- dropdown -->
-                    <rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;" fill="currentColor" />
+                    <rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;" />
                 </div>
             </button>
         </nav>

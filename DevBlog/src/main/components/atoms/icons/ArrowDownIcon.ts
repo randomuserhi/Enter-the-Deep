@@ -15,6 +15,8 @@ declare namespace Atoms.Icons {
     }
 }
 
+// TODO(randomuserhi): Update once RHU svg parse bug is fixed.
+
 RHU.module(new Error(), "components/atoms/icons/arrowDown", { 
     Macro: "rhu/macro"
 }, function({ Macro }) {
@@ -29,7 +31,7 @@ RHU.module(new Error(), "components/atoms/icons/arrowDown", {
     })(), "atoms/icons/arrowDown", //html
         ``, {
             element: //html
-            `<svg viewBox="0 0 24 24"></svg>`
+            `<svg viewBox="0 0 24 24" fill="currentColor"></svg>`
         });
 
     return icon;
