@@ -75,6 +75,9 @@
     <ClCompile Include="Deep\Physics\Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deep\Math\Vec4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep\Deep.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Math\Vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
