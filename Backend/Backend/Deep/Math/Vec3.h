@@ -8,6 +8,8 @@ namespace Deep
     {
         Vec3& operator+= (const Vec3& other);
         Vec3& operator-= (const Vec3& other);
+        Vec3& operator*= (const float other);
+        Vec3& operator/= (const float other);
 
         // NOTE(randomuserhi): Fairly sure this format of union inside struct is also UB by
         //                     Cpp abstract machine, but luckily compilers support it as an 
@@ -24,26 +26,9 @@ namespace Deep
         };
     };
 
-
-    // TODO(randomuserhi): Consider making Vec4 and Quaternion different types since their operations are seperate anyway
-    //                     so I shouldn't mix them up
-    struct Vec4
-    {
-        union
-        {
-            float values[4];
-            struct
-            {
-                float x;
-                float y;
-                float z;
-                float w;
-            };
-        };
-    };
-    typedef Vec4 Quaternion;
-
     Vec3 operator+ (Vec3 a, const Vec3& b);
     Vec3 operator- (Vec3 a, const Vec3& b);
+    Vec3 operator* (Vec3 v, const float a);
+    Vec3 operator* (const float a, Vec3 v);
     float operator* (const Vec3& a, const Vec3& b);
 }
