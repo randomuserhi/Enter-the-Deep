@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "navbar/style": {
+        "components/organsisms/navbar/style": {
             active: Style.ClassName;
             wrapper: Style.ClassName;
             margin: Style.ClassName;
@@ -21,15 +21,7 @@ declare namespace RHU {
     }
 }
 
-interface navbar extends HTMLDivElement
-{
-}
-interface navbarConstructor extends RHU.Macro.Constructor<navbar>
-{
-    
-}
-
-RHU.module(new Error(), "navbar/style",
+RHU.module(new Error(), "components/organsisms/navbar/style",
     { Style: "rhu/style", theme: "main/theme" },
     function({ Style, theme })
     {
