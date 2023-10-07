@@ -4,6 +4,12 @@
 
 namespace Deep {
     struct Vec4 {
+        Vec4& Normalize();
+        Vec4 Normalized() const {
+            Vec4 v{ x, y, z, w };
+            return v.Normalize();
+        }
+
         Vec4& operator+= (const Vec4& other);
         Vec4& operator-= (const Vec4& other);
         Vec4& operator*= (const float other);

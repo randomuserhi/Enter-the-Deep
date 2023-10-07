@@ -1,6 +1,17 @@
+#include <cmath>
+
 #include "./Vec4.h"
 
 namespace Deep {
+    Vec4& Vec4::Normalize() {
+        float length = std::sqrt(x * x + y * y + z * z + w * w);
+        x /= length;
+        y /= length;
+        z /= length;
+        w /= length;
+        return *this;
+    }
+
     Vec4& Vec4::operator+= (const Vec4& other) {
         x += other.x;
         y += other.y;

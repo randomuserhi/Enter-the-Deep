@@ -1,6 +1,41 @@
+#include <cmath>
+
 #include "./Quaternion.h"
 
 namespace Deep {
+    Quaternion& Quaternion::Normalize() {
+        float length = std::sqrt(x * x + y * y + z * z + w * w);
+        x /= length;
+        y /= length;
+        z /= length;
+        w /= length;
+        return *this;
+    }
+
+    Quaternion& Quaternion::Inverse() {
+        x *= -1;
+        y *= -1;
+        z *= -1;
+        return *this;
+    }
+
+    Quaternion::Quaternion(Vec3 axis, float angle) {
+        axis.Normalize(); // Must be normalized for the below equation
+
+        /**
+         * cos(a) + sin(a)(xi, yj, zk)
+         * cos(a) + sin(a)xi + sin(a)yj + sin(a)zk
+         */
+        angle /= 2.0f;
+        float sin = std::sin(angle);
+        x = axis.x * sin;
+        y = axis.y * sin;
+        z = axis.z * sin;
+        w = std::cos(angle);
+
+        Normalize();
+    }
+
     Quaternion& Quaternion::operator+= (const Quaternion& other) {
         x += other.x;
         y += other.y;
@@ -63,8 +98,6 @@ namespace Deep {
     }
 
     Mat3 Quaternion::toMat3() const {
-        Mat3 mat;
-
         float w2 = w * w;
         float x2 = x * x;
         float y2 = y * y;
@@ -86,18 +119,10 @@ namespace Deep {
         float yz = y * z * inverse;
         float xw = w * x * inverse;
 
-        mat.values[0] = x2 - y2 - z2 + w2;
-        mat.values[1] = 2.0f * (xy - zw);
-        mat.values[2] = 2.0f * (xz + yw);
-
-        mat.values[3] = 2.0f * (xy + zw);
-        mat.values[4] = (-x2 + y2 - z2 + w2);
-        mat.values[5] = 2.0f * (yz - xw);
-
-        mat.values[6] = 2.0f * (xz - yw);
-        mat.values[7] = 2.0f * (yz + xw);
-        mat.values[8] = -x2 - y2 + z2 + w2;
-
-        return mat;
+        return {
+            x2 - y2 - z2 + w2, 2.0f * (xy - zw)    , 2.0f * (xz + yw)  ,
+            2.0f * (xy + zw) , (-x2 + y2 - z2 + w2), 2.0f * (yz - xw)  ,
+            2.0f * (xz - yw) , 2.0f * (yz + xw)    , -x2 - y2 + z2 + w2
+        };
     }
 }

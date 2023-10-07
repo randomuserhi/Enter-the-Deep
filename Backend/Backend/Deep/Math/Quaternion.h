@@ -6,12 +6,28 @@
 
 namespace Deep {
     struct Quaternion {
+        Quaternion& Normalize();
+        Quaternion Normalized() const {
+            Quaternion q{ x, y, z, w };
+            return q.Normalize();
+        }
+
+        Quaternion& Inverse();
+        Quaternion Inversed() const {
+            Quaternion q{ x, y, z, w };
+            return q.Inverse();
+        }
+
+        Mat3 toMat3() const;
+
         Quaternion& operator+= (const Quaternion& other);
         Quaternion& operator-= (const Quaternion& other);
         Quaternion& operator*= (const float other);
         Quaternion& operator/= (const float other);
 
-        Mat3 toMat3() const;
+        Quaternion(float x, float y, float z, float w) 
+            : x(x), y(y), z(z), w(w) {};
+        Quaternion(Vec3 axis, float angle);
 
         union {
             float values[4];
