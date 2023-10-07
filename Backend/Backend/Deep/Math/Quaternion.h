@@ -25,6 +25,7 @@ namespace Deep {
         Quaternion& operator*= (const float other);
         Quaternion& operator/= (const float other);
 
+        Quaternion() = default;
         Quaternion(float x, float y, float z, float w) 
             : x(x), y(y), z(z), w(w) {};
         Quaternion(Vec3 axis, float angle);
