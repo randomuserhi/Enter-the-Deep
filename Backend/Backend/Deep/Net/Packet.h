@@ -4,21 +4,17 @@
 #include "Deep.h"
 #include "Math/Core.h"
 
-namespace Deep
-{
-    struct PacketReader
-    {
+namespace Deep {
+    struct PacketReader {
         PacketReader(const uint8* const data) : data(data) {}
 
     private:
         const uint8* const data;
     };
 
-    struct Packet
-    {
+    struct Packet {
         Packet() {}
-        Packet(size_t size)
-        {
+        Packet(size_t size) {
             buffer.reserve(size);
         }
          
@@ -40,12 +36,10 @@ namespace Deep
     private:
         std::vector<uint8> buffer;
     };
-    Deep_Inline const uint8* Packet::Data()
-    {
+    Deep_Inline const uint8* Packet::Data() {
         return buffer.data();
     }
-    Deep_Inline size_t Packet::Size()
-    {
+    Deep_Inline size_t Packet::Size() {
         return buffer.size();
     }
 }

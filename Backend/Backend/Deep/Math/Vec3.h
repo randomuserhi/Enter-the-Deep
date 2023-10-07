@@ -2,10 +2,8 @@
 
 #include "../Deep.h"
 
-namespace Deep
-{
-    struct Vec3
-    {
+namespace Deep {
+    struct Vec3 {
         Vec3& operator+= (const Vec3& other);
         Vec3& operator-= (const Vec3& other);
         Vec3& operator*= (const float other);
@@ -14,11 +12,9 @@ namespace Deep
         // NOTE(randomuserhi): Fairly sure this format of union inside struct is also UB by
         //                     Cpp abstract machine, but luckily compilers support it as an 
         //                     extension
-        union
-        {
+        union {
             float values[3];
-            struct
-            {
+            struct {
                 float x;
                 float y;
                 float z;

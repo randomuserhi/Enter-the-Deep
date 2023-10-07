@@ -2,7 +2,6 @@
 #include <cassert>
 #include <limits>
 
-namespace Deep
-{
+namespace Deep {
     IPv4 const IPv4::any{};
 }

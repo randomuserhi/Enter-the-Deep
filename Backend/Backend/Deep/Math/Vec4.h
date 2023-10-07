@@ -1,21 +1,17 @@
 #pragma once
 
-namespace Deep
-{
-    // TODO(randomuserhi): Consider making Vec4 and Quaternion different types since their operations are seperate anyway
-    //                     so I shouldn't mix them up
-    struct Vec4
-    {
+#include "./Vec3.h"
+
+namespace Deep {
+    struct Vec4 {
         Vec4& operator+= (const Vec4& other);
         Vec4& operator-= (const Vec4& other);
         Vec4& operator*= (const float other);
         Vec4& operator/= (const float other);
 
-        union
-        {
+        union {
             float values[4];
-            struct
-            {
+            struct {
                 float x;
                 float y;
                 float z;
@@ -23,7 +19,6 @@ namespace Deep
             };
         };
     };
-    typedef Vec4 Quaternion;
 
     Vec4 operator+ (Vec4 a, const Vec4& b);
     Vec4 operator- (Vec4 a, const Vec4& b);

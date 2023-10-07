@@ -2,10 +2,8 @@
 
 #include "Sock.h"
 
-namespace Deep
-{
-    class Channel
-    {
+namespace Deep {
+    class Channel {
     public:
         Channel(size_t bufferSize)
             : bufferSize(bufferSize), buffer(new uint8[bufferSize])

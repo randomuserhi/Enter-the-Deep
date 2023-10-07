@@ -3,21 +3,18 @@
 #include "Packet.h"
 #include "Sock.h" // NOTE(randomuserhi): For `Deep::IsBigEndian()`
 
-namespace Deep
-{
+namespace Deep {
     // TODO(randomuserhi): Important read, 
     //                     https://stackoverflow.com/questions/3022552/is-there-any-standard-htonl-like-function-for-64-bits-integers-in-c
 
-    void Packet::Write(uint8 byte)
-    {
+    void Packet::Write(uint8 byte) {
         buffer.push_back(byte);
     }
 
     // NOTE(randomuserhi): This writes raw bytes to the buffer and does not account
     //                     for endianess. For ASCII strings or formats where data only
     //                     spans 1 byte, this works fine.
-    void Packet::Write(const uint8* bytes, size_t numBytes)
-    {
+    void Packet::Write(const uint8* bytes, size_t numBytes) {
         size_t old = buffer.size();
         buffer.resize(buffer.size() + numBytes);
         // Fairly sure this is UB to the abstract Cpp machine, since no uint8 objects
@@ -37,8 +34,7 @@ namespace Deep
     // 
     // Reasonable compilers shouldn't care, but by the cpp standard this is UB
 
-    void Packet::Write(int32 value)
-    {
+    void Packet::Write(int32 value) {
         size_t old = buffer.size();
         buffer.resize(buffer.size() + sizeof value);
         *reinterpret_cast<int32_t*>(buffer.data() + old) = htonl(value);

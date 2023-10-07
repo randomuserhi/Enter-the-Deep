@@ -1,6 +1,5 @@
 # include "Channel.h"
 
-namespace Deep
-{
+namespace Deep {
 
 }
