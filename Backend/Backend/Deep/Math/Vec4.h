@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Vec3.h"
+#include "./Quaternion.h"
 
 namespace Deep {
     struct Vec4 {
@@ -17,6 +17,7 @@ namespace Deep {
                 float z;
                 float w;
             };
+            Quaternion quaternion;
         };
     };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Deep.h"
+#include "./Mat3.h"
 
 namespace Deep {
     struct Vec3 {
@@ -8,6 +8,8 @@ namespace Deep {
         Vec3& operator-= (const Vec3& other);
         Vec3& operator*= (const float other);
         Vec3& operator/= (const float other);
+
+        Vec3& operator *= (const Mat3& m);
 
         // NOTE(randomuserhi): Fairly sure this format of union inside struct is also UB by
         //                     Cpp abstract machine, but luckily compilers support it as an 
@@ -27,4 +29,6 @@ namespace Deep {
     Vec3 operator* (Vec3 v, const float a);
     Vec3 operator* (const float a, Vec3 v);
     float operator* (const Vec3& a, const Vec3& b);
+
+    Vec3 operator* (Vec3 v, const Mat3& m);
 }
