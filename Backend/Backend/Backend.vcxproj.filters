@@ -81,6 +81,12 @@
     <ClCompile Include="Deep\Math\Vec4.cpp">
       <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Deep\Math\Mat3.cpp">
+      <Filter>Source Files\Deep\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep\Math\Quaternion.cpp">
+      <Filter>Source Files\Deep\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep\Deep.h">
@@ -132,6 +138,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Math\Vec4.h">
+      <Filter>Header Files\Deep\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Math\Mat3.h">
+      <Filter>Header Files\Deep\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Math\Quaternion.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
   </ItemGroup>

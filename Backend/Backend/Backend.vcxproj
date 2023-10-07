@@ -142,6 +142,8 @@
     <ClCompile Include="Backend.cpp" />
     <ClCompile Include="Deep\DebugUtil\Memory.cpp" />
     <ClCompile Include="Deep\ECS\ECS.cpp" />
+    <ClCompile Include="Deep\Math\Mat3.cpp" />
+    <ClCompile Include="Deep\Math\Quaternion.cpp" />
     <ClCompile Include="Deep\Math\Vec3.cpp" />
     <ClCompile Include="Deep\Math\Vec4.cpp" />
     <ClCompile Include="Deep\Net\Channel.cpp" />
@@ -160,6 +162,8 @@
     <ClInclude Include="Deep\Deep_Types.h" />
     <ClInclude Include="Deep\ECS.h" />
     <ClInclude Include="Deep\Math\Core.h" />
+    <ClInclude Include="Deep\Math\Mat3.h" />
+    <ClInclude Include="Deep\Math\Quaternion.h" />
     <ClInclude Include="Deep\Math\Vec3.h" />
     <ClInclude Include="Deep\Math\Vec4.h" />
     <ClInclude Include="Deep\Net.h" />
