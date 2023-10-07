@@ -72,27 +72,31 @@ namespace Deep {
 
         float inverse = 1.0f / (w2 + x2 + y2 + z2);
 
-        float xy = x * y;
-        float zw = w * z;
+        x2 *= inverse;
+        y2 *= inverse;
+        z2 *= inverse;
+        w2 *= inverse;
 
-        float xz = x * z;
-        float yw = w * y;
+        float xy = x * y * inverse;
+        float zw = w * z * inverse;
 
-        float yz = y * z;
-        float xw = w * x;
+        float xz = x * z * inverse;
+        float yw = w * y * inverse;
 
-        // TODO(randomuserhi): Needs testing, I might have written it transposed
-        mat.values[0] = (x2 - y2 - z2 + w2) * inverse;
-        mat.values[1] = 2.0f * (xy + zw) * inverse;
-        mat.values[2] = 2.0f * (xz - yw) * inverse;
+        float yz = y * z * inverse;
+        float xw = w * x * inverse;
 
-        mat.values[3] = 2.0f * (xy - zw) * inverse;
-        mat.values[4] = (-x2 + y2 - z2 + w2) * inverse;
-        mat.values[5] = 2.0f * (yz + xw) * inverse;
+        mat.values[0] = x2 - y2 - z2 + w2;
+        mat.values[1] = 2.0f * (xy - zw);
+        mat.values[2] = 2.0f * (xz + yw);
 
-        mat.values[6] = 2.0f * (xz + yw) * inverse;
-        mat.values[7] = 2.0f * (yz - xw) * inverse;
-        mat.values[8] = (-x2 - y2 + z2 + w2) * inverse;
+        mat.values[3] = 2.0f * (xy + zw);
+        mat.values[4] = (-x2 + y2 - z2 + w2);
+        mat.values[5] = 2.0f * (yz - xw);
+
+        mat.values[6] = 2.0f * (xz - yw);
+        mat.values[7] = 2.0f * (yz + xw);
+        mat.values[8] = -x2 - y2 + z2 + w2;
 
         return mat;
     }
