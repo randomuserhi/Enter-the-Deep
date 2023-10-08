@@ -34,7 +34,7 @@
 * Deep Utilities
 */
 
-#include "Deep_Types.h"
+#include "./Deep/Deep_Types.h"
 
 #if defined(Deep_Compiler_Clang)
 #define Deep_Inline inline

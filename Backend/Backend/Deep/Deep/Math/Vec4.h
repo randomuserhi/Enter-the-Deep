@@ -1,7 +1,5 @@
 #pragma once
 
-#include "./Quaternion.h"
-
 namespace Deep {
     struct Vec4 {
         Vec4& Normalize();
@@ -23,7 +21,6 @@ namespace Deep {
                 float z;
                 float w;
             };
-            Quaternion quaternion;
         };
     };
 

@@ -1,7 +1,7 @@
 #include <winsock2.h>
 
-#include "Packet.h"
-#include "Sock.h" // NOTE(randomuserhi): For `Deep::IsBigEndian()`
+#include "./Packet.h"
+#include "../Sock.h" // NOTE(randomuserhi): For `Deep::IsBigEndian()`
 
 namespace Deep {
     // TODO(randomuserhi): Important read, 

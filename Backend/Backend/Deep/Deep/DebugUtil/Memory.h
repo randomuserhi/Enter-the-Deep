@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Deep.h"
+#include "../../Deep.h"
 
 #if !defined(DEEP_DEBUG_MEMORY_LOGFILE)
 #define DEEP_DEBUG_MEMORY_LOGFILE "memory_allocations.txt"

@@ -88,12 +88,20 @@ namespace Deep {
         return a /= other;
     }
 
-    float operator* (const Quaternion& a, const Quaternion& b) {
-        return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+    Quaternion& Quaternion::operator*= (const Quaternion& other) {
+        x = z * other.y + y * other.z + w * other.x + x * other.w;
+        y = z * other.x + x * other.z + w * other.y + y * other.w;
+        z = y * other.x + x * other.y + w * other.z + z * other.w;
+        w = w * other.w - x * other.x - y * other.y - z * other.z;
+        return *this;
     }
 
-    Vec3 operator* (const Quaternion& rot, Vec3 v) {
-        Mat3 m = rot.toMat3();
+    Quaternion operator* (Quaternion a, const Quaternion& b) {
+        return a *= b;
+    }
+
+    Vec3 operator* (const Quaternion& q, Vec3 v) {
+        Mat3 m = q.toMat3();
         return v *= m;
     }
 
@@ -119,10 +127,16 @@ namespace Deep {
         float yz = y * z * inverse;
         float xw = w * x * inverse;
 
-        return {
-            x2 - y2 - z2 + w2, 2.0f * (xy - zw)    , 2.0f * (xz + yw)  ,
-            2.0f * (xy + zw) , (-x2 + y2 - z2 + w2), 2.0f * (yz - xw)  ,
-            2.0f * (xz - yw) , 2.0f * (yz + xw)    , -x2 - y2 + z2 + w2
-        };
+        Mat3 m;
+        m.m00 = x2 - y2 - z2 + w2;
+        m.m01 = 2.0f * (xy + zw);
+        m.m02 = 2.0f * (xz - yw);
+        m.m10 = 2.0f * (xy - zw);
+        m.m11 = -x2 + y2 - z2 + w2;
+        m.m12 = 2.0f * (yz + xw);
+        m.m20 = 2.0f * (xz + yw);
+        m.m21 = 2.0f * (yz - xw);
+        m.m22 = -x2 - y2 + z2 + w2;
+        return m;
     }
 }

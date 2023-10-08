@@ -48,43 +48,43 @@
     <ClCompile Include="Backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\DebugUtil\Memory.cpp">
+    <ClCompile Include="Deep\Deep\DebugUtil\Memory.cpp">
       <Filter>Source Files\Deep\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Sock\Sock_Windows.cpp">
+    <ClCompile Include="Deep\Deep\Sock\Sock_Windows.cpp">
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Sock\Sock_Posix.cpp">
+    <ClCompile Include="Deep\Deep\Sock\Sock_Posix.cpp">
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Sock\Sock.cpp">
+    <ClCompile Include="Deep\Deep\Sock\Sock.cpp">
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Sock\IPv4.cpp">
+    <ClCompile Include="Deep\Deep\Sock\IPv4.cpp">
       <Filter>Source Files\Deep\Sock</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Net\Channel.cpp">
+    <ClCompile Include="Deep\Deep\Net\Channel.cpp">
       <Filter>Source Files\Deep\Net</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Net\Packet.cpp">
+    <ClCompile Include="Deep\Deep\Net\Packet.cpp">
       <Filter>Source Files\Deep\Net</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Math\Vec3.cpp">
+    <ClCompile Include="Deep\Deep\Math\Vec3.cpp">
       <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Physics\Physics.cpp">
+    <ClCompile Include="Deep\Deep\Physics\Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\ECS\ECS.cpp">
+    <ClCompile Include="Deep\Deep\ECS\ECS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Math\Vec4.cpp">
+    <ClCompile Include="Deep\Deep\Math\Vec4.cpp">
       <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Math\Mat3.cpp">
+    <ClCompile Include="Deep\Deep\Math\Mat3.cpp">
       <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Deep\Math\Quaternion.cpp">
+    <ClCompile Include="Deep\Deep\Math\Quaternion.cpp">
       <Filter>Source Files\Deep\Math</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,58 +92,58 @@
     <ClInclude Include="Deep\Deep.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\DebugUtil\Memory.h">
+    <ClInclude Include="Deep\Deep\DebugUtil\Memory.h">
       <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\DebugUtil\Memory_Def.h">
+    <ClInclude Include="Deep\Deep\DebugUtil\Memory_Def.h">
       <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\DebugUtil\Memory_Undef.h">
+    <ClInclude Include="Deep\Deep\DebugUtil\Memory_Undef.h">
       <Filter>Header Files\Deep\DebugUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Sock.h">
+    <ClInclude Include="Deep\Deep\Sock.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Sock\Sock_Windows.h">
+    <ClInclude Include="Deep\Deep\Sock\Sock_Windows.h">
       <Filter>Header Files\Deep\Sock</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Sock\AF_INET.h">
+    <ClInclude Include="Deep\Deep\Sock\AF_INET.h">
       <Filter>Header Files\Deep\Sock</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Sock\IPv4.h">
+    <ClInclude Include="Deep\Deep\Sock\IPv4.h">
       <Filter>Header Files\Deep\Sock</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net\Packet.h">
+    <ClInclude Include="Deep\Deep\Net\Packet.h">
       <Filter>Header Files\Deep\Net</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net\Channel.h">
+    <ClInclude Include="Deep\Deep\Net\Channel.h">
       <Filter>Header Files\Deep\Net</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Net.h">
+    <ClInclude Include="Deep\Deep\Net.h">
       <Filter>Header Files\Deep</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Math\Vec3.h">
+    <ClInclude Include="Deep\Deep\Math\Vec3.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Math\Core.h">
-      <Filter>Header Files\Deep\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Deep\Deep_Types.h">
+    <ClInclude Include="Deep\Deep\Deep_Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Physics.h">
+    <ClInclude Include="Deep\Deep\Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\ECS.h">
+    <ClInclude Include="Deep\Deep\ECS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Math\Vec4.h">
+    <ClInclude Include="Deep\Deep\Math\Vec4.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Math\Mat3.h">
+    <ClInclude Include="Deep\Deep\Math\Mat3.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Deep\Math\Quaternion.h">
+    <ClInclude Include="Deep\Deep\Math\Quaternion.h">
+      <Filter>Header Files\Deep\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep\Deep\Math.h">
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
   </ItemGroup>

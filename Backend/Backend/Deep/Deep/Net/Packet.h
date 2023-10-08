@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "Deep.h"
-#include "Math/Core.h"
 
 namespace Deep {
     struct PacketReader {

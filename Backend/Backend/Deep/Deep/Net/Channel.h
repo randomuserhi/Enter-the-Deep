@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Sock.h"
+#include "../Sock.h"
 
 namespace Deep {
     class Channel {
