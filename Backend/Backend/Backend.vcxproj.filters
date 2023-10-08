@@ -43,6 +43,12 @@
     <Filter Include="Header Files\Deep\Math">
       <UniqueIdentifier>{3debcdfb-0362-4cca-8133-8e69704b5761}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Deep\ECS">
+      <UniqueIdentifier>{39c3f339-0810-4769-ba27-dd29ce576f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Physics">
+      <UniqueIdentifier>{5140c74e-624c-4513-a0b0-1e79391c46a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Backend.cpp">
@@ -144,7 +150,7 @@
       <Filter>Header Files\Deep\Math</Filter>
     </ClInclude>
     <ClInclude Include="Deep\Deep\Math.h">
-      <Filter>Header Files\Deep\Math</Filter>
+      <Filter>Header Files\Deep</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
