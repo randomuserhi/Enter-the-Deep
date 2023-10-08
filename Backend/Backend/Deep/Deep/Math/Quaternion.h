@@ -7,13 +7,13 @@
 namespace Deep {
     struct Quaternion {
         Quaternion& Normalize();
-        Quaternion Normalized() const {
+        Quaternion normalized() const {
             Quaternion q{ x, y, z, w };
             return q.Normalize();
         }
 
         Quaternion& Inverse();
-        Quaternion Inversed() const {
+        Quaternion inversed() const {
             Quaternion q{ x, y, z, w };
             return q.Inverse();
         }

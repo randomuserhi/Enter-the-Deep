@@ -3,7 +3,7 @@
 namespace Deep {
     struct Vec4 {
         Vec4& Normalize();
-        Vec4 Normalized() const {
+        Vec4 normalized() const {
             Vec4 v{ x, y, z, w };
             return v.Normalize();
         }

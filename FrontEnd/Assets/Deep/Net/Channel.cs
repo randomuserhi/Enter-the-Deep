@@ -22,7 +22,9 @@ namespace Deep.Net
         public void OnReceive(IAsyncResult result)
         {
             int numBytes = socket.EndReceiveFrom(result, ref endPoint);
-            Debug.Log($"Received {numBytes} bytes.");
+            int index = 0;
+            string message = BitHelper.ReadASCIIString(buffer, ref index);
+            Debug.Log($"Received {numBytes} bytes: {message}");
         }
 
         public void Open() => socket.Open();

@@ -3,7 +3,7 @@
 namespace Deep {
     struct Mat3 {
         Mat3& Transpose();
-        Mat3 Transposed() const {
+        Mat3 transposed() const {
             Mat3 q{ 
                 m00, m10, m20, 
                 m01, m11, m21, 
