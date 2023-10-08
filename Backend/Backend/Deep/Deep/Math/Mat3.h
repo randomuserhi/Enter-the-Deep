@@ -2,6 +2,16 @@
 
 namespace Deep {
     struct Mat3 {
+        Mat3& Transpose();
+        Mat3 Transposed() const {
+            Mat3 q{ 
+                m00, m10, m20, 
+                m01, m11, m21, 
+                m02, m12, m22 
+            };
+            return q;
+        }
+
         /**
          * (00, 10, 20)
          * (01, 11, 21)
