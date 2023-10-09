@@ -63,7 +63,7 @@ RHU.module(new Error(), "main", {
                 );
             }, rhuDocuscript);
 
-            this.body.append(docuscript.render(docuscript.pages.get("test")!));
+            this.body.append(docuscript.render(page));
         } as RHU.Macro.Constructor<App>;
 
         return appmount
