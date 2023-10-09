@@ -5,14 +5,15 @@ declare namespace RHU {
 }
 
 declare namespace RHUDocuscript {
-    interface Parser extends Docuscript.Record {
-        text: (text: string) => Node<"text">;
-        br: () => Node<"br">;
-        p: (...children: (string | Node)[]) => Node<"p">;
+    type n<T extends (...args: any[]) => any> = Docuscript.NodeDefinition<T>;
+    interface Parser extends Docuscript.NodeDefinitionMap {
+        text: n<(text: string) => Node<"text">>;
+        br: n<() => Node<"br">>;
+        p: n<(...children: (string | Node)[]) => Node<"p">>;
         
-        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
+        h: n<(heading: number, ...children: (string | Node)[]) => Node<"h">>;
     
-        block: (...children: (string | Node)[]) => Node<"block">;
+        block: n<(...children: (string | Node)[]) => Node<"block">>;
     }
 
     interface NodeMap {
@@ -36,19 +37,29 @@ RHU.module(new Error(), "docuscript", {
     type context = RHUDocuscript.Context;
     type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = RHUDocuscript.Node<T>;
     return {
-        nodes: {
-            text: function(this: context, text) {
+        text: {
+            create: function(this: context, text) {
                 return {
                     __type__: "text",
                     text: text,
                 };
             },
-            br: function() {
+            parse: function(node) {
+                return document.createTextNode(node.text);
+            }
+        },
+        br: {
+            create: function() {
                 return {
                     __type__: "br",
                 };
             },
-            p: function(this: context, ...children) {
+            parse: function() {
+                return document.createElement("br");
+            }
+        },
+        p: {
+            create: function(this: context, ...children) {
                 let node: node<"p"> = {
                     __type__: "p",
                 };
@@ -66,7 +77,12 @@ RHU.module(new Error(), "docuscript", {
 
                 return node;
             },
-            h: function(this: context, heading, ...children) {
+            parse: function() {
+                return document.createElement("p");
+            }
+        },
+        h: {
+            create: function(this: context, heading, ...children) {
                 let node: node<"h"> = {
                     __type__: "h",
                     heading: heading,
@@ -85,7 +101,12 @@ RHU.module(new Error(), "docuscript", {
 
                 return node;
             },
-            block: function(this: context, ...children) {
+            parse: function(node) {
+                return document.createElement(`h${node.heading}`);
+            }
+        },
+        block: {
+            create: function(this: context, ...children) {
                 let node: node<"block"> = {
                     __type__: "block",
                 };
@@ -103,23 +124,9 @@ RHU.module(new Error(), "docuscript", {
 
                 return node;
             },
-        },
-        parsers: {
-            text: function(node) {
-                return document.createTextNode(node.text);
-            },
-            br: function() {
-                return document.createElement("br");
-            },
-            p: function() {
-                return document.createElement("p");
-            },
-            h: function(node) {
-                return document.createElement(`h${node.heading}`);
-            },
-            block: function() {
+            parse: function() {
                 return document.createElement("div");
-            },
+            }
         },
     };
 });

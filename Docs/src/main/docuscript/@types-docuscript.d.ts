@@ -1,6 +1,6 @@
 interface Docuscript {
-    (name: string, generator: (nodes: Docuscript.docuscript.Parser) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
-    <T extends Docuscript.Record>(name: string, generator: (nodes: T) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
+    (name: string, generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Parser>) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
+    <T extends Docuscript.NodeDefinitionMap>(name: string, generator: (nodes: Docuscript.ParserNodes<T>) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
     defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser>;
     pages: Map<String, Docuscript.Page<any>>;
     render(page: Docuscript.Page<any>): DocumentFragment;
@@ -18,32 +18,37 @@ declare namespace Docuscript {
         __parent__?: AnyNode,
         [x: string]: any,
     };
-    type Record = { [k in string]: (...args: any[]) => any };
+    type NodeDefinitionMap = { [k in string]: NodeDefinition };
+    interface NodeDefinition<T extends (...args: any[]) => any = (...args: any[]) => any> {
+        create: T;
+        parse: (node: AnyNode) => globalThis.Node;
+    }
 
-    interface Context<T extends Record> {
+    interface Context<T extends NodeDefinitionMap> {
         page: Page<T>;
         nodes: {
-            [P in keyof T]: T[P];
+            [P in keyof T]: T[P]["create"];
         };
         remount: (child: Node<T>, parent: Node<T>) => void;
     }
 
-    interface Parser<T extends Record> {
-        nodes: {
-            [P in keyof T]: T[P];
-        };
-        parsers: {
-            [P in keyof T]: (node: ReturnType<T[P]>) => globalThis.Node; 
-        };
+    type Parser<T extends NodeDefinitionMap> = {
+        [P in keyof T]: {
+            create: T[P]["create"];
+            parse: (node: ReturnType<T[P]["create"]>) => globalThis.Node; 
+        }
+    };
+    type ParserNodes<T extends NodeDefinitionMap> = {
+        [P in keyof T]: T[P]["create"];
     }
 
-    interface Page<T extends Record> {
+    interface Page<T extends NodeDefinitionMap> {
         name: string;
         parser: Parser<T>;
         content: Node<T>[];
     }
 
-    type Node<Parser extends Record, T = {}> = {
+    type Node<Parser extends NodeDefinitionMap, T = {}> = {
         __type__: keyof Parser,
         __children__?: Node<Parser>[],
         __parent__?: Node<Parser>,
@@ -51,14 +56,14 @@ declare namespace Docuscript {
     } & T;
 
     namespace docuscript {
-        interface Parser extends Record {
-            text: (text: string) => Node<"text">;
-            br: () => Node<"br">;
-            p: (...children: (string | Node)[]) => Node<"p">;
+        interface Parser extends NodeDefinitionMap {
+            text: NodeDefinition<(text: string) => Node<"text">>;
+            br: NodeDefinition<() => Node<"br">>;
+            p: NodeDefinition<(...children: (string | Node)[]) => Node<"p">>;
             
-            h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
+            h: NodeDefinition<(heading: number, ...children: (string | Node)[]) => Node<"h">>;
     
-            block: (...children: (string | Node)[]) => Node<"block">;
+            block: NodeDefinition<(...children: (string | Node)[]) => Node<"block">>;
         }
     
         interface NodeMap {
