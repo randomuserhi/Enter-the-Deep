@@ -5,7 +5,7 @@
     type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = Docuscript.docuscript.Node<T>;
     let defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser> = {
         text: {
-            create: function(this: context, text) {
+            create: function(text) {
                 return {
                     __type__: "text",
                     text: text,

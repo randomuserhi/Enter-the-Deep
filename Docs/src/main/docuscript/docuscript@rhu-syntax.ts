@@ -38,7 +38,7 @@ RHU.module(new Error(), "docuscript", {
     type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = RHUDocuscript.Node<T>;
     return {
         text: {
-            create: function(this: context, text) {
+            create: function(text) {
                 return {
                     __type__: "text",
                     text: text,
