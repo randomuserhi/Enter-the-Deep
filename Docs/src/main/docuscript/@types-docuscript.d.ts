@@ -1,8 +1,9 @@
 interface Docuscript {
-    <T extends {} = Docuscript.Nodes>(name: string, generator: (nodes: T) => void, parser?: Docuscript.Parser): Docuscript.Page;
-    defaultParser: Docuscript.Parser;
-    pages: Map<String, Docuscript.Page>;
-    render(page: Docuscript.Page): DocumentFragment;
+    (name: string, generator: (nodes: Docuscript.docuscript.Parser) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
+    <T extends Docuscript.Record>(name: string, generator: (nodes: T) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
+    defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser>;
+    pages: Map<String, Docuscript.Page<any>>;
+    render(page: Docuscript.Page<any>): DocumentFragment;
 }
 
 declare var docuscript: Docuscript;
@@ -11,41 +12,68 @@ interface Window {
 }
 
 declare namespace Docuscript {
-    interface Parser<T extends {} = Nodes> {
+    type AnyNode = {  
+        __type__: PropertyKey,
+        __children__?: AnyNode[],
+        __parent__?: AnyNode,
+        [x: string]: any,
+    };
+    type Record = { [k in string]: (...args: any[]) => any };
+
+    interface Context<T extends Record> {
+        page: Page<T>;
+        nodes: {
+            [P in keyof T]: T[P];
+        };
+        remount: (child: Node<T>, parent: Node<T>) => void;
+    }
+
+    interface Parser<T extends Record> {
         nodes: {
             [P in keyof T]: T[P];
         };
         parsers: {
-            [P in keyof T]: (node: ReturnType<T[P]>) => DocumentFragment; 
+            [P in keyof T]: (node: ReturnType<T[P]>) => globalThis.Node; 
         };
     }
 
-    interface Page {
+    interface Page<T extends Record> {
         name: string;
-        parser: Parser;
-        content: Node[];
+        parser: Parser<T>;
+        content: Node<T>[];
     }
 
-    type Node<T = {}, Parser extends {} = Nodes> = {
+    type Node<Parser extends Record, T = {}> = {
         __type__: keyof Parser,
-        __children__?: Node[],
-        __parent__?: Node,
+        __children__?: Node<Parser>[],
+        __parent__?: Node<Parser>,
         [x: string]: any,
     } & T;
 
-    interface Nodes {
-        text: (text: string) => Node<text>;
-        h: (heading: number, ...children: (string | Node)[]) => Node<h>;
-        p: (...children: (string | Node)[]) => Node<p>;
-    }
+    namespace docuscript {
+        interface Parser extends Record {
+            text: (text: string) => Docuscript.Node<Parser, NodeMap["text"]>;
+            br: () => Docuscript.Node<Parser, NodeMap["br"]>;
+            p: (...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["p"]>;
+            
+            h: (heading: number, ...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["h"]>;
+    
+            block: (...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["block"]>;
+        }
+    
+        interface NodeMap {
+            text: {
+                text: string;
+            };
+            br: {};
+            p: {};
+            h: {
+                heading: number;
+            };
+            block: {};
+        }
 
-    interface text {
-        text: string;
-    }
-
-    interface p {}
-
-    interface h {
-        heading: number;
+        type Context = Docuscript.Context<Parser>;
+        type Node<T extends keyof NodeMap | undefined = undefined> = Docuscript.Node<Parser, T extends keyof NodeMap ? NodeMap[T] : {}>;
     }
 }
