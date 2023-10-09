@@ -6,13 +6,13 @@ declare namespace RHU {
 
 declare namespace RHUDocuscript {
     interface Parser extends Docuscript.Record {
-        text: (text: string) => Docuscript.Node<Parser, NodeMap["text"]>;
-        br: () => Docuscript.Node<Parser, NodeMap["br"]>;
-        p: (...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["p"]>;
+        text: (text: string) => Node<"text">;
+        br: () => Node<"br">;
+        p: (...children: (string | Node)[]) => Node<"p">;
         
-        h: (heading: number, ...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["h"]>;
+        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
     
-        block: (...children: (string | Docuscript.Node<Parser>)[]) => Docuscript.Node<Parser, NodeMap["block"]>;
+        block: (...children: (string | Node)[]) => Node<"block">;
     }
 
     interface NodeMap {
