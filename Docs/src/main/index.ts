@@ -16,9 +16,13 @@ interface App extends HTMLDivElement {
 
 RHU.module(new Error(), "main", { 
     Macro: "rhu/macro", Style: "rhu/style", 
-    theme: "main/theme", navbar: "components/organisms/navbar",
-    rhuDocuscript: "docuscript"
-}, function({ Macro, Style, theme, navbar, rhuDocuscript }) {
+    theme: "main/theme",
+    navbar: "components/organisms/navbar", 
+    docpages: "components/organisms/docpages",
+}, function({ 
+    Macro, Style, theme, 
+    navbar, docpages,
+}) {
     const style = Style(({ style }) => {
         const spacer = style.class`
         position: relative;
@@ -46,24 +50,10 @@ RHU.module(new Error(), "main", {
     
     Macro((() => {
         const appmount = function(this: App) {
-            this.classList.toggle(`${theme}`, true);   
+            this.classList.toggle(`${theme}`, true);
 
-            let page = docuscript("test", ({ h, block, br }) => {
-                h(1, "This is a heading");
-                block(
-                    "This is a paragraph",
-                    "multiline?",
-                    br(),
-                    `no idea how this
-                    will
-                    render so...`,
-                    block(
-                        "nested blocks"
-                    )
-                );
-            }, rhuDocuscript);
-
-            this.body.append(docuscript.render(page));
+            // TODO(randomuserhi): Change to load landing page, and allow switching to different content/pages:
+            this.body.replaceChildren(document.createMacro(docpages));
         } as RHU.Macro.Constructor<App>;
 
         return appmount
@@ -72,8 +62,6 @@ RHU.module(new Error(), "main", {
         <rhu-macro rhu-type="${navbar}"></rhu-macro>
         <div class="${style.spacer}"></div>
         <div rhu-id="body">
-            Go deep,
-            or go home.
         </div>
         `, {
             element: //html

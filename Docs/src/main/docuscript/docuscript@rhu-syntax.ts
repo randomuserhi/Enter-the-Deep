@@ -7,6 +7,7 @@ declare namespace RHU {
 declare namespace RHUDocuscript {
     type n<T extends (...args: any[]) => any> = Docuscript.NodeDefinition<T>;
     interface Parser extends Docuscript.NodeDefinitionMap {
+        img: n<(src: string) => Node<"img">>;
         text: n<(text: string) => Node<"text">>;
         br: n<() => Node<"br">>;
         p: n<(...children: (string | Node)[]) => Node<"p">>;
@@ -17,6 +18,9 @@ declare namespace RHUDocuscript {
     }
 
     interface NodeMap {
+        img: {
+            src: string;
+        };
         text: {
             text: string;
         };
@@ -37,6 +41,19 @@ RHU.module(new Error(), "docuscript", {
     type context = RHUDocuscript.Context;
     type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = RHUDocuscript.Node<T>;
     return {
+        img: {
+            create: function(src) {
+                return {
+                    __type__: "img",
+                    src: src,
+                }
+            },
+            parse: function(node) {
+                let img = document.createElement("img");
+                img.src = node.src;
+                return img;
+            }
+        },
         text: {
             create: function(text) {
                 return {

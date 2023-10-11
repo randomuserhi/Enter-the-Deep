@@ -2,7 +2,7 @@
 
 (function() {
     type context = Docuscript.docuscript.Context;
-    type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = Docuscript.docuscript.Node<T>;
+    type node<T extends keyof Docuscript.docuscript.NodeMap | undefined = undefined> = Docuscript.docuscript.Node<T>;
     let defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser> = {
         text: {
             create: function(text) {
