@@ -18,28 +18,31 @@ declare namespace Docuscript {
         __parent__?: AnyNode,
         [x: string]: any,
     };
-    type NodeDefinitionMap = { [k in string]: NodeDefinition };
+    type NodeDefinitionMap = { [K in string]: (...args: any[]) => any; };
     interface NodeDefinition<T extends (...args: any[]) => any = (...args: any[]) => any> {
         create: T;
         parse: (node: AnyNode) => globalThis.Node;
     }
+    type ToNodeMap<T extends { [k in string]: (...args: any[]) => any }> = {
+        [K in keyof T]: NodeDefinition<T[K]>;
+    };
 
     interface Context<T extends NodeDefinitionMap> {
         page: Page<T>;
         nodes: {
-            [P in keyof T]: T[P]["create"];
+            [P in keyof T]: ToNodeMap<T>[P]["create"];
         };
         remount: (child: Node<T>, parent: Node<T>) => void;
     }
 
     type Parser<T extends NodeDefinitionMap> = {
         [P in keyof T]: {
-            create: T[P]["create"];
-            parse: (node: ReturnType<T[P]["create"]>) => globalThis.Node; 
+            create: ToNodeMap<T>[P]["create"];
+            parse: (node: ReturnType<ToNodeMap<T>[P]["create"]>) => globalThis.Node; 
         }
     };
     type ParserNodes<T extends NodeDefinitionMap> = {
-        [P in keyof T]: T[P]["create"];
+        [P in keyof T]: ToNodeMap<T>[P]["create"];
     }
 
     interface Page<T extends NodeDefinitionMap> {
@@ -57,13 +60,13 @@ declare namespace Docuscript {
 
     namespace docuscript {
         interface Parser extends NodeDefinitionMap {
-            text: NodeDefinition<(text: string) => Node<"text">>;
-            br: NodeDefinition<() => Node<"br">>;
-            p: NodeDefinition<(...children: (string | Node)[]) => Node<"p">>;
+            text: (text: string) => Node<"text">;
+            br: () => Node<"br">;
+            p: (...children: (string | Node)[]) => Node<"p">;
             
-            h: NodeDefinition<(heading: number, ...children: (string | Node)[]) => Node<"h">>;
+            h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
     
-            block: NodeDefinition<(...children: (string | Node)[]) => Node<"block">>;
+            block: (...children: (string | Node)[]) => Node<"block">;
         }
     
         interface NodeMap {

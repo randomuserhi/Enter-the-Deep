@@ -5,16 +5,15 @@ declare namespace RHU {
 }
 
 declare namespace RHUDocuscript {
-    type n<T extends (...args: any[]) => any> = Docuscript.NodeDefinition<T>;
     interface Parser extends Docuscript.NodeDefinitionMap {
-        img: n<(src: string) => Node<"img">>;
-        text: n<(text: string) => Node<"text">>;
-        br: n<() => Node<"br">>;
-        p: n<(...children: (string | Node)[]) => Node<"p">>;
+        img: (src: string) => Node<"img">;
+        text: (text: string) => Node<"text">;
+        br: () => Node<"br">;
+        p: (...children: (string | Node)[]) => Node<"p">;
         
-        h: n<(heading: number, ...children: (string | Node)[]) => Node<"h">>;
+        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
     
-        block: n<(...children: (string | Node)[]) => Node<"block">>;
+        block: (...children: (string | Node)[]) => Node<"block">;
     }
 
     interface NodeMap {
