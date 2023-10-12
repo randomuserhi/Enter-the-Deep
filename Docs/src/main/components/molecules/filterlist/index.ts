@@ -19,13 +19,21 @@ declare namespace Molecules {
 RHU.module(new Error(), "components/molecules/filterlist", { 
     Macro: "rhu/macro", style: "components/molecules/filterlist/style",
     dropdown: "components/atoms/dropdown",
+    docs: "docs",
 }, function({ 
     Macro, style,
-    dropdown
+    dropdown,
+    docs,
 }) {
     const filterlist = Macro((() => {
         const filterlist = function(this: Molecules.Filterlist) {
             this.classList.add(`${style.wrapper}`);
+
+            this.version.setOptions(docs.sort([...docs.versions.keys()], "desc").map(k => ({
+                label: k,
+                value: k,
+            })));
+
         } as RHU.Macro.Constructor<Molecules.Filterlist>;
 
         return filterlist;
