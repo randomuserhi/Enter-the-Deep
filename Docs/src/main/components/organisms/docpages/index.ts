@@ -54,7 +54,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
         `
         <div class="${style.margin}">
             <rhu-macro class="${style.sidebar}" rhu-type="${filterlist}"></rhu-macro>
-            <div class="${style.content}" rhu-id="content"></div>
+            <div class="${style.content}">
+                <div>title?</div>
+                <div rhu-id="content"></div>
+            </div>
         </div>
         `, {
             element: //html
