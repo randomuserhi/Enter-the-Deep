@@ -37,7 +37,7 @@ declare namespace RHUDocuscript {
     type Page = Docuscript.Page<Language, FuncMap>;
     type Parser = Docuscript.Parser<Language, FuncMap>;
     type Context = Docuscript.Context<Language, FuncMap>;
-    type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
+    type Node<T extends Language | undefined = undefined> = Docuscript.NodeDef<NodeMap, T>;
 }
 
 RHU.module(new Error(), "docuscript", { 

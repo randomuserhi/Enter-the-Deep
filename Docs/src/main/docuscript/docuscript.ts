@@ -140,7 +140,7 @@
         const parser = page.parser;
 
         let stack: Node[] = [];
-        let walk = (node: Docuscript._Node<T>) => {
+        let walk = (node: Docuscript.Node<T>) => {
             let dom = parser[node.__type__].parse(node as any);
             let parent = stack.length === 0 ? undefined : stack[stack.length - 1];
 

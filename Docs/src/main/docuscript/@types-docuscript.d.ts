@@ -31,7 +31,7 @@ declare namespace Docuscript {
         nodes: {
             [P in keyof NodeFuncMap<T>]: ToNodeMap<FuncMap>[P]["create"];
         };
-        remount: (child: _Node<T>, parent: _Node<T>) => void;
+        remount: (child: Node<T>, parent: Node<T>) => void;
     }
 
     type Parser<T extends string, FuncMap extends NodeFuncMap<T>> = {
@@ -46,17 +46,17 @@ declare namespace Docuscript {
 
     interface Page<T extends string, FuncMap extends NodeFuncMap<T>> {
         parser: Parser<T, FuncMap>;
-        content: _Node<T>[];
+        content: Node<T>[];
     }
 
-    type _Node<T, Content = {}> = {
-        __type__: T,
-        __children__?: _Node<T>[],
-        __parent__?: _Node<T>,
-        [x: string]: any,
-    } & Content;
+    interface Node<T> {
+        __type__: T;
+        __children__?: Node<T>[];
+        __parent__?: Node<T>;
+        [x: string]: any;
+    }
 
-    type Node<NodeMap, T> = _Node<T extends keyof NodeMap ? T : keyof NodeMap, T extends keyof NodeMap ? NodeMap[T] : {}>;
+    type NodeDef<NodeMap, T> = Node<T extends keyof NodeMap ? T : keyof NodeMap> & (T extends keyof NodeMap ? NodeMap[T] : {});
 
     namespace docuscript {
         interface NodeMap {
@@ -85,6 +85,6 @@ declare namespace Docuscript {
         type Page = Docuscript.Page<Language, FuncMap>;
         type Parser = Docuscript.Parser<Language, FuncMap>;
         type Context = Docuscript.Context<Language, FuncMap>;
-        type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
+        type Node<T extends Language | undefined = undefined> = Docuscript.NodeDef<NodeMap, T>;
     }
 }
