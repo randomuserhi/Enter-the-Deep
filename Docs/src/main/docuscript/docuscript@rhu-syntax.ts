@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "docuscript": Docuscript.Parser<RHUDocuscript.Language>;
+        "docuscript": RHUDocuscript.Parser;
     }
 }
 
@@ -22,7 +22,7 @@ declare namespace RHUDocuscript {
     }
     type Language = keyof NodeMap;
 
-    interface Parser extends Docuscript.NodeDefinitionMap<Language> {
+    interface FuncMap extends Docuscript.NodeFuncMap<Language> {
         img: (src: string) => Node<"img">;
         text: (text: string) => Node<"text">;
         br: () => Node<"br">;
@@ -34,7 +34,9 @@ declare namespace RHUDocuscript {
         frag: (...children: (string | Node)[]) => Node<"frag">;
     }
 
-    type Context = Docuscript.Context<Language, Parser>;
+    type Page = Docuscript.Page<Language, FuncMap>;
+    type Parser = Docuscript.Parser<Language, FuncMap>;
+    type Context = Docuscript.Context<Language, FuncMap>;
     type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
 }
 

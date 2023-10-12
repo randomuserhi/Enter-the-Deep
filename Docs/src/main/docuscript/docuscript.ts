@@ -3,7 +3,7 @@
 (function() {
     type context = Docuscript.docuscript.Context;
     type node<T extends keyof Docuscript.docuscript.NodeMap | undefined = undefined> = Docuscript.docuscript.Node<T>;
-    let defaultParser: Docuscript.Parser<Docuscript.docuscript.Language> = {
+    let defaultParser: Docuscript.docuscript.Parser = {
         text: {
             create: function(text) {
                 return {
@@ -97,14 +97,14 @@
         },
     };
 
-    let docuscript = window.docuscript = function<T extends string>(generator: (nodes: T) => void, parser: Docuscript.Parser<T> = defaultParser as any): Docuscript.Page<T> {
-        const page: Docuscript.Page<T> = {
+    let docuscript = window.docuscript = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: T) => void, parser: Docuscript.Parser<T, FuncMap> = defaultParser as any): Docuscript.Page<T, FuncMap> {
+        const page: Docuscript.Page<T, FuncMap> = {
             parser,
             content: []
         };
         const nodes: any = {};
         const context: any = {};
-        for (const [node, func] of Object.entries(parser as Docuscript.Parser<string>)) {
+        for (const [node, func] of Object.entries(parser as Docuscript.Parser<string, Docuscript.NodeFuncMap<string>>)) {
             nodes[node as keyof typeof nodes] = (...args: any[]) => 
                 func.create.call(docuscriptContext, ...args);
 
@@ -114,7 +114,7 @@
                 return node;
             }
         }
-        const docuscriptContext: Docuscript.Context<T, Docuscript.NodeDefinitionMap<T>> = {
+        const docuscriptContext: Docuscript.Context<T, Docuscript.NodeFuncMap<T>> = {
             page,
             nodes,
             remount: (child, parent) => {
@@ -135,7 +135,7 @@
         return page;
     } as Docuscript;
 
-    docuscript.render = function<T extends string>(page: Docuscript.Page<T>) {
+    docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>) {
         const fragment = new DocumentFragment();
         const parser = page.parser;
 
