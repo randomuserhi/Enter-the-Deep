@@ -28,7 +28,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
     const docpages = Macro((() => {
         const docpages = function(this: Organisms.Docpages) {
             /* Example page */
-            let page = docuscript(({ h, div, br, img }) => {
+            let page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({ 
+                h, div, br, img,
+            }) => {
                 h(1, "This is a heading");
                 img("https://avatars.githubusercontent.com/u/40913834?s=40&v=4");
 
