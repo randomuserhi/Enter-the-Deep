@@ -28,19 +28,19 @@ RHU.module(new Error(), "components/organisms/docpages", {
     const docpages = Macro((() => {
         const docpages = function(this: Organisms.Docpages) {
             /* Example page */
-            let page = docuscript(({ h, block, br, img, frag }) => {
+            let page = docuscript(({ h, div, br, img }) => {
                 h(1, "This is a heading");
                 img("https://avatars.githubusercontent.com/u/40913834?s=40&v=4");
 
                 for (let i = 0; i < 20; ++i) {
-                    block(
+                    div(
                         "This is a paragraph",
                         "multiline?",
                         br(),
                         `no idea how this
                         will
                         render so...`,
-                        block(
+                        div(
                             "nested blocks"
                         )
                     );

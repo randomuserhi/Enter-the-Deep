@@ -3,7 +3,7 @@
 (function() {
     type context = Docuscript.docuscript.Context;
     type node<T extends keyof Docuscript.docuscript.NodeMap | undefined = undefined> = Docuscript.docuscript.Node<T>;
-    let defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser> = {
+    let defaultParser: Docuscript.Parser<Docuscript.docuscript.Language> = {
         text: {
             create: function(text) {
                 return {
@@ -97,15 +97,22 @@
         },
     };
 
-    let docuscript = window.docuscript = function<T extends Docuscript.NodeDefinitionMap = Docuscript.docuscript.Parser>(generator: (nodes: T) => void, parser: Docuscript.Parser<T> = defaultParser as any): Docuscript.Page<T> {
+    let docuscript = window.docuscript = function<T extends string>(generator: (nodes: T) => void, parser: Docuscript.Parser<T> = defaultParser as any): Docuscript.Page<T> {
         const page: Docuscript.Page<T> = {
             parser,
             content: []
         };
         const nodes: any = {};
-        for (const [node, func] of Object.entries(parser)) {
+        const context: any = {};
+        for (const [node, func] of Object.entries(parser as Docuscript.Parser<string>)) {
             nodes[node as keyof typeof nodes] = (...args: any[]) => 
                 func.create.call(docuscriptContext, ...args);
+
+            context[node as keyof typeof context] = (...args: any[]) => { 
+                const node = func.create.call(docuscriptContext, ...args); 
+                page.content.push(node); // auto-mount node
+                return node;
+            }
         }
         const docuscriptContext: Docuscript.Context<T> = {
             page,
@@ -124,24 +131,16 @@
                 }
             } 
         }
-        const context: any = {};
-        for (const [node, func] of Object.entries(parser)) {
-            context[node as keyof typeof context] = (...args: any[]) => { 
-                const node = func.create.call(docuscriptContext, ...args); 
-                page.content.push(node); // auto-mount node
-                return node;
-            }
-        }
         generator(context);
         return page;
     } as Docuscript;
 
-    docuscript.render = function<T extends Docuscript.NodeDefinitionMap>(page: Docuscript.Page<T>) {
+    docuscript.render = function<T extends string>(page: Docuscript.Page<T>) {
         const fragment = new DocumentFragment();
         const parser = page.parser;
 
         let stack: Node[] = [];
-        let walk = (node: Docuscript.Node<T>) => {
+        let walk = (node: Docuscript._Node<T>) => {
             let dom = parser[node.__type__].parse(node as any);
             let parent = stack.length === 0 ? undefined : stack[stack.length - 1];
 

@@ -1,22 +1,10 @@
 declare namespace RHU {
     interface Modules {
-        "docuscript": Docuscript.Parser<RHUDocuscript.Parser>;
+        "docuscript": Docuscript.Parser<RHUDocuscript.Language>;
     }
 }
 
 declare namespace RHUDocuscript {
-    interface Parser extends Docuscript.NodeDefinitionMap {
-        img: (src: string) => Node<"img">;
-        text: (text: string) => Node<"text">;
-        br: () => Node<"br">;
-        p: (...children: (string | Node)[]) => Node<"p">;
-        
-        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
-    
-        block: (...children: (string | Node)[]) => Node<"block">;
-        frag: (...children: (string | Node)[]) => Node<"frag">;
-    }
-
     interface NodeMap {
         img: {
             src: string;
@@ -29,18 +17,31 @@ declare namespace RHUDocuscript {
         h: {
             heading: number;
         };
-        block: {};
+        div: {};
         frag: {};
     }
+    type Language = keyof NodeMap;
 
-    type Context = Docuscript.Context<Parser>;
-    type Node<T extends keyof NodeMap | undefined = undefined> = Docuscript.Node<Parser, T extends keyof NodeMap ? NodeMap[T] : {}>;
+    interface Parser extends Docuscript.NodeDefinitionMap<Language> {
+        img: (src: string) => Node<"img">;
+        text: (text: string) => Node<"text">;
+        br: () => Node<"br">;
+        p: (...children: (string | Node)[]) => Node<"p">;
+        
+        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
+    
+        div: (...children: (string | Node)[]) => Node<"div">;
+        frag: (...children: (string | Node)[]) => Node<"frag">;
+    }
+
+    type Context = Docuscript.Context<Language>;
+    type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
 }
 
 RHU.module(new Error(), "docuscript", { 
 }, function({}) {
     type context = RHUDocuscript.Context;
-    type node<T extends keyof RHUDocuscript.NodeMap | undefined = undefined> = RHUDocuscript.Node<T>;
+    type node<T extends RHUDocuscript.Language | undefined = undefined> = RHUDocuscript.Node<T>;
     return {
         img: {
             create: function(src) {
@@ -123,10 +124,10 @@ RHU.module(new Error(), "docuscript", {
                 return document.createElement(`h${node.heading}`);
             }
         },
-        block: {
+        div: {
             create: function(this: context, ...children) {
-                let node: node<"block"> = {
-                    __type__: "block",
+                let node: node<"div"> = {
+                    __type__: "div",
                 };
                 
                 for (let child of children) {

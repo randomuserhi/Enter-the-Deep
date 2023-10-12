@@ -1,7 +1,7 @@
 interface Docuscript {
-    (generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Parser>) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
-    <T extends Docuscript.NodeDefinitionMap>(generator: (nodes: Docuscript.ParserNodes<T>) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
-    defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser>;
+    (generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Language>) => void): Docuscript.Page<Docuscript.docuscript.Language>;
+    <T extends string>(generator: (nodes: Docuscript.ParserNodes<T>) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
+    defaultParser: Docuscript.Parser<Docuscript.docuscript.Language>;
     render(page: Docuscript.Page<any>): DocumentFragment;
 }
 
@@ -17,7 +17,7 @@ declare namespace Docuscript {
         __parent__?: AnyNode,
         [x: string]: any,
     };
-    type NodeDefinitionMap = { [K in string]: (...args: any[]) => any; };
+    type NodeDefinitionMap<T extends string> = { [K in T]: (...args: any[]) => any; };
     interface NodeDefinition<T extends (...args: any[]) => any = (...args: any[]) => any> {
         create: T;
         parse: (node: AnyNode) => globalThis.Node;
@@ -26,47 +26,39 @@ declare namespace Docuscript {
         [K in keyof T]: NodeDefinition<T[K]>;
     };
 
-    interface Context<T extends NodeDefinitionMap> {
+    interface Context<T extends string> {
         page: Page<T>;
         nodes: {
-            [P in keyof T]: ToNodeMap<T>[P]["create"];
+            [P in keyof NodeDefinitionMap<T>]: ToNodeMap<NodeDefinitionMap<T>>[P]["create"];
         };
-        remount: (child: Node<T>, parent: Node<T>) => void;
+        remount: (child: _Node<T>, parent: _Node<T>) => void;
     }
 
-    type Parser<T extends NodeDefinitionMap> = {
-        [P in keyof T]: {
-            create: ToNodeMap<T>[P]["create"];
-            parse: (node: ReturnType<ToNodeMap<T>[P]["create"]>) => globalThis.Node; 
+    type Parser<T extends string> = {
+        [P in keyof NodeDefinitionMap<T>]: {
+            create: ToNodeMap<NodeDefinitionMap<T>>[P]["create"];
+            parse: (node: ReturnType<ToNodeMap<NodeDefinitionMap<T>>[P]["create"]>) => globalThis.Node; 
         }
     };
-    type ParserNodes<T extends NodeDefinitionMap> = {
-        [P in keyof T]: ToNodeMap<T>[P]["create"];
+    type ParserNodes<T extends string> = {
+        [P in keyof NodeDefinitionMap<T>]: ToNodeMap<NodeDefinitionMap<T>>[P]["create"];
     }
 
-    interface Page<T extends NodeDefinitionMap> {
+    interface Page<T extends string> {
         parser: Parser<T>;
-        content: Node<T>[];
+        content: _Node<T>[];
     }
 
-    type Node<Parser extends NodeDefinitionMap, T = {}> = {
-        __type__: keyof Parser,
-        __children__?: Node<Parser>[],
-        __parent__?: Node<Parser>,
+    type _Node<T, Content = {}> = {
+        __type__: T,
+        __children__?: _Node<T>[],
+        __parent__?: _Node<T>,
         [x: string]: any,
-    } & T;
+    } & Content;
+
+    type Node<NodeMap, T> = _Node<T extends keyof NodeMap ? T : keyof NodeMap, T extends keyof NodeMap ? NodeMap[T] : {}>;
 
     namespace docuscript {
-        interface Parser extends NodeDefinitionMap {
-            text: (text: string) => Node<"text">;
-            br: () => Node<"br">;
-            p: (...children: (string | Node)[]) => Node<"p">;
-            
-            h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
-    
-            block: (...children: (string | Node)[]) => Node<"block">;
-        }
-    
         interface NodeMap {
             text: {
                 text: string;
@@ -78,8 +70,19 @@ declare namespace Docuscript {
             };
             block: {};
         }
+        type Language = keyof NodeMap;
 
-        type Context = Docuscript.Context<Parser>;
-        type Node<T extends keyof NodeMap | undefined = undefined> = Docuscript.Node<Parser, T extends keyof NodeMap ? NodeMap[T] : {}>;
+        interface Parser extends NodeDefinitionMap<Language> {
+            text: (text: string) => Node<"text">;
+            br: () => Node<"br">;
+            p: (...children: (string | Node)[]) => Node<"p">;
+            
+            h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
+    
+            block: (...children: (string | Node)[]) => Node<"block">;
+        }
+
+        type Context = Docuscript.Context<Language>;
+        type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
     }
 }
