@@ -15,7 +15,6 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
     {
         const style = Style(({ style }) => {
             const wrapper = style.class`
-            height: 100%;
             padding: 0 70px;
             `;
             style/*css*/`
@@ -27,9 +26,8 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             `;
 
             const margin = style.class`
-            height: 100%;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1800px;
 
             margin: 0 auto;
 
@@ -37,8 +35,6 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             `;
 
             const sidebar = style.class`
-            width: var(--Sidebar_width);
-            flex-shrink: 0;
             `;
             style/*css*/`
             @media screen and (max-width: 780px) { /* if width <= 780 */

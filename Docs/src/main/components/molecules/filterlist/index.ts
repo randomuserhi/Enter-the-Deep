@@ -22,14 +22,16 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 }) {
     const filterlist = Macro((() => {
         const filterlist = function(this: Molecules.Filterlist) {
+            this.classList.add(`${style.wrapper}`);
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
         return filterlist;
     })(), "molecules/filterlist", //html
         `
+        <div class="${style.content}"></div>
         `, {
             element: //html
-            `<div class="${style.wrapper}"></div>`
+            `<div></div>`
         });
 
     return filterlist;

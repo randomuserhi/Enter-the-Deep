@@ -43,13 +43,8 @@ RHU.module(new Error(), "main", {
         }
         `
 
-        const body = style.class`
-        height: calc(100% - var(--Navbar_height));
-        `;
-
         return {
             spacer,
-            body
         };
     });
     
@@ -66,7 +61,7 @@ RHU.module(new Error(), "main", {
         `
         <rhu-macro rhu-type="${navbar}"></rhu-macro>
         <div class="${style.spacer}"></div>
-        <div class="${style.body}" rhu-id="body">
+        <div rhu-id="body">
         </div>
         `, {
             element: //html

@@ -2,6 +2,7 @@ declare namespace RHU {
     interface Modules {
         "components/molecules/filterlist/style": {
             wrapper: Style.ClassName;
+            content: Style.ClassName;
         };
     }
 }
@@ -11,22 +12,24 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
     function({ Style, theme })
     {
         const style = Style(({ style }) => {
-            style/*css*/`
-            :root
-            {
-                --Sidebar_width: 250px;
-            }
+            const wrapper = style.class`
+            position: relative;
+            width: 25%;
+            min-width: 200px;
+            flex-shrink: 0;
             `;
 
-            const wrapper = style.class`
-            position: fixed;
-            width: var(--Sidebar_width);
+            const content = style.class`
+            position: sticky;
+            top: var(--Navbar_height);
+            width: 100%;
+            height: calc(100vh - var(--Navbar_height));
             background-color: #eee;
-            height: 100%;
-            `;
+            `
             
             return {
                 wrapper,
+                content,
             };
         });
 
