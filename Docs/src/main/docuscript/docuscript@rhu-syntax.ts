@@ -34,7 +34,7 @@ declare namespace RHUDocuscript {
         frag: (...children: (string | Node)[]) => Node<"frag">;
     }
 
-    type Context = Docuscript.Context<Language>;
+    type Context = Docuscript.Context<Language, Parser>;
     type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
 }
 

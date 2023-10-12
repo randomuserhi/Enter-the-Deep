@@ -26,10 +26,10 @@ declare namespace Docuscript {
         [K in keyof T]: NodeDefinition<T[K]>;
     };
 
-    interface Context<T extends string> {
+    interface Context<T extends string, FuncMap extends NodeDefinitionMap<T>> {
         page: Page<T>;
         nodes: {
-            [P in keyof NodeDefinitionMap<T>]: ToNodeMap<NodeDefinitionMap<T>>[P]["create"];
+            [P in keyof NodeDefinitionMap<T>]: ToNodeMap<FuncMap>[P]["create"];
         };
         remount: (child: _Node<T>, parent: _Node<T>) => void;
     }
@@ -82,7 +82,7 @@ declare namespace Docuscript {
             block: (...children: (string | Node)[]) => Node<"block">;
         }
 
-        type Context = Docuscript.Context<Language>;
+        type Context = Docuscript.Context<Language, Parser>;
         type Node<T extends Language | undefined = undefined> = Docuscript.Node<NodeMap, T>;
     }
 }

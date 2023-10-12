@@ -114,7 +114,7 @@
                 return node;
             }
         }
-        const docuscriptContext: Docuscript.Context<T> = {
+        const docuscriptContext: Docuscript.Context<T, Docuscript.NodeDefinitionMap<T>> = {
             page,
             nodes,
             remount: (child, parent) => {
