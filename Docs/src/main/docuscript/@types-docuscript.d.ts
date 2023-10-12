@@ -1,8 +1,7 @@
 interface Docuscript {
-    (name: string, generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Parser>) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
-    <T extends Docuscript.NodeDefinitionMap>(name: string, generator: (nodes: Docuscript.ParserNodes<T>) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
+    (generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Parser>) => void): Docuscript.Page<Docuscript.docuscript.Parser>;
+    <T extends Docuscript.NodeDefinitionMap>(generator: (nodes: Docuscript.ParserNodes<T>) => void, parser: Docuscript.Parser<T>): Docuscript.Page<T>;
     defaultParser: Docuscript.Parser<Docuscript.docuscript.Parser>;
-    pages: Map<String, Docuscript.Page<any>>;
     render(page: Docuscript.Page<any>): DocumentFragment;
 }
 
@@ -46,7 +45,6 @@ declare namespace Docuscript {
     }
 
     interface Page<T extends NodeDefinitionMap> {
-        name: string;
         parser: Parser<T>;
         content: Node<T>[];
     }

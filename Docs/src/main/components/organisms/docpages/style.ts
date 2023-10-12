@@ -2,6 +2,9 @@ declare namespace RHU {
     interface Modules {
         "components/organsisms/docpages/style": {
             wrapper: Style.ClassName;
+            margin: Style.ClassName;
+            sidebar: Style.ClassName;
+            content: Style.ClassName;
         };
     }
 }
@@ -12,11 +15,47 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
     {
         const style = Style(({ style }) => {
             const wrapper = style.class`
-                display: flex;
-                gap: 10px;
+            height: 100%;
+            padding: 0 70px;
             `;
+            style/*css*/`
+            @media screen and (max-width: 780px) { /* if width <= 780 */
+                ${wrapper} {
+                    padding: 7px 30px;
+                }
+            }
+            `;
+
+            const margin = style.class`
+            height: 100%;
+            width: 100%;
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            display: flex;
+            `;
+
+            const sidebar = style.class`
+            width: var(--Sidebar_width);
+            `;
+            style/*css*/`
+            @media screen and (max-width: 780px) { /* if width <= 780 */
+                ${sidebar} {
+                    display: none;
+                }
+            }
+            `;
+
+            const content = style.class`
+                padding: 0 15px;
+            `;
+
             return {
-                wrapper
+                wrapper,
+                margin,
+                sidebar,
+                content
             };
         });
 

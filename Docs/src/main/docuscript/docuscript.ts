@@ -97,9 +97,8 @@
         },
     };
 
-    let docuscript = window.docuscript = function<T extends Docuscript.NodeDefinitionMap = Docuscript.docuscript.Parser>(name: string, generator: (nodes: T) => void, parser: Docuscript.Parser<T> = defaultParser as any): Docuscript.Page<T> {
+    let docuscript = window.docuscript = function<T extends Docuscript.NodeDefinitionMap = Docuscript.docuscript.Parser>(generator: (nodes: T) => void, parser: Docuscript.Parser<T> = defaultParser as any): Docuscript.Page<T> {
         const page: Docuscript.Page<T> = {
-            name,
             parser,
             content: []
         };
@@ -134,7 +133,6 @@
             }
         }
         generator(context);
-        pages.set(page.name, page);
         return page;
     } as Docuscript;
 
@@ -175,5 +173,4 @@
     };
 
     docuscript.defaultParser = defaultParser;
-    let pages = docuscript.pages = new Map<String, Docuscript.Page<any>>();
 })();

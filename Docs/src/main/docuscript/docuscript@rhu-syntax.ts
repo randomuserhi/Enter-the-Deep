@@ -14,6 +14,7 @@ declare namespace RHUDocuscript {
         h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
     
         block: (...children: (string | Node)[]) => Node<"block">;
+        frag: (...children: (string | Node)[]) => Node<"frag">;
     }
 
     interface NodeMap {
@@ -29,6 +30,7 @@ declare namespace RHUDocuscript {
             heading: number;
         };
         block: {};
+        frag: {};
     }
 
     type Context = Docuscript.Context<Parser>;
@@ -143,6 +145,29 @@ RHU.module(new Error(), "docuscript", {
             parse: function() {
                 return document.createElement("div");
             }
+        },
+        frag: {
+            create: function (this: context, ...children) {
+                let node: node<"frag"> = {
+                    __type__: "frag",
+                };
+                
+                for (let child of children) {
+                    let childNode: node;
+                    if (typeof child === "string") {
+                        childNode = this.nodes.p(child);
+                    } else {
+                        childNode = child;
+                    }
+                    
+                    this.remount(childNode, node);
+                }
+
+                return node;
+            },
+            parse: function() {
+                return new DocumentFragment();
+            },
         },
     };
 });
