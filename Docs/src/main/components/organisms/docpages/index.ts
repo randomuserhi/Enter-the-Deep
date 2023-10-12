@@ -108,6 +108,8 @@ RHU.module(new Error(), "components/organisms/docpages", {
         }
 
         docpages.prototype.view = function(versionStr, pageStr) {
+            this.currentVersion = versionStr;
+            this.currentPage = pageStr;
             const version = docs.get(this.currentVersion);
             if (RHU.exists(version)) {
                 const page = version.pages.get(this.currentPage);
