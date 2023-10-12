@@ -14,14 +14,14 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             style/*css*/`
             :root
             {
-                --Sidebar_width: 200px;
+                --Sidebar_width: 250px;
             }
             `;
 
             const wrapper = style.class`
             position: fixed;
             width: var(--Sidebar_width);
-            background-color: #ccc;
+            background-color: #eee;
             height: 100%;
             `;
             

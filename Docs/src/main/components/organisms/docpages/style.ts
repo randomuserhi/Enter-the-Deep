@@ -21,7 +21,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             style/*css*/`
             @media screen and (max-width: 780px) { /* if width <= 780 */
                 ${wrapper} {
-                    padding: 7px 30px;
+                    padding: 0px 7px;
                 }
             }
             `;
@@ -29,7 +29,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             const margin = style.class`
             height: 100%;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
 
             margin: 0 auto;
 
@@ -38,6 +38,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
 
             const sidebar = style.class`
             width: var(--Sidebar_width);
+            flex-shrink: 0;
             `;
             style/*css*/`
             @media screen and (max-width: 780px) { /* if width <= 780 */
