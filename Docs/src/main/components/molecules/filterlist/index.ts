@@ -13,7 +13,7 @@ declare namespace RHU {
 
 declare namespace Atoms {
     interface Filteritem extends HTMLDivElement {
-        set(page: string): void;
+        set(page: Page): void;
     }
 }
 
@@ -21,7 +21,7 @@ declare namespace Molecules {
     interface Filterlist extends HTMLDivElement {
         load(version: string): void;
         
-        root: string;
+        root?: string;
 
         version: Atoms.Dropdown;
         search: HTMLInputElement;
@@ -38,13 +38,14 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     dropdown,
     docs,
 }) {
+    //TODO(randomuserhi): convert to filterlist and have it recursive (use itself to make nested items)
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
 
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
-            this.innerHTML = page;
+            this.innerHTML = page.name;
         };
 
         return filteritem;
@@ -55,6 +56,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             `<div></div>`
         });
 
+    //TODO(randomuserhi): convert to wrapper
     const filterlist = Macro((() => {
         const filterlist = function(this: Molecules.Filterlist) {
             this.classList.add(`${style.wrapper}`);
@@ -68,6 +70,8 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 this.load(this.version.value);
             });
 
+            this.root = undefined;
+
             this.load(this.version.value);
         } as RHU.Macro.Constructor<Molecules.Filterlist>;
 
@@ -78,10 +82,14 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 return;   
             }
             const fragment = new DocumentFragment();
-            const pages = [...version.directories.keys()];
-            for (const page of pages) {
-                const item = document.createMacro(filteritem);
-                item.set(page);
+            const root: Directory | undefined = this.root ? version.get(this.root) : version;
+            if (!root) {
+                // TODO(randomuserhi): Root not found error
+                return;
+            }
+            for (const page of root.subDirectories.keys()) {
+                const item = document.createMacro("atoms/filteritem");
+                item.set(root.subDirectories.get(page)!);
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
