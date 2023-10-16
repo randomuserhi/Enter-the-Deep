@@ -13,7 +13,7 @@ declare namespace RHU {
 
 declare namespace Atoms {
     interface Filteritem extends HTMLDivElement {
-        
+        set(page: string): void;
     }
 }
 
@@ -40,6 +40,10 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         const filteritem = function(this: Atoms.Filteritem) {
 
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
+
+        filteritem.prototype.set = function(page) {
+            this.innerHTML = page;
+        };
 
         return filteritem;
     })(), "atoms/filteritem", //html
@@ -75,6 +79,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             const pages = [...version.pages.keys()];
             for (const page of pages) {
                 const item = document.createMacro(filteritem);
+                item.set(page);
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
