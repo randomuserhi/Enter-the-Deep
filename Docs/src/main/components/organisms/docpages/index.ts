@@ -18,7 +18,7 @@ declare namespace Organisms {
         content: HTMLDivElement;
         filterlist: Molecules.Filterlist;
 
-        currentPage: string;
+        currentPath: string;
         currentVersion: string;
     }
 }
@@ -34,48 +34,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
     docs,
 }) {
     const a = docs.create("0.0.1");
-    a.pages.set("home", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({ 
-        h, div, br, img,
-    }) => {
-        h(1, "This is a heading 0.0.1");
-        img("https://avatars.githubusercontent.com/u/40913834?s=40&v=4");
-
-        for (let i = 0; i < 20; ++i) {
-            div(
-                "This is a paragraph",
-                "multiline?",
-                br(),
-                `no idea how this
-                will
-                render so...`,
-                div(
-                    "nested blocks"
-                )
-            );
-        }
-    }, rhuDocuscript));
-
     const b = docs.create("0.0.2");
-    b.pages.set("home", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({ 
-        h, div, br, img,
-    }) => {
-        h(1, "This is a heading 0.0.2");
-        img("https://avatars.githubusercontent.com/u/40913834?s=40&v=4");
-
-        for (let i = 0; i < 20; ++i) {
-            div(
-                "This is a paragraph",
-                "multiline?",
-                br(),
-                `no idea how this
-                will
-                render so...`,
-                div(
-                    "nested blocks"
-                )
-            );
-        }
-    }, rhuDocuscript));
 
     const PageNotFound = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h, p
@@ -89,17 +48,25 @@ RHU.module(new Error(), "components/organisms/docpages", {
         h(1, "Version not found.");
     }, rhuDocuscript);
 
+    const DirectoryPage = (directory: Directory) => {
+        return docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+
+        }) => {
+
+        }, rhuDocuscript);
+    }
+
     const docpages = Macro((() => {
         const docpages = function(this: Organisms.Docpages) {
 
             this.filterlist.version.addEventListener("change", () => {
                 this.currentVersion = this.filterlist.version.value;
-                this.view(this.currentVersion, this.currentPage);
+                this.view(this.currentVersion, this.currentPath);
             });
             
-            this.currentPage = "home";
+            this.currentPath = "home";
             this.currentVersion = this.filterlist.version.value;
-            this.view(this.currentVersion, this.currentPage);
+            this.view(this.currentVersion, this.currentPath);
 
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
@@ -109,12 +76,16 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
         docpages.prototype.view = function(versionStr, pageStr) {
             this.currentVersion = versionStr;
-            this.currentPage = pageStr;
+            this.currentPath = pageStr;
             const version = docs.get(this.currentVersion);
             if (RHU.exists(version)) {
-                const page = version.pages.get(this.currentPage);
-                if (RHU.exists(page)) {
-                    this.render(page);
+                const directory = version.get(this.currentPath);
+                if (RHU.exists(directory)) {
+                    if (RHU.exists(directory.page)) {
+                        this.render(directory.page);
+                    } else {
+                        this.render(DirectoryPage(directory));
+                    }
                 } else {
                     this.render(PageNotFound);
                 }
@@ -131,6 +102,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
             <div class="${style.content}">
                 <div>title?</div>
                 <div rhu-id="content"></div>
+            </div>
+            <div class="${style.outline}">
+                In this article
             </div>
         </div>
         `, {

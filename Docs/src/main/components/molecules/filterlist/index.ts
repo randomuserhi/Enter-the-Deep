@@ -21,6 +21,8 @@ declare namespace Molecules {
     interface Filterlist extends HTMLDivElement {
         load(version: string): void;
         
+        root: string;
+
         version: Atoms.Dropdown;
         search: HTMLInputElement;
         list: HTMLDivElement;
@@ -76,7 +78,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 return;   
             }
             const fragment = new DocumentFragment();
-            const pages = [...version.pages.keys()];
+            const pages = [...version.directories.keys()];
             for (const page of pages) {
                 const item = document.createMacro(filteritem);
                 item.set(page);
@@ -92,6 +94,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             <div>Version</div>
             <rhu-macro rhu-id="version" rhu-type="${dropdown}"></rhu-macro>
             <input rhu-id="search" type="text"/>
+            <div></div>
             <div rhu-id="list"></div>
         </div>
         `, {

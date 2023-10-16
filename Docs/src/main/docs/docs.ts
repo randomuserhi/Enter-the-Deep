@@ -11,7 +11,14 @@ declare namespace RHU {
 
 interface Docs {
     version: string;
-    pages: Map<string, RHUDocuscript.Page>;
+    directories: Map<string, Directory>;
+    get(path: string): Directory | undefined;
+}
+
+interface Directory {
+    name: string;
+    page?: RHUDocuscript.Page;
+    subDirectories: Directory[];
 }
 
 RHU.module(new Error(), "docs", { 
@@ -25,9 +32,13 @@ RHU.module(new Error(), "docs", {
             return versions.get(version);
         },
         create(version) {
+            // TODO(randomuserhi): convert to object constructor
             const docs: Docs = {
                 version: version,
-                pages: new Map(),
+                directories: new Map(),
+                get: function(path: string) {
+                    return this.directories.get(path);
+                }
             };
             versions.set(version, docs);
             return docs;

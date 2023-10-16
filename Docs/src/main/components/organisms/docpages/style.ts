@@ -5,6 +5,7 @@ declare namespace RHU {
             margin: Style.ClassName;
             sidebar: Style.ClassName;
             content: Style.ClassName;
+            outline: Style.ClassName;
         };
     }
 }
@@ -45,14 +46,29 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             `;
 
             const content = style.class`
-                padding: 0 15px;
+            padding: 0 15px;
+            `;
+
+            const outline = style.class`
+            flex: 1;
+            display: flex;
+            justify-content: right;
+            align-items: right;
+            `;
+            style/*css*/`
+            @media screen and (max-width: 780px) { /* if width <= 780 */
+                ${outline} {
+                    display: none;
+                }
+            }
             `;
 
             return {
                 wrapper,
                 margin,
                 sidebar,
-                content
+                content,
+                outline,
             };
         });
 
