@@ -118,6 +118,7 @@ RHU.module(new Error(), "docs", {
         }
         current.page = page;
     };
+    RHU.inherit(Docs, Directory);
 
     return {
         versions,
