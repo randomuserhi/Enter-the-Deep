@@ -2,19 +2,21 @@ declare namespace RHU {
     interface Modules {
         "docs": {
             sort(data: string[], opt?: "asc" | "desc"): string[];
-            versions: Map<string, Docs>;
             get(version: string): Docs | undefined;
             create(version: string): Docs;
+            versions: Map<string, Docs>;
         };
     }
 }
 
 interface Directory {
-    parent?: Directory;
-    subDirectories: Map<string, Page>;
     get(path: string): Page | undefined;
     set(path: string, page?: RHUDocuscript.Page): void;
     fullPath(): string;
+    sortedKeys(): string[];
+
+    parent?: Directory;
+    subDirectories: Map<string, Page>;
 }
 
 interface Docs extends Directory {
@@ -77,6 +79,9 @@ RHU.module(new Error(), "docs", {
             }
         }
         return path.reverse().join("/");
+    }
+    Directory.prototype.sortedKeys = function() {
+        return [...this.subDirectories.keys()].sort();
     }
 
     interface DocsConstructor {
