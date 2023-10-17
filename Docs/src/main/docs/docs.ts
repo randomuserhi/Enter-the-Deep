@@ -34,13 +34,21 @@ RHU.module(new Error(), "docs", {
         prototype: Page;
     }
 
+    const split = (path: string): string[] => {
+        const paths = path.split(/[\/\\]/g);
+        if (paths.length > 0 && paths[paths.length - 1].trim() === "") {
+            return paths.slice(0, paths.length - 1);
+        }
+        return paths;
+    };
+
     const Directory = function(this: Page, name: string, page?: RHUDocuscript.Page) {
         this.name = name;
         this.page = page;
         this.subDirectories = new Map();
     } as unknown as DirectoryConstructor;
     Directory.prototype.get = function(path) {
-        const paths = path.split(/[\/\\]/g);
+        const paths = split(path);
         let current: Page | undefined = this;
         for (const p of paths) {
             if (!current) break;
@@ -49,7 +57,7 @@ RHU.module(new Error(), "docs", {
         return current;
     };
     Directory.prototype.set = function(path, page) {
-        const paths = path.split(/[\/\\]/g);
+        const paths = split(path);
         let current: Page = this;
         for (const p of paths) {
             if (!current.subDirectories.has(p)) {
@@ -70,7 +78,7 @@ RHU.module(new Error(), "docs", {
         this.subDirectories = new Map();
     } as unknown as DocsConstructor;
     Docs.prototype.get = function(path) {
-        const paths = path.split(/[\/\\]/g);
+        const paths = split(path);
         let current: Page | undefined;
         for (const p of paths) {
             let map = current ? current.subDirectories : this.subDirectories;
@@ -80,7 +88,7 @@ RHU.module(new Error(), "docs", {
         return current;
     };
     Docs.prototype.set = function(path, page) {
-        const paths = path.split(/[\/\\]/g);
+        const paths = split(path);
         let current: Page | undefined;
         for (const p of paths) {
             let map = current ? current.subDirectories : this.subDirectories;

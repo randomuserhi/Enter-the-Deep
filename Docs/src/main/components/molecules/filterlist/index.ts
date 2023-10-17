@@ -14,6 +14,9 @@ declare namespace RHU {
 declare namespace Atoms {
     interface Filteritem extends HTMLDivElement {
         set(page: Page): void;
+    
+        label: HTMLDivElement;
+        list: HTMLDivElement;
     }
 }
 
@@ -38,25 +41,33 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     dropdown,
     docs,
 }) {
-    //TODO(randomuserhi): convert to filterlist and have it recursive (use itself to make nested items)
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
-
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
-            this.innerHTML = page.name;
+            this.label.innerHTML = page.name;
+            
+            const fragment = new DocumentFragment();
+            for (const p of page.subDirectories.keys()) {
+                const item = document.createMacro("atoms/filteritem");
+                item.set(page.subDirectories.get(p)!);
+                fragment.append(item);
+            }
+            this.list.replaceChildren(fragment);
         };
 
         return filteritem;
     })(), "atoms/filteritem", //html
         `
+            <div rhu-id="label"></div>
+            <div rhu-id="list">
+            </div>
         `, {
             element: //html
             `<div></div>`
         });
 
-    //TODO(randomuserhi): convert to wrapper
     const filterlist = Macro((() => {
         const filterlist = function(this: Molecules.Filterlist) {
             this.classList.add(`${style.wrapper}`);

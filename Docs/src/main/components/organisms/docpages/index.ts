@@ -45,6 +45,25 @@ RHU.module(new Error(), "components/organisms/docpages", {
         h
     }) => {
         h(1, "0.0.1");
+        h(2, "some/nested/file");
+    }, rhuDocuscript));
+    a.set("some/nested", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+        h
+    }) => {
+        h(1, "0.0.1");
+        h(2, "some/nested");
+    }, rhuDocuscript));
+    a.set("some/nested/cringe", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+        h
+    }) => {
+        h(1, "0.0.1");
+        h(2, "some/nested/cringe");
+    }, rhuDocuscript));
+    a.set("some/nested_2", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+        h
+    }) => {
+        h(1, "0.0.1");
+        h(2, "some/nested_2");
     }, rhuDocuscript));
 
     const b = docs.create("0.0.2");
