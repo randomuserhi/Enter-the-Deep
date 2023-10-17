@@ -46,10 +46,10 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
-            this.label.innerHTML = page.name;
+            this.label.innerHTML = page.fullPath();
             
             const fragment = new DocumentFragment();
-            for (const p of page.subDirectories.keys()) {
+            for (const p of [...page.subDirectories.keys()].sort()) {
                 const item = document.createMacro("atoms/filteritem");
                 item.set(page.subDirectories.get(p)!);
                 fragment.append(item);
@@ -98,7 +98,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 // TODO(randomuserhi): Root not found error
                 return;
             }
-            for (const page of root.subDirectories.keys()) {
+            for (const page of [...root.subDirectories.keys()].sort()) {
                 const item = document.createMacro("atoms/filteritem");
                 item.set(root.subDirectories.get(page)!);
                 fragment.append(item);

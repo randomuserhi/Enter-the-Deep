@@ -10,9 +10,11 @@ declare namespace RHU {
 }
 
 interface Directory {
+    parent?: Directory;
     subDirectories: Map<string, Page>;
     get(path: string): Page | undefined;
     set(path: string, page?: RHUDocuscript.Page): void;
+    fullPath(): string;
 }
 
 interface Docs extends Directory {
@@ -30,7 +32,7 @@ RHU.module(new Error(), "docs", {
     const versions = new Map<string, Docs>();
 
     interface DirectoryConstructor {
-        new(name: string, page?: RHUDocuscript.Page): Page;
+        new(name: string, parent?: Directory): Page;
         prototype: Page;
     }
 
@@ -42,9 +44,9 @@ RHU.module(new Error(), "docs", {
         return paths;
     };
 
-    const Directory = function(this: Page, name: string, page?: RHUDocuscript.Page) {
+    const Directory = function(this: Page, name: string, parent?: Directory) {
         this.name = name;
-        this.page = page;
+        this.parent = parent;
         this.subDirectories = new Map();
     } as unknown as DirectoryConstructor;
     Directory.prototype.get = function(path) {
@@ -61,12 +63,21 @@ RHU.module(new Error(), "docs", {
         let current: Page = this;
         for (const p of paths) {
             if (!current.subDirectories.has(p)) {
-                current.subDirectories.set(p, new Directory(p));
+                current.subDirectories.set(p, new Directory(p, current));
             }
             current = current.subDirectories.get(p)!;
         }
         current.page = page;
     };
+    Directory.prototype.fullPath = function() {
+        const path: string[] = [];
+        for (let current: Directory | undefined = this; RHU.exists(current); current = current.parent) {
+            if ((current as Page).name) {
+                path.push((current as Page).name);
+            }
+        }
+        return path.reverse().join("/");
+    }
 
     interface DocsConstructor {
         new(version: string): Docs;
@@ -93,7 +104,7 @@ RHU.module(new Error(), "docs", {
         for (const p of paths) {
             let map = current ? current.subDirectories : this.subDirectories;
             if (!map.has(p)) {
-                map.set(p, new Directory(p));
+                map.set(p, new Directory(p, current));
             }
             current = map.get(p)!;
         }
