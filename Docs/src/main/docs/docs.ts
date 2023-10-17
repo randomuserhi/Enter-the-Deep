@@ -93,31 +93,6 @@ RHU.module(new Error(), "docs", {
         this.version = version;
         this.subDirectories = new Map();
     } as unknown as DocsConstructor;
-    Docs.prototype.get = function(path) {
-        const paths = split(path);
-        let current: Page | undefined;
-        for (const p of paths) {
-            let map = current ? current.subDirectories : this.subDirectories;
-            current = map.get(p);
-            if (!current) break;
-        }
-        return current;
-    };
-    Docs.prototype.set = function(path, page) {
-        const paths = split(path);
-        let current: Page | undefined;
-        for (const p of paths) {
-            let map = current ? current.subDirectories : this.subDirectories;
-            if (!map.has(p)) {
-                map.set(p, new Directory(p, current));
-            }
-            current = map.get(p)!;
-        }
-        if (!current) {
-            throw new ReferenceError("Directory should not be undefined or null here.");
-        }
-        current.page = page;
-    };
     RHU.inherit(Docs, Directory);
 
     return {
