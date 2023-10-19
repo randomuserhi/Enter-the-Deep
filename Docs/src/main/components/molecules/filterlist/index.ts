@@ -31,6 +31,7 @@ declare namespace Molecules {
         setPath(path?: string): void;
         
         root?: string;
+        currentVersion: string;
 
         version: Atoms.Dropdown;
         search: HTMLInputElement;
@@ -103,6 +104,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         } as RHU.Macro.Constructor<Molecules.Filterlist>;
 
         filterlist.prototype.load = function(versionStr) {
+            this.currentVersion = versionStr;
             const version = docs.get(versionStr);
             if (!RHU.exists(version)) {
                 this.list.replaceChildren();
@@ -118,6 +120,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 const item = document.createMacro("atoms/filteritem");
                 const view = root.subDirectories.get(page)!;
                 item.addEventListener("view", (e) => {
+                    this.setPath(e.detail.page.fullPath());
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
                 item.set(view);
@@ -129,15 +132,33 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         filterlist.prototype.setPath = function(path) {
             if (!path) {
                 this.path.replaceChildren();
-                return;
+            } else {
+                let frag = new DocumentFragment();
+                if (path) {
+                    const item = document.createElement("span");
+                    item.innerHTML = "~";
+                    item.addEventListener("click", (e) => {
+                        this.setPath();
+                    });
+                    frag.append(item);
+                }
+                let builtPath: string[] = [];
+                for (const directory of docs.split(path)) {
+                    const item = document.createElement("span");
+                    item.innerHTML = directory;
+                    
+                    builtPath.push(directory);
+                    const p = [...builtPath].join("/");
+                    item.addEventListener("click", (e) => {
+                        this.setPath(p);
+                    });
+                    frag.append(item);
+                }
+                this.path.replaceChildren(frag);
             }
-            let frag = new DocumentFragment();
-            for (const directory of docs.split(path)) {
-                const item = document.createElement("span");
-                item.innerHTML = directory;
-                frag.append(item);
-            }
-            this.path.replaceChildren(frag);
+            
+            this.root = path;
+            this.load(this.currentVersion);
         };
 
         return filterlist;
