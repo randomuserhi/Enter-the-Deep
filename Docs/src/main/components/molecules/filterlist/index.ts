@@ -1,5 +1,5 @@
 interface GlobalEventHandlersEventMap {
-    "view": CustomEvent<{ page?: RHUDocuscript.Page }>;
+    "view": CustomEvent<{ page: Page }>;
 }
 
 declare namespace RHU {
@@ -19,6 +19,7 @@ declare namespace Atoms {
     interface Filteritem extends HTMLDivElement {
         set(page: Page): void;
     
+        page?: Page;
         label: HTMLDivElement;
         list: HTMLDivElement;
     }
@@ -49,15 +50,23 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 }) {
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
+            this.label.addEventListener("click", () => {
+                this.dispatchEvent(RHU.CustomEvent("view", { page: this.page }));
+            });
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
             this.label.innerHTML = page.fullPath();
-            
+
+            this.page = page;
+
             const fragment = new DocumentFragment();
             for (const p of page.sortedKeys()) {
                 const item = document.createMacro("atoms/filteritem");
                 item.set(page.subDirectories.get(p)!);
+                item.addEventListener("view", (e) => {
+                    this.dispatchEvent(RHU.CustomEvent("view", e.detail));
+                });
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
@@ -108,10 +117,10 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             for (const page of root.sortedKeys()) {
                 const item = document.createMacro("atoms/filteritem");
                 const view = root.subDirectories.get(page)!;
-                item.set(view);
-                item.addEventListener("click", () => {
-                    this.dispatchEvent(RHU.CustomEvent("view", { page: view.page }));
+                item.addEventListener("view", (e) => {
+                    this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
+                item.set(view);
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
