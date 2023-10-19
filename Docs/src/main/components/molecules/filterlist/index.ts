@@ -120,7 +120,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 const item = document.createMacro("atoms/filteritem");
                 const view = root.subDirectories.get(page)!;
                 item.addEventListener("view", (e) => {
-                    //this.setPath(e.detail.page.fullPath());
+                    //this.setPath(e.detail.page.fullPath()); // -> TODO(randomuserhi): Add a button (similar to dropdown button) on right side that sets path instead of every click.
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
                 item.set(view);
