@@ -120,7 +120,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 const item = document.createMacro("atoms/filteritem");
                 const view = root.subDirectories.get(page)!;
                 item.addEventListener("view", (e) => {
-                    this.setPath(e.detail.page.fullPath());
+                    //this.setPath(e.detail.page.fullPath());
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
                 item.set(view);
