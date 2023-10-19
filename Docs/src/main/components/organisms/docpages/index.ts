@@ -106,7 +106,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.currentVersion = this.filterlist.version.value;
                 this.view(this.currentVersion, this.currentPath);
             });
-            
+            this.filterlist.addEventListener("view", (e) => {
+                console.log(e.detail.page);
+            });
+
             this.currentPath = "home";
             this.currentVersion = this.filterlist.version.value;
             this.view(this.currentVersion, this.currentPath);

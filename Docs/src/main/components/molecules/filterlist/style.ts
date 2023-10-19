@@ -3,6 +3,7 @@ declare namespace RHU {
         "components/molecules/filterlist/style": {
             wrapper: Style.ClassName;
             content: Style.ClassName;
+            path: Style.ClassName;
         };
     }
 }
@@ -26,10 +27,21 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             height: calc(100vh - var(--Navbar_height));
             background-color: #eee;
             `
+
+            const path = style.class`
+            display: flex;
+            `;
+            style`
+            ${path} > span::after {
+                content: "/";
+                padding: 3px; 0;
+            }
+            `;
             
             return {
                 wrapper,
                 content,
+                path,
             };
         });
 

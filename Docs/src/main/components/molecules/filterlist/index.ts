@@ -1,3 +1,7 @@
+interface GlobalEventHandlersEventMap {
+    "view": CustomEvent<{ page?: RHUDocuscript.Page }>;
+}
+
 declare namespace RHU {
     interface Modules {
         "components/molecules/filterlist": "molecules/filterlist";
@@ -23,11 +27,13 @@ declare namespace Atoms {
 declare namespace Molecules {
     interface Filterlist extends HTMLDivElement {
         load(version: string): void;
+        setPath(path?: string): void;
         
         root?: string;
 
         version: Atoms.Dropdown;
         search: HTMLInputElement;
+        path: HTMLDivElement;
         list: HTMLDivElement;
     }
 }
@@ -82,6 +88,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             });
 
             this.root = undefined;
+            this.setPath(this.root);
 
             this.load(this.version.value);
         } as RHU.Macro.Constructor<Molecules.Filterlist>;
@@ -100,10 +107,28 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             }
             for (const page of root.sortedKeys()) {
                 const item = document.createMacro("atoms/filteritem");
-                item.set(root.subDirectories.get(page)!);
+                const view = root.subDirectories.get(page)!;
+                item.set(view);
+                item.addEventListener("click", () => {
+                    this.dispatchEvent(RHU.CustomEvent("view", { page: view.page }));
+                });
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
+        };
+
+        filterlist.prototype.setPath = function(path) {
+            if (!path) {
+                this.path.replaceChildren();
+                return;
+            }
+            let frag = new DocumentFragment();
+            for (const directory of docs.split(path)) {
+                const item = document.createElement("span");
+                item.innerHTML = directory;
+                frag.append(item);
+            }
+            this.path.replaceChildren(frag);
         };
 
         return filterlist;
@@ -113,7 +138,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             <div>Version</div>
             <rhu-macro rhu-id="version" rhu-type="${dropdown}"></rhu-macro>
             <input rhu-id="search" type="text"/>
-            <div></div>
+            <div rhu-id="path" class="${style.path}"></div>
             <div rhu-id="list"></div>
         </div>
         `, {

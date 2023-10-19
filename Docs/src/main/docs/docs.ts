@@ -5,6 +5,7 @@ declare namespace RHU {
             get(version: string): Docs | undefined;
             create(version: string): Docs;
             versions: Map<string, Docs>;
+            split(path: string): string[];
         };
     }
 }
@@ -139,5 +140,6 @@ RHU.module(new Error(), "docs", {
                 return data[el.index];
             });
         },
+        split,
     };
 });
