@@ -10,9 +10,16 @@ declare namespace RHU {
     }
 }
 
+interface PageLink {
+    path: string;
+    cache?: RHUDocuscript.Page;
+    loading: boolean;
+}
+
 interface Directory {
     get(path: string): Page | undefined;
-    set(path: string, page?: RHUDocuscript.Page): void;
+    set(path: string, page?: string): void;
+    setCache(path: string, page: RHUDocuscript.Page): void;
     fullPath(): string;
     sortedKeys(): string[];
 
@@ -26,7 +33,7 @@ interface Docs extends Directory {
 
 interface Page extends Directory  {
     name: string;
-    page?: RHUDocuscript.Page;
+    page?: PageLink;
 }
 
 RHU.module(new Error(), "docs", { 
@@ -70,7 +77,29 @@ RHU.module(new Error(), "docs", {
             }
             current = current.subDirectories.get(p)!;
         }
-        current.page = page;
+        if (page) {
+            current.page = {
+                path: page,
+                loading: false,
+            };
+        } else {
+            current.page = undefined;
+        }
+    };
+    Directory.prototype.setCache = function(path, cache) {
+        const paths = split(path);
+        let current: Page = this;
+        for (const p of paths) {
+            if (!current.subDirectories.has(p)) {
+                current.subDirectories.set(p, new Directory(p, current));
+            }
+            current = current.subDirectories.get(p)!;
+        }
+        current.page = {
+            path: path,
+            cache,
+            loading: false,
+        };
     };
     Directory.prototype.fullPath = function() {
         const path: string[] = [];

@@ -43,58 +43,37 @@ declare namespace Atoms {
 RHU.module(new Error(), "components/organisms/docpages", { 
     Macro: "rhu/macro", style: "components/organsisms/docpages/style",
     filterlist: "components/molecules/filterlist",
-    rhuDocuscript: "docuscript", docs: "docs",
+    rhuDocuscript: "docuscript", docs: "docs", indices: "docs/indices",
 }, function({ 
     Macro, style,
     filterlist,
     rhuDocuscript,
-    docs,
+    docs, indices,
 }) {
-    console.log(docs);
-    
-    const a = docs.create("0.0.1");
-    a.set("home", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
-    }) => {
-        h(1, "0.0.1");
-    }, rhuDocuscript));
-    a.set("some/nested/file", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h, p
-    }) => {
-        h(1, "0.0.1");
-        h(2, "some/nested/file");
-    }, rhuDocuscript));
-    a.set("some/nested", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
-    }) => {
-        h(1, "0.0.1");
-        h(2, "some/nested");
-    }, rhuDocuscript));
-    a.set("some/nested/cringe", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
-    }) => {
-        h(1, "0.0.1");
-        h(2, "some/nested/cringe");
-    }, rhuDocuscript));
-    a.set("some/nested_2", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
-    }) => {
-        h(1, "0.0.1");
-        h(2, "some/nested_2");
-    }, rhuDocuscript));
-    a.set("a/nested_2", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
-    }) => {
-        h(1, "0.0.1");
-        h(2, "a/nested_2");
-    }, rhuDocuscript));
+    const DOCUSCRIPT_ROOT = indices.DOCUSCRIPT_ROOT;
 
-    const b = docs.create("0.0.2");
-    b.set("home", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+    const path = {
+        join: function (...paths: string[]) {
+            const separator = "/";
+            paths = paths.map((part, index) => {
+                if (index)
+                    part = part.replace(new RegExp("^" + separator), "");
+                if (index !== paths.length - 1)
+                    part = part.replace(new RegExp(separator + "$"), "");
+                return part;
+            });
+            return paths.join(separator);
+        },
+        isAbsolute: function (path: string) {
+            return /^([a-z]+:)?[\\/]/i.test(path);
+        }
+    };
+
+    const LoadingPage = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h
     }) => {
-        h(1, "0.0.2");
-    }, rhuDocuscript));
+        h(1, "Page is loading.");
+    }, rhuDocuscript);
 
     const PageNotFound = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h, p
@@ -214,7 +193,23 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 const directory = version.get(this.currentPath);
                 if (RHU.exists(directory)) {
                     if (RHU.exists(directory.page)) {
-                        this.render(directory.page);
+                        if (RHU.exists(directory.page.cache)) {
+                            this.render(directory.page.cache);
+                        } else {
+                            this.render(LoadingPage);
+                            if (!directory.page.loading) {
+                                const script = document.createElement("script");
+                                script.onload = () => {
+                                    this.render(directory.page!.cache!);
+                                };
+                                script.onerror = () => {
+                                    directory!.page!.loading = false;
+                                    script.replaceWith();
+                                };
+                                script.src = path.join(DOCUSCRIPT_ROOT, this.currentVersion, directory.page.path);
+                                document.head.append(script);
+                            }
+                        }
                     } else {
                         this.render(DirectoryPage(directory));
                     }
