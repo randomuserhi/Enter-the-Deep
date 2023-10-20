@@ -97,31 +97,35 @@
         },
     };
 
-    let docuscript = window.docuscript = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: T) => void, parser: Docuscript.Parser<T, FuncMap> = defaultParser as any): Docuscript.Page<T, FuncMap> {
-        const page: Docuscript.Page<T, FuncMap> = {
+    let docuscript = window.docuscript = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: Docuscript.ParserNodes<T, FuncMap>) => void, parser: Docuscript.Parser<T, FuncMap> = defaultParser as any): Docuscript.Page<T, FuncMap> {
+        return {
             parser,
-            content: []
+            generator
         };
+    } as Docuscript;
+
+    docuscript.parse = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>) {
+        let content: Docuscript.Node<any>[] = [];
+        
         const nodes: any = {};
         const context: any = {};
-        for (const [node, func] of Object.entries(parser as Docuscript.Parser<string, Docuscript.NodeFuncMap<string>>)) {
+        for (const [node, func] of Object.entries(page.parser as Docuscript.Parser<string, Docuscript.NodeFuncMap<string>>)) {
             nodes[node as keyof typeof nodes] = (...args: any[]) => 
                 func.create.call(docuscriptContext, ...args);
 
             context[node as keyof typeof context] = (...args: any[]) => { 
                 const node = func.create.call(docuscriptContext, ...args); 
-                page.content.push(node); // auto-mount node
+                content.push(node); // auto-mount node
                 return node;
             }
         }
         const docuscriptContext: Docuscript.Context<T, Docuscript.NodeFuncMap<T>> = {
-            page,
             nodes,
             remount: (child, parent) => {
                 if (child.__parent__ && child.__parent__.__children__) {
                     child.__parent__.__children__ = child.__parent__.__children__.filter(n => n !== child);
                 } else {
-                    page.content = page.content.filter(n => n !== child);
+                    content = content.filter(n => n !== child);
                 }
                 child.__parent__ = parent;
                 if (parent.__children__) {
@@ -131,21 +135,23 @@
                 }
             } 
         }
-        generator(context);
-        return page;
-    } as Docuscript;
+        page.generator(context);
+
+        return content;
+    }
 
     docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, patch?: {
         pre?: (node: Docuscript.Node<T>) => void;
         post?: (node: Docuscript.Node<T>, dom: Node) => void;
     }) {
         const fragment = new DocumentFragment();
-        const parser = page.parser;
+        const parser = page.parser as Docuscript.Parser<string, FuncMap>;
+
+        let content = docuscript.parse(page);
 
         let stack: Node[] = [];
         let walk = (node: Docuscript.Node<T>) => {
             if (RHU.exists(patch) && RHU.exists(patch.pre)) {
-                node = RHU.clone(node);
                 patch.pre(node);
             }
             let dom = parser[node.__type__].parse(node as any);
@@ -171,10 +177,9 @@
 
             stack.pop();
         };
-        for (let node of page.content) {
+        for (let node of content) {
             if (!node.__children__ || node.__children__.length === 0) {
                 if (RHU.exists(patch) && RHU.exists(patch.pre)) {
-                    node = RHU.clone(node);
                     patch.pre(node);
                 }
                 const dom = parser[node.__type__].parse(node as any);

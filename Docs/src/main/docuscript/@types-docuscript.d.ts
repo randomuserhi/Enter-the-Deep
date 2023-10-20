@@ -1,6 +1,7 @@
 interface Docuscript {
     (generator: (nodes: Docuscript.ParserNodes<Docuscript.docuscript.Language, Docuscript.docuscript.FuncMap>) => void): Docuscript.docuscript.Page;
     <T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: Docuscript.ParserNodes<T, FuncMap>) => void, parser: Docuscript.Parser<T, FuncMap>): Docuscript.Page<T, FuncMap>;
+    parse(page: Docuscript.Page<any, any>): Docuscript.Node<any>[];
     defaultParser: Docuscript.docuscript.Parser;
     render(page: Docuscript.Page<any, any>): DocumentFragment;
     render<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, 
@@ -32,7 +33,6 @@ declare namespace Docuscript {
     };
 
     interface Context<T extends string, FuncMap extends NodeFuncMap<T>> {
-        page: Page<T, FuncMap>;
         nodes: {
             [P in keyof NodeFuncMap<T>]: ToNodeMap<FuncMap>[P]["create"];
         };
@@ -51,7 +51,7 @@ declare namespace Docuscript {
 
     interface Page<T extends string, FuncMap extends NodeFuncMap<T>> {
         parser: Parser<T, FuncMap>;
-        content: Node<T>[];
+        generator: (nodes: Docuscript.ParserNodes<T, FuncMap>) => void;
     }
 
     interface Node<T> {
