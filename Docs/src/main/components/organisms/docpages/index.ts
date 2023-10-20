@@ -161,6 +161,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
         docpages.prototype.render = function(page) {
+            // TODO(randomuserhi): generate a label -> node map so that after page render we can seek to a header node via its label
+            //                     - used when loading URL query params for a page if a link to a specific title is provided
+
             const frag = new DocumentFragment();
             const stack: Atoms.Headeritem[] = [];
             const depths: number[] = [];
