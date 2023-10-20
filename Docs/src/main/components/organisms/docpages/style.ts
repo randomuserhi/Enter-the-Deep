@@ -92,7 +92,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             display: flex;
             `;
             style`
-            ${path} > a::after {
+            ${path} > li::after {
                 content: "/";
                 padding: 3px; 0;
             }

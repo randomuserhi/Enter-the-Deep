@@ -33,7 +33,7 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             display: flex;
             `;
             style`
-            ${path} > span::after {
+            ${path} > li::after {
                 content: "/";
                 padding: 3px; 0;
             }
