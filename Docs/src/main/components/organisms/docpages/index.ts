@@ -18,11 +18,13 @@ declare namespace Organisms {
     interface Docpages extends HTMLDivElement {
         view(version: string, page: string): void;
         render(page: RHUDocuscript.Page): void;
+        setPath(path?: string): void;
 
         content: HTMLDivElement;
         filterlist: Molecules.Filterlist;
         headerlist: HTMLDivElement;
-
+        path: HTMLDivElement;
+        
         currentPath: string;
         currentVersion: string;
     }
@@ -73,6 +75,12 @@ RHU.module(new Error(), "components/organisms/docpages", {
         h
     }) => {
         h(1, "Page is loading.");
+    }, rhuDocuscript);
+
+    const FailedLoadingPage = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
+        h
+    }) => {
+        h(1, "Page failed to load.");
     }, rhuDocuscript);
 
     const PageNotFound = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
@@ -193,6 +201,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 const directory = version.get(this.currentPath);
                 if (RHU.exists(directory)) {
                     if (RHU.exists(directory.page)) {
+                        this.setPath(this.currentPath);
                         if (RHU.exists(directory.page.cache)) {
                             this.render(directory.page.cache);
                         } else {
@@ -203,6 +212,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                                     this.render(directory.page!.cache!);
                                 };
                                 script.onerror = () => {
+                                    this.render(FailedLoadingPage);
                                     directory!.page!.loading = false;
                                     script.replaceWith();
                                 };
@@ -221,6 +231,29 @@ RHU.module(new Error(), "components/organisms/docpages", {
             }
         }
 
+        docpages.prototype.setPath = function(path) {
+            if (!path) {
+                this.path.replaceChildren();
+            } else {
+                let frag = new DocumentFragment();
+                let builtPath: string[] = [];
+                for (const directory of docs.split(path)) {
+                    const item = document.createElement("a");
+                    item.href = "file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10";
+                    item.innerHTML = directory;
+                    
+                    builtPath.push(directory);
+                    const p = [...builtPath].join("/");
+                    item.addEventListener("click", (e) => {
+                        this.view(this.currentVersion, p);
+                        e.preventDefault();
+                    });
+                    frag.append(item);
+                }
+                this.path.replaceChildren(frag);
+            }
+        };
+
         return docpages;
     })(), "organisms/docpages", //html
         `
@@ -228,7 +261,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
             <rhu-macro rhu-id="filterlist" class="${style.sidebar}" rhu-type="${filterlist}"></rhu-macro>
             <div class="${style.page}">
                 <div class="${style.content}">
-                    <div>title?</div>
+                    <div rhu-id="path" class="${style.path}">title?</div>
                     <div rhu-id="content"></div>
                 </div>
                 <div class="${style.outline}">

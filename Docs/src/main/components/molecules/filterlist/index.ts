@@ -132,6 +132,8 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             this.list.replaceChildren(fragment);
         };
 
+        // TODO(randomuserhi): Path functionality is the exact same as the path displayed above page title, only difference is styles
+        //                     - move into an Atom and use rhu-macro here instead
         filterlist.prototype.setPath = function(path) {
             if (!path) {
                 this.path.replaceChildren();
@@ -147,13 +149,15 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 }
                 let builtPath: string[] = [];
                 for (const directory of docs.split(path)) {
-                    const item = document.createElement("span");
+                    const item = document.createElement("a");
+                    item.href = "file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10";
                     item.innerHTML = directory;
                     
                     builtPath.push(directory);
                     const p = [...builtPath].join("/");
                     item.addEventListener("click", (e) => {
                         this.setPath(p);
+                        e.preventDefault();
                     });
                     frag.append(item);
                 }
