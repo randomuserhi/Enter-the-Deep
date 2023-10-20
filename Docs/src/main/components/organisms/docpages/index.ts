@@ -125,11 +125,11 @@ RHU.module(new Error(), "components/organisms/docpages", {
     })(), "atoms/headeritem", //html
         `
             <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
-            <ul rhu-id="list">
-            </ul>
+            <ol rhu-id="list">
+            </ol>
         `, {
             element: //html
-            `<li></li>`
+            `<ol></ol>`
         });
 
     const docpages = Macro((() => {
@@ -248,7 +248,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                         this.view(this.currentVersion, p);
                         e.preventDefault();
                     });
-                    frag.append(item);
+
+                    const wrapper = document.createElement("li");
+                    wrapper.append(item);
+                    frag.append(wrapper);
                 }
                 this.path.replaceChildren(frag);
             }
@@ -261,13 +264,13 @@ RHU.module(new Error(), "components/organisms/docpages", {
             <rhu-macro rhu-id="filterlist" class="${style.sidebar}" rhu-type="${filterlist}"></rhu-macro>
             <div class="${style.page}">
                 <div class="${style.content}">
-                    <div rhu-id="path" class="${style.path}">title?</div>
+                    <ol rhu-id="path" class="${style.path}">title?</ol>
                     <div rhu-id="content"></div>
                 </div>
                 <div class="${style.outline}">
                     <div class="${style.outline.content}">
                         In this article
-                        <ul rhu-id="headerlist"></ul>
+                        <ol rhu-id="headerlist"></ol>
                     </div>
                 </div>
             </div>

@@ -80,11 +80,11 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     })(), "atoms/filteritem", //html
         `
             <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
-            <ul rhu-id="list">
-            </ul>
+            <ol rhu-id="list">
+            </ol>
         `, {
             element: //html
-            `<li></li>`
+            `<ol></ol>`
         });
 
     const filterlist = Macro((() => {
@@ -159,7 +159,10 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                         this.setPath(p);
                         e.preventDefault();
                     });
-                    frag.append(item);
+
+                    const wrapper = document.createElement("li");
+                    wrapper.append(item);
+                    frag.append(wrapper);
                 }
                 this.path.replaceChildren(frag);
             }
@@ -175,8 +178,8 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             <div>Version</div>
             <rhu-macro rhu-id="version" rhu-type="${dropdown}"></rhu-macro>
             <input rhu-id="search" type="text"/>
-            <div rhu-id="path" class="${style.path}"></div>
-            <ul rhu-id="list"></ul>
+            <ol rhu-id="path" class="${style.path}"></ol>
+            <ol rhu-id="list"></ol>
         </div>
         `, {
             element: //html
