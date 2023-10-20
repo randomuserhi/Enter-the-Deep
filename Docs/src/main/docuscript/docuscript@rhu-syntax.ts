@@ -16,6 +16,7 @@ declare namespace RHUDocuscript {
         p: {};
         h: {
             heading: number;
+            label: string;
         };
         div: {};
         frag: {};
@@ -28,7 +29,7 @@ declare namespace RHUDocuscript {
         br: () => Node<"br">;
         p: (...children: (string | Node)[]) => Node<"p">;
         
-        h: (heading: number, ...children: (string | Node)[]) => Node<"h">;
+        h: (heading: number, label: string, ...children: (string | Node)[]) => Node<"h">;
     
         div: (...children: (string | Node)[]) => Node<"div">;
         frag: (...children: (string | Node)[]) => Node<"frag">;
@@ -103,21 +104,26 @@ RHU.module(new Error(), "docuscript", {
             }
         },
         h: {
-            create: function(this: context, heading, ...children) {
+            create: function(this: context, heading, label, ...children) {
                 let node: node<"h"> = {
                     __type__: "h",
-                    heading: heading,
+                    heading,
+                    label,
                 };
                 
-                for (let child of children) {
-                    let childNode: node;
-                    if (typeof child === "string") {
-                        childNode = this.nodes.text(child);
-                    } else {
-                        childNode = child;
+                if (children.length === 0) {
+                    this.remount(this.nodes.text(label), node);
+                } else {
+                    for (let child of children) {
+                        let childNode: node;
+                        if (typeof child === "string") {
+                            childNode = this.nodes.text(child);
+                        } else {
+                            childNode = child;
+                        }
+                        
+                        this.remount(childNode, node);
                     }
-                    
-                    this.remount(childNode, node);
                 }
 
                 return node;

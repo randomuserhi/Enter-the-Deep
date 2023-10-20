@@ -135,13 +135,17 @@
         return page;
     } as Docuscript;
 
-    docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>) {
+    docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, job?: (node: Docuscript.Node<T>, dom: Node) => void) {
         const fragment = new DocumentFragment();
         const parser = page.parser;
 
         let stack: Node[] = [];
         let walk = (node: Docuscript.Node<T>) => {
             let dom = parser[node.__type__].parse(node as any);
+            if (RHU.exists(job)) {
+                job(node, dom);
+            }
+
             let parent = stack.length === 0 ? undefined : stack[stack.length - 1];
 
             stack.push(dom);
@@ -162,7 +166,11 @@
         };
         for (let node of page.content) {
             if (!node.__children__ || node.__children__.length === 0) {
-                fragment.append(parser[node.__type__].parse(node as any));
+                const dom = parser[node.__type__].parse(node as any);
+                fragment.append(dom);
+                if (RHU.exists(job)) {
+                    job(node, dom);
+                }
                 continue;
             }
             walk(node);

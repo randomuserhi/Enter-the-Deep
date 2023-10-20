@@ -1,3 +1,6 @@
+// TODO(randomuserhi): Macros "headeritem" and "filteritem" are very similar, the only difference are their styling
+//                     - I should combine them into 1 Macro for cleaner code.
+
 declare namespace RHU {
     interface Modules {
         "components/organisms/docpages": "organisms/docpages";
@@ -6,6 +9,7 @@ declare namespace RHU {
     namespace Macro {
         interface TemplateMap {
             "organisms/docpages": Organisms.Docpages;
+            "atoms/headeritem": Atoms.Headeritem;
         }
     }
 }
@@ -17,9 +21,22 @@ declare namespace Organisms {
 
         content: HTMLDivElement;
         filterlist: Molecules.Filterlist;
+        headerlist: HTMLDivElement;
 
         currentPath: string;
         currentVersion: string;
+    }
+}
+
+declare namespace Atoms {
+    interface Headeritem extends HTMLDivElement {
+        set(label: string): void;
+        add(item: Node): void;
+
+        target: Node;
+
+        label: HTMLDivElement;
+        list: HTMLDivElement;
     }
 }
 
@@ -42,7 +59,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
         h(1, "0.0.1");
     }, rhuDocuscript));
     a.set("some/nested/file", docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h
+        h, p
     }) => {
         h(1, "0.0.1");
         h(2, "some/nested/file");
@@ -99,6 +116,32 @@ RHU.module(new Error(), "components/organisms/docpages", {
         }, rhuDocuscript);
     }
 
+    const headeritem = Macro((() => {
+        const headeritem = function(this: Atoms.Headeritem) {
+            this.label.addEventListener("click", () => {
+                this.dispatchEvent(RHU.CustomEvent("view", { target: this.target }));
+            });
+        } as RHU.Macro.Constructor<Atoms.Headeritem>;
+
+        headeritem.prototype.set = function(label: string) {
+            this.label.innerHTML = label;
+        };
+
+        headeritem.prototype.add = function(item: HTMLElement) {
+            this.list.append(item);
+        };
+
+        return headeritem;
+    })(), "atoms/headeritem", //html
+        `
+            <div rhu-id="label"></div>
+            <div rhu-id="list">
+            </div>
+        `, {
+            element: //html
+            `<div></div>`
+        });
+
     const docpages = Macro((() => {
         const docpages = function(this: Organisms.Docpages) {
 
@@ -107,7 +150,8 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.view(this.currentVersion, this.currentPath);
             });
             this.filterlist.addEventListener("view", (e) => {
-                this.view(this.currentVersion, e.detail.page.fullPath());
+                const page = e.detail.target as Page;
+                this.view(this.currentVersion, page.fullPath());
             });
 
             this.currentPath = "home";
@@ -117,7 +161,41 @@ RHU.module(new Error(), "components/organisms/docpages", {
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
         docpages.prototype.render = function(page) {
-            this.content.replaceChildren(docuscript.render(page));
+            const frag = new DocumentFragment();
+            const stack: Atoms.Headeritem[] = [];
+            const depths: number[] = [];
+            this.content.replaceChildren(docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, (node, dom) => {
+                if (node.__type__ === "h") {
+                    const h = node as RHUDocuscript.Node<"h">;
+                    
+                    let depth = depths.length === 0 ? Infinity : depths[depths.length - 1];
+                    while (h.heading <= depth && depths.length > 0) {
+                        depths.pop();
+                        stack.pop();
+                        depth = depths[depths.length - 1];
+                    }
+
+                    const parent = stack.length === 0 ? undefined : stack[stack.length - 1];
+                    
+                    const item = document.createMacro(headeritem);
+                    item.addEventListener("view", (e) => {
+                        const node = e.detail.target as HTMLElement;
+                        node.scrollIntoView(true);
+                    });
+                    item.target = dom;
+                    item.set(h.label);
+                    
+                    stack.push(item);
+                    depths.push(h.heading);
+                    
+                    if (parent) {
+                        parent.add(item);
+                    } else {
+                        frag.append(item);
+                    }
+                }
+            }));
+            this.headerlist.replaceChildren(frag);
         }
 
         docpages.prototype.view = function(versionStr, pageStr) {
@@ -151,7 +229,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                     <div rhu-id="content"></div>
                 </div>
                 <div class="${style.outline}">
-                    In this article
+                    <div class="${style.outline.content}">
+                        In this article
+                        <div rhu-id="headerlist"></div>
+                    </div>
                 </div>
             </div>
         </div>

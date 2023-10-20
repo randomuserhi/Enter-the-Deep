@@ -6,7 +6,9 @@ declare namespace RHU {
             sidebar: Style.ClassName;
             page: Style.ClassName;
             content: Style.ClassName;
-            outline: Style.ClassName;
+            outline: Style.ClassName<{
+                content: Style.ClassName;
+            }>;
         };
     }
 }
@@ -56,8 +58,13 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             flex: 1;
             `;
 
-            const outline = style.class`
+            const outline = style.class<{
+                wrapper: RHU.Style.ClassName;
+                content: RHU.Style.ClassName;
+            }>`
+            position: relative;
             flex: 0.5;
+            flex-shrink: 0;
             `;
             style/*css*/`
             @media screen and (max-width: 780px) { /* if width <= 780 */
@@ -65,6 +72,12 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
                     display: none;
                 }
             }
+            `;
+
+            outline.content = style.class`
+            position: sticky;
+            top: var(--Navbar_height);
+            height: calc(100vh - var(--Navbar_height));
             `;
 
             return {

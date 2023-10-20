@@ -1,7 +1,3 @@
-interface GlobalEventHandlersEventMap {
-    "view": CustomEvent<{ page: Page }>;
-}
-
 declare namespace RHU {
     interface Modules {
         "components/molecules/filterlist": "molecules/filterlist";
@@ -40,6 +36,10 @@ declare namespace Molecules {
     }
 }
 
+interface GlobalEventHandlersEventMap {
+    "view": CustomEvent<{ target: unknown }>;
+}
+
 RHU.module(new Error(), "components/molecules/filterlist", { 
     Macro: "rhu/macro", style: "components/molecules/filterlist/style",
     dropdown: "components/atoms/dropdown",
@@ -52,7 +52,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
             this.label.addEventListener("click", () => {
-                this.dispatchEvent(RHU.CustomEvent("view", { page: this.page }));
+                this.dispatchEvent(RHU.CustomEvent("view", { target: this.page }));
             });
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
@@ -117,7 +117,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 return;
             }
             for (const page of root.sortedKeys()) {
-                const item = document.createMacro("atoms/filteritem");
+                const item = document.createMacro(filteritem);
                 const view = root.subDirectories.get(page)!;
                 item.addEventListener("view", (e) => {
                     //this.setPath(e.detail.page.fullPath()); // -> TODO(randomuserhi): Add a button (similar to dropdown button) on right side that sets path instead of every click.

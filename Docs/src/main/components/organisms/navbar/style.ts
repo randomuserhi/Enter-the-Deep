@@ -40,6 +40,11 @@ RHU.module(new Error(), "components/organsisms/navbar/style",
                     --Navbar_height: 60px;
                 }
             }
+
+            html
+            {
+                scroll-padding-top: var(--Navbar_height);
+            }
             `;
             const wrapper = style.class`
             display: flex;

@@ -3,6 +3,7 @@ interface Docuscript {
     <T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: Docuscript.ParserNodes<T, FuncMap>) => void, parser: Docuscript.Parser<T, FuncMap>): Docuscript.Page<T, FuncMap>;
     defaultParser: Docuscript.docuscript.Parser;
     render(page: Docuscript.Page<any, any>): DocumentFragment;
+    render<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, job?: (node: Docuscript.NodeDef<FuncMap, undefined>, dom: Node) => void): DocumentFragment;
 }
 
 declare var docuscript: Docuscript;
