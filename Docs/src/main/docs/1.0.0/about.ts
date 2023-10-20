@@ -4,12 +4,13 @@ RHU.require(new Error(), {
     docs, rhuDocuscript,
 }) {
     const version = "1.0.0";
-    const name = "about";
+    const path = "about";
+    
     const page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h,
     }) => {
         h(1, "1.0.0/about");
     }, rhuDocuscript);
-    docs.get(version)!.setCache(name, page);
+    docs.get(version)!.setCache(path, page);
     return page;
 });
