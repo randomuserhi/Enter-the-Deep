@@ -4,6 +4,7 @@ declare namespace RHU {
             wrapper: Style.ClassName;
             content: Style.ClassName;
             path: Style.ClassName;
+            filteritem: Style.ClassName;
         };
     }
 }
@@ -38,10 +39,17 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             }
             `;
             
+            const filteritem = style.class`
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            `;
+
             return {
                 wrapper,
                 content,
                 path,
+                filteritem,
             };
         });
 

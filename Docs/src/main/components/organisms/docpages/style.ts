@@ -9,6 +9,7 @@ declare namespace RHU {
             outline: Style.ClassName<{
                 content: Style.ClassName;
             }>;
+            headeritem: Style.ClassName;
         };
     }
 }
@@ -80,6 +81,12 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             height: calc(100vh - var(--Navbar_height));
             `;
 
+            const headeritem = style.class`
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            `;
+
             return {
                 wrapper,
                 margin,
@@ -87,6 +94,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
                 page,
                 content,
                 outline,
+                headeritem,
             };
         });
 

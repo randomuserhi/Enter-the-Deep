@@ -51,8 +51,11 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 }) {
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
-            this.label.addEventListener("click", () => {
+            this.classList.add(`${style.filteritem}`);
+
+            this.label.addEventListener("click", (e) => {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.page }));
+                e.preventDefault(); // stop redirect
             });
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
@@ -76,12 +79,12 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         return filteritem;
     })(), "atoms/filteritem", //html
         `
-            <div rhu-id="label"></div>
-            <div rhu-id="list">
-            </div>
+            <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            <ul rhu-id="list">
+            </ul>
         `, {
             element: //html
-            `<div></div>`
+            `<li></li>`
         });
 
     const filterlist = Macro((() => {
@@ -169,7 +172,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             <rhu-macro rhu-id="version" rhu-type="${dropdown}"></rhu-macro>
             <input rhu-id="search" type="text"/>
             <div rhu-id="path" class="${style.path}"></div>
-            <div rhu-id="list"></div>
+            <ul rhu-id="list"></ul>
         </div>
         `, {
             element: //html

@@ -118,8 +118,11 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
     const headeritem = Macro((() => {
         const headeritem = function(this: Atoms.Headeritem) {
-            this.label.addEventListener("click", () => {
+            this.classList.add(`${style.headeritem}`);
+
+            this.label.addEventListener("click", (e) => {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.target }));
+                e.preventDefault(); // stop redirect
             });
         } as RHU.Macro.Constructor<Atoms.Headeritem>;
 
@@ -134,12 +137,12 @@ RHU.module(new Error(), "components/organisms/docpages", {
         return headeritem;
     })(), "atoms/headeritem", //html
         `
-            <div rhu-id="label"></div>
-            <div rhu-id="list">
-            </div>
+            <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            <ul rhu-id="list">
+            </ul>
         `, {
             element: //html
-            `<div></div>`
+            `<li></li>`
         });
 
     const docpages = Macro((() => {
@@ -236,7 +239,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 <div class="${style.outline}">
                     <div class="${style.outline.content}">
                         In this article
-                        <div rhu-id="headerlist"></div>
+                        <ul rhu-id="headerlist"></ul>
                     </div>
                 </div>
             </div>
