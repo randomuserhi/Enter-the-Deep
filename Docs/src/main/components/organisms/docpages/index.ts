@@ -167,34 +167,36 @@ RHU.module(new Error(), "components/organisms/docpages", {
             const frag = new DocumentFragment();
             const stack: Atoms.Headeritem[] = [];
             const depths: number[] = [];
-            this.content.replaceChildren(docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, (node, dom) => {
-                if (node.__type__ === "h") {
-                    const h = node as RHUDocuscript.Node<"h">;
-                    
-                    let depth = depths.length === 0 ? Infinity : depths[depths.length - 1];
-                    while (h.heading <= depth && depths.length > 0) {
-                        depths.pop();
-                        stack.pop();
-                        depth = depths[depths.length - 1];
-                    }
+            this.content.replaceChildren(docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, { 
+                post: (node, dom) => {
+                    if (node.__type__ === "h") {
+                        const h = node as RHUDocuscript.Node<"h">;
+                        
+                        let depth = depths.length === 0 ? Infinity : depths[depths.length - 1];
+                        while (h.heading <= depth && depths.length > 0) {
+                            depths.pop();
+                            stack.pop();
+                            depth = depths[depths.length - 1];
+                        }
 
-                    const parent = stack.length === 0 ? undefined : stack[stack.length - 1];
-                    
-                    const item = document.createMacro(headeritem);
-                    item.addEventListener("view", (e) => {
-                        const node = e.detail.target as HTMLElement;
-                        node.scrollIntoView(true);
-                    });
-                    item.target = dom;
-                    item.set(h.label);
-                    
-                    stack.push(item);
-                    depths.push(h.heading);
-                    
-                    if (parent) {
-                        parent.add(item);
-                    } else {
-                        frag.append(item);
+                        const parent = stack.length === 0 ? undefined : stack[stack.length - 1];
+                        
+                        const item = document.createMacro(headeritem);
+                        item.addEventListener("view", (e) => {
+                            const node = e.detail.target as HTMLElement;
+                            node.scrollIntoView(true);
+                        });
+                        item.target = dom;
+                        item.set(h.label);
+                        
+                        stack.push(item);
+                        depths.push(h.heading);
+                        
+                        if (parent) {
+                            parent.add(item);
+                        } else {
+                            frag.append(item);
+                        }
                     }
                 }
             }));

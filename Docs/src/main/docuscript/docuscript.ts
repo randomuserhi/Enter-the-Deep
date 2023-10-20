@@ -135,15 +135,22 @@
         return page;
     } as Docuscript;
 
-    docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, job?: (node: Docuscript.Node<T>, dom: Node) => void) {
+    docuscript.render = function<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, patch?: {
+        pre?: (node: Docuscript.Node<T>) => void;
+        post?: (node: Docuscript.Node<T>, dom: Node) => void;
+    }) {
         const fragment = new DocumentFragment();
         const parser = page.parser;
 
         let stack: Node[] = [];
         let walk = (node: Docuscript.Node<T>) => {
+            if (RHU.exists(patch) && RHU.exists(patch.pre)) {
+                node = RHU.clone(node);
+                patch.pre(node);
+            }
             let dom = parser[node.__type__].parse(node as any);
-            if (RHU.exists(job)) {
-                job(node, dom);
+            if (RHU.exists(patch) && RHU.exists(patch.post)) {
+                patch.post(node, dom);
             }
 
             let parent = stack.length === 0 ? undefined : stack[stack.length - 1];
@@ -166,10 +173,14 @@
         };
         for (let node of page.content) {
             if (!node.__children__ || node.__children__.length === 0) {
+                if (RHU.exists(patch) && RHU.exists(patch.pre)) {
+                    node = RHU.clone(node);
+                    patch.pre(node);
+                }
                 const dom = parser[node.__type__].parse(node as any);
                 fragment.append(dom);
-                if (RHU.exists(job)) {
-                    job(node, dom);
+                if (RHU.exists(patch) && RHU.exists(patch.post)) {
+                    patch.post(node, dom);
                 }
                 continue;
             }
