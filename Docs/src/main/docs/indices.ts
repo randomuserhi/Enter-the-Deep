@@ -25,6 +25,7 @@ declare namespace RHU {
         
         const a = docs.create("1.0.0");
         a.set("home", "home.js");
+        a.set("about", "about.js");
 
         return {
             DOCUSCRIPT_ROOT
