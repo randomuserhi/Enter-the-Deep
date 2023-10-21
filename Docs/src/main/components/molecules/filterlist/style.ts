@@ -47,6 +47,7 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             user-select: none;
             `;
 
+            // https://docsstyleguide.z13.web.core.windows.net/icon-font.html#docons
             const dropdown = style.class`
             `;
             style`

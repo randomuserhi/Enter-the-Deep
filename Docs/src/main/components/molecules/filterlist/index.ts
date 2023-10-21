@@ -51,8 +51,6 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 }) {
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
-            this.classList.add(`${style.filteritem}`);
-
             this.label.addEventListener("click", (e) => {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.page }));
                 e.preventDefault(); // stop redirect
@@ -80,7 +78,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     })(), "atoms/filteritem", //html
         `
             <span class="${style.dropdown}"></span>
-            <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            <a class="${style.filteritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
             <ol rhu-id="list">
             </ol>
         `, {

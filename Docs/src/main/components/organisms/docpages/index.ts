@@ -155,8 +155,6 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
     const headeritem = Macro((() => {
         const headeritem = function(this: Atoms.Headeritem) {
-            this.classList.add(`${style.headeritem}`);
-
             this.label.addEventListener("click", (e) => {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.target }));
                 e.preventDefault(); // stop redirect
@@ -174,7 +172,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
         return headeritem;
     })(), "atoms/headeritem", //html
         `
-            <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            <a class="${style.headeritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
             <ol rhu-id="list">
             </ol>
         `, {
