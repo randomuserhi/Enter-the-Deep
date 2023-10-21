@@ -35,6 +35,7 @@ interface Docs extends Directory {
 interface Page extends Directory  {
     name: string;
     page?: PageLink;
+    dom?: Atoms.Filteritem;
 }
 
 RHU.module(new Error(), "docs", { 

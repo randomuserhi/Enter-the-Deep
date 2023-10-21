@@ -200,7 +200,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.view(this.currentVersion, page.fullPath());
             });
 
-            this.currentPath = "home";
+            this.currentPath = "home/nested";
             this.currentVersion = this.filterlist.version.value;
             this.view(this.currentVersion, this.currentPath);
 
@@ -258,6 +258,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 if (RHU.exists(directory)) {
                     if (RHU.exists(directory.page)) {
                         this.setPath(this.currentPath);
+                        this.filterlist.setActive(this.currentPath);
                         if (RHU.exists(directory.page.cache)) {
                             this.render(directory.page.cache);
                         } else {

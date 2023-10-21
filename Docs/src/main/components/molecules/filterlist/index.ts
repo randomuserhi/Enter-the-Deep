@@ -17,6 +17,7 @@ declare namespace Atoms {
     
         page?: Page;
 
+        body: HTMLDivElement;
         label: HTMLDivElement;
         list: HTMLDivElement;
         dropdown: HTMLSpanElement;
@@ -27,7 +28,10 @@ declare namespace Molecules {
     interface Filterlist extends HTMLDivElement {
         load(version: string): void;
         setPath(path?: string): void;
+        setActive(path: string, seek?: boolean): void;
         
+        activePath?: string;
+        lastActive?: Atoms.Filteritem;
         root?: string;
         currentVersion: string;
 
@@ -63,7 +67,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
-            this.label.innerHTML = page.fullPath();
+            this.label.innerHTML = page.name;
 
             this.page = page;
 
@@ -74,6 +78,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 item.addEventListener("view", (e) => {
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
+                page.get(p)!.dom = item;
                 fragment.append(item);
             }
             if (fragment.childElementCount > 0) {
@@ -87,7 +92,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         return filteritem;
     })(), "atoms/filteritem", //html
         `
-            <div class="${style.filteritem.content}">
+            <div rhu-id="body" class="${style.filteritem.content}">
                 <span rhu-id="dropdown" class="${style.filteritem.nochildren} ${style.dropdown}"></span>
                 <a class="${style.filteritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
             </div>
@@ -111,6 +116,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 this.load(this.version.value);
             });
 
+            this.lastActive = undefined;
             this.root = undefined;
             this.setPath(this.root);
 
@@ -138,9 +144,14 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
                 });
                 item.set(view);
+                view.dom = item;
                 fragment.append(item);
             }
             this.list.replaceChildren(fragment);
+
+            if (this.activePath) {
+                this.setActive(this.activePath);
+            }
         };
 
         // TODO(randomuserhi): Path functionality is the exact same as the path displayed above page title, only difference is styles
@@ -180,6 +191,39 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             
             this.root = path;
             this.load(this.currentVersion);
+        };
+
+        filterlist.prototype.setActive = function(path, seek) {
+            this.activePath = path;
+
+            if (seek) {
+                const parts = docs.split(path);
+                if (parts.length > 1) {
+                    this.setPath(parts.slice(0, parts.length - 1).join("/"));
+                } else {
+                    this.setPath();
+                }
+            }
+
+            if (this.lastActive) {
+                this.lastActive.body.classList.toggle(`${style.filteritem.active}`, false); // TODO(randomuserhi): Make into a filteritem function called "toggleActive" or something
+            }
+
+            const version = docs.get(this.currentVersion);
+            if (version) {
+                const directory = version.get(path);
+                if (directory && directory.dom) {
+                    directory.dom.body.classList.toggle(`${style.filteritem.active}`, true); // TODO(randomuserhi): Make into a filteritem function called "toggleActive" or something
+                    this.lastActive = directory.dom;
+                    let page = directory.parent as Page;
+                    while (page) {
+                        if (page && page.dom) {
+                            page.dom.classList.toggle(`${style.filteritem.expanded}`, true); // TODO(randomuserhi): Make into a filteritem function called "toggleExpand" or something
+                        }
+                        page = page.parent as Page;
+                    }
+                }
+            }
         };
 
         return filterlist;

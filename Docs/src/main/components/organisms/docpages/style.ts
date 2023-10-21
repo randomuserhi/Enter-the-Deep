@@ -103,7 +103,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
 
             headeritem.children = style.class`
             display: none;
-            margin-left: 10px;
+            padding-left: 10px;
             `;
 
             headeritem.content = style.class`

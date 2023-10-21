@@ -9,6 +9,7 @@ declare namespace RHU {
                 children: Style.ClassName;
                 nochildren: Style.ClassName;
                 expanded: Style.ClassName;
+                active: Style.ClassName;
             }>;
             dropdown: Style.ClassName;
         };
@@ -51,17 +52,22 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
                 children: RHU.Style.ClassName;
                 nochildren: RHU.Style.ClassName;
                 expanded: RHU.Style.ClassName;
+                active: RHU.Style.ClassName;
             }>`
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
             `;
 
+            filteritem.active = style.class`
+            background-color: #ccc;
+            `;
+
             filteritem.nochildren = style.class``;
 
             filteritem.children = style.class`
             display: none;
-            margin-left: 10px;
+            padding-left: 10px;
             `;
 
             filteritem.content = style.class`
