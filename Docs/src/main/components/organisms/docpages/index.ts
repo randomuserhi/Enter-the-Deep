@@ -39,6 +39,7 @@ declare namespace Atoms {
 
         target: Node;
 
+        dropdown: HTMLSpanElement;
         label: HTMLDivElement;
         list: HTMLDivElement;
     }
@@ -159,6 +160,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.target }));
                 e.preventDefault(); // stop redirect
             });
+            this.dropdown.addEventListener("click", (e) => {
+                this.classList.toggle(`${style.headeritem.expanded}`);
+            });
         } as RHU.Macro.Constructor<Atoms.Headeritem>;
 
         headeritem.prototype.set = function(label: string) {
@@ -167,17 +171,21 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
         headeritem.prototype.add = function(item: HTMLElement) {
             this.list.append(item);
+            this.dropdown.classList.toggle(`${style.headeritem.nochildren}`, false);
         };
 
         return headeritem;
     })(), "atoms/headeritem", //html
         `
-            <a class="${style.headeritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
-            <ol rhu-id="list">
+            <div class="${style.headeritem.content}">
+                <span rhu-id="dropdown" class="${style.headeritem.nochildren} ${style.headeritem.dropdown}"></span>
+                <a class="${style.headeritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            </div>
+            <ol rhu-id="list" class="${style.headeritem.children}">
             </ol>
         `, {
             element: //html
-            `<ol></ol>`
+            `<li></li>`
         });
 
     const docpages = Macro((() => {

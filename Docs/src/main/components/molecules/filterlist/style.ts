@@ -4,7 +4,12 @@ declare namespace RHU {
             wrapper: Style.ClassName;
             content: Style.ClassName;
             path: Style.ClassName;
-            filteritem: Style.ClassName;
+            filteritem: Style.ClassName<{
+                content: Style.ClassName;
+                children: Style.ClassName;
+                nochildren: Style.ClassName;
+                expanded: Style.ClassName;
+            }>;
             dropdown: Style.ClassName;
         };
     }
@@ -41,19 +46,66 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             }
             `;
             
-            const filteritem = style.class`
+            const filteritem = style.class<{
+                content: RHU.Style.ClassName;
+                children: RHU.Style.ClassName;
+                nochildren: RHU.Style.ClassName;
+                expanded: RHU.Style.ClassName;
+            }>`
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
             `;
 
+            filteritem.nochildren = style.class``;
+
+            filteritem.children = style.class`
+            display: none;
+            margin-left: 10px;
+            `;
+
+            filteritem.content = style.class`
+            display: flex;
+            align-items: center;
+            `;
+
             // https://docsstyleguide.z13.web.core.windows.net/icon-font.html#docons
             const dropdown = style.class`
+            display: flex;
+            justify-content: center;
+            align-items: center;
             `;
             style`
             ${dropdown}::before {
                 font-family: docons;
+                font-size: .55rem;
+                font-weight: 600;
+                padding: 0 3px;
                 content: "Ｔ";
+
+                transition: transform .15s ease-in-out;
+                transform: rotate(0);
+            }
+            ${dropdown}:hover {
+                cursor: pointer;
+            }
+
+            ${filteritem.nochildren}${dropdown}::before {
+                opacity: 0;
+                pointer-events: none;
+            }
+            ${filteritem.nochildren}${dropdown}:hover {
+                cursor: unset;
+            }
+            `;
+
+            filteritem.expanded = style.class``;
+            style`
+            ${filteritem.expanded} ${filteritem.children} {
+                display: block;
+            }
+            ${filteritem.expanded} ${dropdown}::before {
+                transform: rotate(90deg);
             }
             `;
 

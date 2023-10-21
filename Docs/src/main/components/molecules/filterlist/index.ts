@@ -16,8 +16,10 @@ declare namespace Atoms {
         set(page: Page): void;
     
         page?: Page;
+
         label: HTMLDivElement;
         list: HTMLDivElement;
+        dropdown: HTMLSpanElement;
     }
 }
 
@@ -55,6 +57,9 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.page }));
                 e.preventDefault(); // stop redirect
             });
+            this.dropdown.addEventListener("click", (e) => {
+                this.classList.toggle(`${style.filteritem.expanded}`);
+            });
         } as RHU.Macro.Constructor<Atoms.Filteritem>;
 
         filteritem.prototype.set = function(page) {
@@ -71,19 +76,26 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 });
                 fragment.append(item);
             }
+            if (fragment.childElementCount > 0) {
+                this.dropdown.classList.toggle(`${style.filteritem.nochildren}`, false);
+            } else {
+                this.dropdown.classList.toggle(`${style.filteritem.nochildren}`, true);
+            }
             this.list.replaceChildren(fragment);
         };
 
         return filteritem;
     })(), "atoms/filteritem", //html
         `
-            <span class="${style.dropdown}"></span>
-            <a class="${style.filteritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
-            <ol rhu-id="list">
+            <div class="${style.filteritem.content}">
+                <span rhu-id="dropdown" class="${style.filteritem.nochildren} ${style.dropdown}"></span>
+                <a class="${style.filteritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+            </div>
+            <ol rhu-id="list" class="${style.filteritem.children}">
             </ol>
         `, {
             element: //html
-            `<ol></ol>`
+            `<li></li>`
         });
 
     const filterlist = Macro((() => {

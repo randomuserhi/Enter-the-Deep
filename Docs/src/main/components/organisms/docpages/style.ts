@@ -9,7 +9,13 @@ declare namespace RHU {
             outline: Style.ClassName<{
                 content: Style.ClassName;
             }>;
-            headeritem: Style.ClassName;
+            headeritem: Style.ClassName<{
+                content: Style.ClassName;
+                dropdown: Style.ClassName;
+                children: Style.ClassName;
+                nochildren: Style.ClassName;
+                expanded: Style.ClassName;
+            }>;
             path: Style.ClassName;
         };
     }
@@ -83,10 +89,68 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             overflow-y: auto;
             `;
 
-            const headeritem = style.class`
+            const headeritem = style.class<{
+                content: RHU.Style.ClassName;
+                dropdown: RHU.Style.ClassName;
+                children: RHU.Style.ClassName;
+                nochildren: RHU.Style.ClassName;
+                expanded: RHU.Style.ClassName;
+            }>`
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
+            `;
+
+            headeritem.children = style.class`
+            display: none;
+            margin-left: 10px;
+            `;
+
+            headeritem.content = style.class`
+            display: flex;
+            align-items: center;
+            `;
+
+            headeritem.nochildren = style.class``; 
+
+            // https://docsstyleguide.z13.web.core.windows.net/icon-font.html#docons
+            headeritem.dropdown = style.class`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            `;
+            style`
+            ${headeritem.dropdown}::before {
+                font-family: docons;
+                font-size: .55rem;
+                font-weight: 600;
+                padding: 0 3px;
+                content: "Ｔ";
+
+                transition: transform .15s ease-in-out;
+                transform: rotate(0);
+            }
+            ${headeritem.dropdown}:hover {
+                cursor: pointer;
+            }
+
+            ${headeritem.nochildren}${headeritem.dropdown}::before {
+                opacity: 0;
+                pointer-events: none;
+            }
+            ${headeritem.nochildren}${headeritem.dropdown}:hover {
+                cursor: unset;
+            }
+            `;
+
+            headeritem.expanded = style.class``;
+            style`
+            ${headeritem.expanded} ${headeritem.children} {
+                display: block;
+            }
+            ${headeritem.expanded} ${headeritem.dropdown}::before {
+                transform: rotate(90deg);
+            }
             `;
 
             const path = style.class`
