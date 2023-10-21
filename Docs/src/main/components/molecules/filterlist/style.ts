@@ -5,6 +5,7 @@ declare namespace RHU {
             content: Style.ClassName;
             path: Style.ClassName;
             filteritem: Style.ClassName;
+            dropdown: Style.ClassName;
         };
     }
 }
@@ -27,6 +28,7 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             width: 100%;
             height: calc(100vh - var(--Navbar_height));
             background-color: #eee;
+            overflow-y: auto;
             `
 
             const path = style.class`
@@ -45,11 +47,21 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             user-select: none;
             `;
 
+            const dropdown = style.class`
+            `;
+            style`
+            ${dropdown}::before {
+                font-family: docons;
+                content: "Ｔ";
+            }
+            `;
+
             return {
                 wrapper,
                 content,
                 path,
                 filteritem,
+                dropdown,
             };
         });
 

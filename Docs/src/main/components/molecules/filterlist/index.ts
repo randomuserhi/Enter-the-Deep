@@ -79,6 +79,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         return filteritem;
     })(), "atoms/filteritem", //html
         `
+            <span class="${style.dropdown}"></span>
             <a href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
             <ol rhu-id="list">
             </ol>

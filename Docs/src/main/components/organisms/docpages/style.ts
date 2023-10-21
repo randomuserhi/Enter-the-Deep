@@ -80,6 +80,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             position: sticky;
             top: var(--Navbar_height);
             height: calc(100vh - var(--Navbar_height));
+            overflow-y: auto;
             `;
 
             const headeritem = style.class`

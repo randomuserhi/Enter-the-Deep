@@ -2,6 +2,11 @@
 * This file contains all css defaults
 */
 
+@font-face {
+    font-family: docons;
+    src: url(docons.woff2);
+}
+
 *, *::before, *::after
 {
     box-sizing: border-box;
