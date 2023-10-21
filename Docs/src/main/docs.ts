@@ -13,7 +13,7 @@ declare namespace RHU {
 interface PageLink {
     path: string;
     cache?: RHUDocuscript.Page;
-    loading: boolean;
+    script?: HTMLScriptElement;
 }
 
 interface Directory {
@@ -22,6 +22,7 @@ interface Directory {
     setCache(path: string, page: RHUDocuscript.Page): void;
     fullPath(): string;
     sortedKeys(): string[];
+    walk(job: (directory: Directory) => void): void; //NOTE(randomuserhi): Walks all children including nested, excluding current directory (the one you called walk on) -> maybe rename to walkChildren?
 
     parent?: Directory;
     subDirectories: Map<string, Page>;
@@ -80,7 +81,6 @@ RHU.module(new Error(), "docs", {
         if (page) {
             current.page = {
                 path: page,
-                loading: false,
             };
         } else {
             current.page = undefined;
@@ -98,7 +98,6 @@ RHU.module(new Error(), "docs", {
         current.page = {
             path: path,
             cache,
-            loading: false,
         };
     };
     Directory.prototype.fullPath = function() {
@@ -109,10 +108,16 @@ RHU.module(new Error(), "docs", {
             }
         }
         return path.reverse().join("/");
-    }
+    };
     Directory.prototype.sortedKeys = function() {
         return [...this.subDirectories.keys()].sort();
-    }
+    };
+    Directory.prototype.walk = function(job) {
+        for (const dir of this.subDirectories.values()) {
+            job(dir);
+            dir.walk(job);
+        }
+    };
 
     interface DocsConstructor {
         new(version: string): Docs;

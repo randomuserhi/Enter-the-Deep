@@ -1,6 +1,8 @@
 // TODO(randomuserhi): Macros "headeritem" and "filteritem" are very similar, the only difference are their styling
 //                     - I should combine them into 1 Macro for cleaner code.
 
+// TODO(randomuserhi): Cleanup code -> page loader should be in a different module.
+
 declare namespace RHU {
     interface Modules {
         "components/organisms/docpages": "organisms/docpages";
@@ -68,6 +70,54 @@ RHU.module(new Error(), "components/organisms/docpages", {
         },
         isAbsolute: function (path: string) {
             return /^([a-z]+:)?[\\/]/i.test(path);
+        }
+    };
+
+    const loadPage = (versionStr: string, page: PageLink, callback?: { onload?: () => void; onerror?: () => void; }) => {
+        if (page.cache) return;
+
+        if (!page.script) {
+            const script = document.createElement("script");
+            script.onload = () => {
+                page.script = undefined;
+
+                if (callback && callback.onload) {
+                    callback.onload();
+                }
+            };
+            script.onerror = () => {
+                if (callback && callback.onerror) {
+                    callback.onerror();
+                }
+                page.script = undefined;
+                script.replaceWith();
+            };
+            script.src = path.join(DOCUSCRIPT_ROOT, versionStr, page.path);
+            page.script = script;
+            document.head.append(script);
+        } else {
+            page.script.addEventListener("load", () => {
+                if (callback && callback.onload) {
+                    callback.onload();
+                }
+            });
+            page.script.addEventListener("error", () => {
+                if (callback && callback.onerror) {
+                    callback.onerror();
+                }
+            });
+        }
+    };
+
+    const loadAll = (versionStr: string) => {
+        const version = docs.get(versionStr);
+        if (version) {
+            version.walk((dir) => {
+                let page = dir as Page;
+                if (page.page) {
+                    loadPage(versionStr, page.page); // TODO(randomuserhi): On fail to load, log error or something
+                }
+            });
         }
     };
 
@@ -206,19 +256,14 @@ RHU.module(new Error(), "components/organisms/docpages", {
                             this.render(directory.page.cache);
                         } else {
                             this.render(LoadingPage);
-                            if (!directory.page.loading) {
-                                const script = document.createElement("script");
-                                script.onload = () => {
+                            loadPage(this.currentVersion, directory.page, {
+                                onload: () => {
                                     this.render(directory.page!.cache!);
-                                };
-                                script.onerror = () => {
+                                }, 
+                                onerror: () => {
                                     this.render(FailedLoadingPage);
-                                    directory!.page!.loading = false;
-                                    script.replaceWith();
-                                };
-                                script.src = path.join(DOCUSCRIPT_ROOT, this.currentVersion, directory.page.path);
-                                document.head.append(script);
-                            }
+                                }
+                            });
                         }
                     } else {
                         this.render(DirectoryPage(directory));
