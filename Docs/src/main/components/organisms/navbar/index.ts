@@ -51,12 +51,12 @@ RHU.module(new Error(), "components/organisms/navbar", {
             </button>-->
             <button rhu-id="githubBtn" class="${style.profile}">
                 <div>
-                    <div style="position: relative; display: inline-block;">
+                    <a style="position: relative; display: inline-block;" href="https://github.com/randomuserhi/" target="blank">
                         <!-- profile image -->
                         <img rhu-id="avatar" class="${style.profile.avatar}" src="https://avatars.githubusercontent.com/u/40913834?s=40&v=4"/>
                         <!-- notification circle -->
                         <span rhu-id="notif" class="${style.profile.avatar.notif}"></span>
-                    </div>
+                    </a>
                     <!-- dropdown -->
                     <!--<rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;"></rhu-macro>-->
                 </div>

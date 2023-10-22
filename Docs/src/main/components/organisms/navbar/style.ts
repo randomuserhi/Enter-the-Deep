@@ -174,7 +174,7 @@ RHU.module(new Error(), "components/organsisms/navbar/style",
                 transform: translateY(0px);
             }
 
-            ${menu.button}:before {
+            ${menu.button}::before {
                 content: "";
                 display: block;
                 box-sizing: content-box;
@@ -192,12 +192,12 @@ RHU.module(new Error(), "components/organsisms/navbar/style",
                 right: 50%;
                 border-radius: 0.5px 0 0 0.5px;
             }
-            ${menu.button}${active}:before
+            ${menu.button}${active}::before
             {
                 transform-origin: 100% 0%;
                 transform: rotate(-40deg) scaleY(1.1);
             }
-            ${menu.button}:after
+            ${menu.button}::after
             {
                 content: "";
                 display: block;
@@ -216,7 +216,7 @@ RHU.module(new Error(), "components/organsisms/navbar/style",
                 left: 50%;
                 border-radius: 0 0.5px 0.5px 0;
             }
-            ${menu.button}${active}:after
+            ${menu.button}${active}::after
             {
                 transform-origin: 0% 0%;
                 transform: rotate(40deg) scaleY(1.1);
