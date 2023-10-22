@@ -102,9 +102,12 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
-            color: inherit;
             text-decoration: inherit;
             `;
+            style`
+            ${headeritem}:hover {
+                text-decoration: underline;
+            }`;
 
             headeritem.children = style.class`
             display: none;

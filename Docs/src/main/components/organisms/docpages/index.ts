@@ -263,9 +263,30 @@ RHU.module(new Error(), "components/organisms/docpages", {
             let i = 0;
             let scrollTarget: HTMLElement | undefined;
             let pageDom = docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, { 
+                pre: (node) => {
+                    if (node.__type__ === "h") {
+                        const h = node as RHUDocuscript.Node<"h">;
+
+                        const _i = i.toString();
+                        const url = new URL(window.location.origin + window.location.pathname);
+                        url.searchParams.set("version", this.currentVersion);
+                        url.searchParams.set("page", this.currentPath);
+                        url.searchParams.set("index", _i);
+                        const link = url.toString();
+                        h.link = link;
+                    }
+                },
                 post: (node, dom) => {
                     if (node.__type__ === "h") {
                         const h = node as RHUDocuscript.Node<"h">;
+                        h.onclick = () => {
+                            if (index != _i) {
+                                index = _i;
+                                window.history.pushState(undefined, "", link);
+                            }
+
+                            (dom as HTMLElement).scrollIntoView(true);
+                        }
                         
                         let depth = depths.length === 0 ? Infinity : depths[depths.length - 1];
                         while (h.heading <= depth && depths.length > 0) {
@@ -276,18 +297,13 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
                         const parent = stack.length === 0 ? undefined : stack[stack.length - 1];
                         
-                        const item = document.createMacro(headeritem);
                         const _i = i.toString();
+                        const link = h.link;
+                        const item = document.createMacro(headeritem);
                         item.addEventListener("view", (e) => {
-                            const url = new URL(window.location.origin + window.location.pathname);
-                            url.searchParams.set("version", this.currentVersion);
-                            url.searchParams.set("page", this.currentPath);
-                            url.searchParams.set("index", _i);
-
                             if (index != _i) {
                                 index = _i;
-
-                                window.history.pushState(undefined, "", url.toString());
+                                window.history.pushState(undefined, "", link);
                             }
 
                             const node = e.detail.target as HTMLElement;

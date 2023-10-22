@@ -193,7 +193,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                     builtPath.push(directory);
                     const p = [...builtPath].join("/");
                     item.addEventListener("click", (e) => {
-                        this.setPath(p);
+                        this.setPath(builtPath.slice(0, builtPath.length - 1).join("/"));
                         e.preventDefault();
                     });
                     const page = version.get(p);

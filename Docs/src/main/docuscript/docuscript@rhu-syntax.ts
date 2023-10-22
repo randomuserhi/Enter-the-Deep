@@ -17,6 +17,8 @@ declare namespace RHUDocuscript {
         h: {
             heading: number;
             label: string;
+            link?: string;
+            onclick?: () => void;
         };
         div: {};
         frag: {};
@@ -29,7 +31,7 @@ declare namespace RHUDocuscript {
         br: () => Node<"br">;
         p: (...children: (string | Node)[]) => Node<"p">;
         
-        h: (heading: number, label: string, ...children: (string | Node)[]) => Node<"h">;
+        h: (heading: number, label: string) => Node<"h">;
     
         div: (...children: (string | Node)[]) => Node<"div">;
         frag: (...children: (string | Node)[]) => Node<"frag">;
@@ -104,32 +106,38 @@ RHU.module(new Error(), "docuscript", {
             }
         },
         h: {
-            create: function(this: context, heading, label, ...children) {
+            create: function(this: context, heading, label) {
                 let node: node<"h"> = {
                     __type__: "h",
                     heading,
                     label,
                 };
-                
-                if (children.length === 0) {
-                    this.remount(this.nodes.text(label), node);
-                } else {
-                    for (let child of children) {
-                        let childNode: node;
-                        if (typeof child === "string") {
-                            childNode = this.nodes.text(child);
-                        } else {
-                            childNode = child;
-                        }
-                        
-                        this.remount(childNode, node);
-                    }
-                }
-
                 return node;
             },
             parse: function(node) {
-                return document.createElement(`h${node.heading}`);
+                const h = node as node<"h">;
+                const dom = document.createElement(`h${h.heading}`);
+                dom.style.display = "flex";
+                dom.style.gap = "8px";
+                dom.style.alignItems = "center";
+                if (h.link) {
+                    const link = document.createElement("a");
+                    link.href = h.link;
+                    link.innerHTML = "";
+                    link.style.fontFamily = "docons";
+                    link.style.fontSize = "1rem";
+                    link.style.textDecoration = "inherit";
+                    link.style.color = "inherit";
+                    link.addEventListener("click", (e) => {  
+                        e.preventDefault();
+                        if (h.onclick) {
+                            h.onclick(); 
+                        }
+                    });
+                    dom.append(link);
+                }
+                dom.append(h.label);
+                return dom;
             }
         },
         div: {
