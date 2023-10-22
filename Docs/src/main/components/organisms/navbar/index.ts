@@ -36,13 +36,13 @@ RHU.module(new Error(), "components/organisms/navbar", {
                 <path fill-rule="evenodd" clip-rule="evenodd" d="m5 0-5 15 6 0 5-15-6 0m10 15 5-15 6 0-5 15-6 0"/>
             </svg>
             <nav class="${style.controls}">
-                <div>
+                <!--<div>
                     <button class="${style.controls.dropdown}">
                         Blogs
                         <rhu-macro rhu-type="${arrowDown}" style="height: 1.3rem;"></rhu-macro>
                     </button>
                 </div>
-                <a>What's New</a>
+                <a>What's New</a>-->
             </nav>
             <!-- Spacer -->
             <div style="flex: 1;"></div>
@@ -58,7 +58,7 @@ RHU.module(new Error(), "components/organisms/navbar", {
                         <span rhu-id="notif" class="${style.profile.avatar.notif}"></span>
                     </div>
                     <!-- dropdown -->
-                    <rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;"></rhu-macro>
+                    <!--<rhu-macro rhu-type="${arrowDown}" class="${style.profile.dropdown}" style="height: 1.3rem;"></rhu-macro>-->
                 </div>
             </button>
         </nav>
