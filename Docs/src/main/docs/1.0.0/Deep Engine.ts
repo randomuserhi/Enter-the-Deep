@@ -7,9 +7,10 @@ RHU.require(new Error(), {
     const path = "Deep Engine";
     
     const page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h,
+        h, p,
     }) => {
-        h(1, "Deep Engine");
+        p("Physics Engine");
+        h(1, "Crazy");
     }, rhuDocuscript);
     docs.get(version)!.setCache(path, page);
     return page;

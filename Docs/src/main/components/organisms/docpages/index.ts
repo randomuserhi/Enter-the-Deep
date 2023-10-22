@@ -22,6 +22,8 @@ declare namespace Organisms {
         render(page: RHUDocuscript.Page, index?: string | null, directory?: Page, scrollTop?: boolean): void;
         setPath(path?: string): void;
 
+        outline: HTMLDivElement;
+        pageTitle: HTMLHeadingElement; 
         content: HTMLDivElement;
         filterlist: Molecules.Filterlist;
         headerlist: HTMLDivElement;
@@ -331,6 +333,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 }
             });
             this.content.replaceChildren(pageDom);
+            this.outline.classList.toggle(`${style.outline.hidden}`, frag.childElementCount === 0);
             this.headerlist.replaceChildren(frag);
             requestAnimationFrame(() => { 
                 if (scrollTarget) {
@@ -376,6 +379,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                     if (RHU.exists(directory.page)) {
                         this.setPath(this.currentPath);
                         this.filterlist.setActive(this.currentPath, seek);
+                        this.pageTitle.replaceChildren(directory.name);
                         if (RHU.exists(directory.page.cache)) {
                             this.render(directory.page.cache, index, directory, !rerender);
                         } else {
@@ -435,9 +439,14 @@ RHU.module(new Error(), "components/organisms/docpages", {
             <div class="${style.page}">
                 <div class="${style.content}">
                     <ol rhu-id="path" class="${style.path}"></ol>
+                    <h1 rhu-id="pageTitle" style="
+                        font-size: 2.5rem;
+                        font-weight: 700;
+                        padding-bottom: 8px;
+                    "></h1>
                     <div rhu-id="content" class="${rhuDocuscriptStyle.body}"></div>
                 </div>
-                <div class="${style.outline}">
+                <div rhu-id="outline" class="${style.outline}">
                     <div class="${style.outline.content}">
                         <div style="
                             width: 100%;

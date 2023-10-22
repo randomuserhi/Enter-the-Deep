@@ -8,6 +8,7 @@ declare namespace RHU {
             content: Style.ClassName;
             outline: Style.ClassName<{
                 content: Style.ClassName;
+                hidden: Style.ClassName;
             }>;
             headeritem: Style.ClassName<{
                 content: Style.ClassName;
@@ -71,6 +72,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             const outline = style.class<{
                 wrapper: RHU.Style.ClassName;
                 content: RHU.Style.ClassName;
+                hidden: RHU.Style.ClassName;
             }>`
             position: relative;
             flex: 0.5;
@@ -82,6 +84,10 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
                     display: none;
                 }
             }
+            `;
+
+            outline.hidden = style.class`
+            display: none;
             `;
 
             outline.content = style.class`
