@@ -7,9 +7,13 @@ RHU.require(new Error(), {
     const path = "about";
     
     const page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
-        h,
+        h, p
     }) => {
         h(1, "1.0.0/about");
+        for (let i = 0; i < 100; ++i) {
+            p("crazy");
+        }
+        h(1, "low");
     }, rhuDocuscript);
     docs.get(version)!.setCache(path, page);
     return page;

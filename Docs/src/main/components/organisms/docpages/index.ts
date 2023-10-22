@@ -18,8 +18,8 @@ declare namespace RHU {
 
 declare namespace Organisms {
     interface Docpages extends HTMLDivElement {
-        view(version: string, page: string): void;
-        render(page: RHUDocuscript.Page): void;
+        view(version: string, page: string, index?: string | null): void;
+        render(page: RHUDocuscript.Page, index?: string | null, directory?: Page): void;
         setPath(path?: string): void;
 
         content: HTMLDivElement;
@@ -34,7 +34,7 @@ declare namespace Organisms {
 
 declare namespace Atoms {
     interface Headeritem extends HTMLDivElement {
-        set(label: string): void;
+        set(label: string, index: number, page?: Page): void;
         add(item: Node): void;
 
         target: Node;
@@ -165,11 +165,19 @@ RHU.module(new Error(), "components/organisms/docpages", {
             });
         } as RHU.Macro.Constructor<Atoms.Headeritem>;
 
-        headeritem.prototype.set = function(label: string) {
+        headeritem.prototype.set = function(label, index, page) {
             this.label.innerHTML = label;
+
+            if (page) {
+                const url = new URL(window.location.origin + window.location.pathname);
+                url.searchParams.set("version", page.version);
+                url.searchParams.set("page", page.fullPath());
+                url.searchParams.set("index", index.toString());
+                this.label.setAttribute("href", url.toString());
+            }
         };
 
-        headeritem.prototype.add = function(item: HTMLElement) {
+        headeritem.prototype.add = function(item) {
             this.list.append(item);
             this.dropdown.classList.toggle(`${style.headeritem.nochildren}`, false);
         };
@@ -179,7 +187,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
         `
             <div class="${style.headeritem.content}">
                 <span rhu-id="dropdown" class="${style.headeritem.nochildren} ${style.headeritem.dropdown}"></span>
-                <a class="${style.headeritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+                <a class="${style.headeritem}" rhu-id="label"></a>
             </div>
             <ol rhu-id="list" class="${style.headeritem.children}">
             </ol>
@@ -200,19 +208,33 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.view(this.currentVersion, page.fullPath());
             });
 
-            this.currentPath = "home/nested";
             this.currentVersion = this.filterlist.version.value;
-            this.view(this.currentVersion, this.currentPath);
+            this.currentPath = "home"; // TODO(randomuserhi): better default page -> maybe get it from version (store default page in version so when people write docs they can declare the default page)
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get("page");
+            const version = urlParams.get("version");
+            if (page) {
+                this.currentPath = page;
+            }
+            if (version) {
+                this.currentVersion = version;
+            }
+            const index = urlParams.get("index");
+
+            this.view(this.currentVersion, this.currentPath, index);
 
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
-        docpages.prototype.render = function(page) {
+        docpages.prototype.render = function(page, index, directory) {
             // TODO(randomuserhi): generate a label -> node map so that after page render we can seek to a header node via its label
             //                     - used when loading URL query params for a page if a link to a specific title is provided
 
             const frag = new DocumentFragment();
             const stack: Atoms.Headeritem[] = [];
             const depths: number[] = [];
+            let i = 0;
+            let scrollTarget: HTMLElement | undefined;
             this.content.replaceChildren(docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, { 
                 post: (node, dom) => {
                     if (node.__type__ === "h") {
@@ -233,7 +255,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                             node.scrollIntoView(true);
                         });
                         item.target = dom;
-                        item.set(h.label);
+                        if (index === i.toString()) {
+                            scrollTarget = dom as HTMLElement;
+                        }
+                        item.set(h.label, i++, directory);
                         
                         stack.push(item);
                         depths.push(h.heading);
@@ -247,9 +272,14 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 }
             }));
             this.headerlist.replaceChildren(frag);
+            requestAnimationFrame(() => { 
+                if (scrollTarget) {
+                    scrollTarget.scrollIntoView(true);
+                }
+            });
         }
 
-        docpages.prototype.view = function(versionStr, pageStr) {
+        docpages.prototype.view = function(versionStr, pageStr, index) {
             this.currentVersion = versionStr;
             this.currentPath = pageStr;
             const version = docs.get(this.currentVersion);
@@ -265,7 +295,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                             this.render(LoadingPage);
                             loadPage(this.currentVersion, directory.page, {
                                 onload: () => {
-                                    this.render(directory.page!.cache!);
+                                    this.render(directory.page!.cache!, index, directory);
                                 }, 
                                 onerror: () => {
                                     this.render(FailedLoadingPage);

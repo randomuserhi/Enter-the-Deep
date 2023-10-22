@@ -68,6 +68,10 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 
         filteritem.prototype.set = function(page) {
             this.label.innerHTML = page.name;
+            const url = new URL(window.location.origin + window.location.pathname);
+            url.searchParams.set("version", page.version);
+            url.searchParams.set("page", page.fullPath());
+            this.label.setAttribute("href", url.toString());
 
             this.page = page;
 
@@ -94,7 +98,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         `
             <div rhu-id="body" class="${style.filteritem.content}">
                 <span rhu-id="dropdown" class="${style.filteritem.nochildren} ${style.dropdown}"></span>
-                <a class="${style.filteritem}" href="file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10" rhu-id="label"></a>
+                <a class="${style.filteritem}" rhu-id="label"></a>
             </div>
             <ol rhu-id="list" class="${style.filteritem.children}">
             </ol>

@@ -24,12 +24,12 @@ interface Directory {
     sortedKeys(): string[];
     walk(job: (directory: Directory) => void): void; //NOTE(randomuserhi): Walks all children including nested, excluding current directory (the one you called walk on) -> maybe rename to walkChildren?
 
+    version: string;
     parent?: Directory;
     subDirectories: Map<string, Page>;
 }
 
 interface Docs extends Directory {
-    version: string;   
 }
 
 interface Page extends Directory  {
@@ -44,7 +44,7 @@ RHU.module(new Error(), "docs", {
     const versions = new Map<string, Docs>();
 
     interface DirectoryConstructor {
-        new(name: string, parent?: Directory): Page;
+        new(version: string, name: string, parent?: Directory): Page;
         prototype: Page;
     }
 
@@ -56,7 +56,8 @@ RHU.module(new Error(), "docs", {
         return paths;
     };
 
-    const Directory = function(this: Page, name: string, parent?: Directory) {
+    const Directory = function(this: Page, version: string, name: string, parent?: Directory) {
+        this.version = version;
         this.name = name;
         this.parent = parent;
         this.subDirectories = new Map();
@@ -75,7 +76,7 @@ RHU.module(new Error(), "docs", {
         let current: Page = this;
         for (const p of paths) {
             if (!current.subDirectories.has(p)) {
-                current.subDirectories.set(p, new Directory(p, current));
+                current.subDirectories.set(p, new Directory(this.version, p, current));
             }
             current = current.subDirectories.get(p)!;
         }
@@ -92,7 +93,7 @@ RHU.module(new Error(), "docs", {
         let current: Page = this;
         for (const p of paths) {
             if (!current.subDirectories.has(p)) {
-                current.subDirectories.set(p, new Directory(p, current));
+                current.subDirectories.set(p, new Directory(this.version, p, current));
             }
             current = current.subDirectories.get(p)!;
         }
