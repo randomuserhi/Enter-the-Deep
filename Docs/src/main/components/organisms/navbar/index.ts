@@ -46,9 +46,9 @@ RHU.module(new Error(), "components/organisms/navbar", {
             </nav>
             <!-- Spacer -->
             <div style="flex: 1;"></div>
-            <button rhu-id="menuBtn" class="${style.menu}">
+            <!--<button rhu-id="menuBtn" class="${style.menu}">
                 <span rhu-id="chevron" class="${style.menu.button}"></span>
-            </button>
+            </button>-->
             <button rhu-id="githubBtn" class="${style.profile}">
                 <div>
                     <div style="position: relative; display: inline-block;">
