@@ -3,7 +3,7 @@ declare namespace RHU {
         "docs": {
             sort(data: string[], opt?: "asc" | "desc"): string[];
             get(version: string): Docs | undefined;
-            create(version: string): Docs;
+            create(version: string, defaultPage?: string): Docs;
             versions: Map<string, Docs>;
             split(path: string): string[];
         };
@@ -30,6 +30,7 @@ interface Directory {
 }
 
 interface Docs extends Directory {
+    defaultPage: string;
 }
 
 interface Page extends Directory  {
@@ -122,12 +123,13 @@ RHU.module(new Error(), "docs", {
     };
 
     interface DocsConstructor {
-        new(version: string): Docs;
+        new(version: string, defaultPage: string): Docs;
         prototype: Docs;
     }
 
-    const Docs = function(this: Docs, version: string) {
+    const Docs = function(this: Docs, version: string, defaultPage: string) {
         this.version = version;
+        this.defaultPage = defaultPage;
         this.subDirectories = new Map();
     } as unknown as DocsConstructor;
     RHU.inherit(Docs, Directory);
@@ -137,9 +139,9 @@ RHU.module(new Error(), "docs", {
         get(version) {
             return versions.get(version);
         },
-        create(version) {
+        create(version, defaultPage) {
             // TODO(randomuserhi): convert to object constructor
-            const docs: Docs = new Docs(version);
+            const docs: Docs = new Docs(version, defaultPage ? defaultPage : "home");
             versions.set(version, docs);
             return docs;
         },

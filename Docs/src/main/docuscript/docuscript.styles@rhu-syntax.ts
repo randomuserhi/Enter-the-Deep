@@ -14,6 +14,7 @@ RHU.module(new Error(), "docuscript/style",
             const body = style.class`
             `;
 
+            // HEADINGS
             style`
             ${body} h1 {
                 font-size: 2.5rem;

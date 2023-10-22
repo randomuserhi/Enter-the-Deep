@@ -210,18 +210,19 @@ RHU.module(new Error(), "components/organisms/docpages", {
             });
 
             const latest = this.filterlist.version.value;
-            const defaultPage = "home"; // TODO(randomuserhi): better default page -> maybe get it from version (store default page in version so when people write docs they can declare the default page)
             this.currentVersion = this.filterlist.version.value;
-            this.currentPath = defaultPage;
             
             const urlParams = new URLSearchParams(window.location.search);
-            const page = urlParams.get("page");
             const version = urlParams.get("version");
-            if (page) {
-                this.currentPath = page;
-            }
             if (version) {
                 this.currentVersion = version;
+            }
+            const page = urlParams.get("page");
+            if (page) {
+                this.currentPath = page;
+            } else {
+                const v = docs.get(this.currentVersion);
+                this.currentPath = v ? v.defaultPage : "home";
             }
             const index = urlParams.get("index");
 
@@ -239,6 +240,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 const page = urlParams.get("page");
                 const version = urlParams.get("version");
                 const index = urlParams.get("index");
+
+                const v = docs.get(this.currentVersion);
+                const defaultPage = v ? v.defaultPage : "home";
 
                 if (e.state && e.state.scrollTop) {
                     const scrollTop = e.state.scrollTop;

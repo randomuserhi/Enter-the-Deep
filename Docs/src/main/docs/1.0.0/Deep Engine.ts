@@ -4,12 +4,12 @@ RHU.require(new Error(), {
     docs, rhuDocuscript,
 }) {
     const version = "1.0.0";
-    const path = "home/nested";
+    const path = "Deep Engine";
     
     const page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h,
     }) => {
-        h(1, "1.0.0/home/nested");
+        h(1, "Deep Engine");
     }, rhuDocuscript);
     docs.get(version)!.setCache(path, page);
     return page;

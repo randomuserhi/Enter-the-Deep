@@ -23,10 +23,9 @@ declare namespace RHU {
         docs,
     }) {
         
-        const a = docs.create("1.0.0");
-        a.set("home", "home.js");
-        a.set("home/nested", "home/nested.js");
-        a.set("about", "about.js");
+        ((docs: Docs) => {
+            docs.set("Deep Engine", "Deep Engine.js");
+        })(docs.create("1.0.0", "Deep Engine"));
 
         return {
             DOCUSCRIPT_ROOT
