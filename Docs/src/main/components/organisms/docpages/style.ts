@@ -16,7 +16,9 @@ declare namespace RHU {
                 nochildren: Style.ClassName;
                 expanded: Style.ClassName;
             }>;
-            path: Style.ClassName;
+            path: Style.ClassName<{
+                item: Style.ClassName;
+            }>;
         };
     }
 }
@@ -87,6 +89,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             top: var(--Navbar_height);
             height: calc(100vh - var(--Navbar_height));
             overflow-y: auto;
+            padding: 8px;
             `;
 
             const headeritem = style.class<{
@@ -99,6 +102,8 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
+            color: inherit;
+            text-decoration: inherit;
             `;
 
             headeritem.children = style.class`
@@ -145,16 +150,19 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
 
             headeritem.expanded = style.class``;
             style`
-            ${headeritem.expanded} ${headeritem.children} {
+            ${headeritem.expanded}>${headeritem.children} {
                 display: block;
             }
-            ${headeritem.expanded} ${headeritem.dropdown}::before {
+            ${headeritem.expanded}>${headeritem.content}>${headeritem.dropdown}::before {
                 transform: rotate(90deg);
             }
             `;
 
-            const path = style.class`
+            const path = style.class<{
+                item: RHU.Style.ClassName;
+            }>`
             display: flex;
+            padding: 8px 0;
             `;
             style`
             ${path} > li::after {
@@ -162,6 +170,18 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
                 padding: 3px; 0;
             }
             `;
+
+            path.item = style.class`
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            text-decoration: inherit;
+            `;
+            style`
+            ${path.item}:hover {
+                text-decoration: underline;
+            }
+            `
 
             return {
                 wrapper,

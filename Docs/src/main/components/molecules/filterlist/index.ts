@@ -180,6 +180,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                     url.searchParams.set("version", this.currentVersion);
                     item.setAttribute("href", url.toString());
 
+                    item.classList.toggle(`${style.path.item}`);
                     const wrapper = document.createElement("li");
                     wrapper.append(item);
                     frag.append(wrapper);
@@ -203,6 +204,7 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                         item.setAttribute("href", url.toString());
                     }
 
+                    item.classList.toggle(`${style.path.item}`);
                     const wrapper = document.createElement("li");
                     wrapper.append(item);
                     frag.append(wrapper);
@@ -251,10 +253,19 @@ RHU.module(new Error(), "components/molecules/filterlist", {
     })(), "molecules/filterlist", //html
         `
         <div class="${style.content}">
-            <div>Version</div>
-            <rhu-macro rhu-id="version" rhu-type="${dropdown}"></rhu-macro>
-            <input rhu-id="search" type="text"/>
+            <div style="font-weight: 800; font-size: 1.125rem;">Version</div>
+            <rhu-macro rhu-id="version" rhu-type="${dropdown}" style="
+                width: 100%;
+            "></rhu-macro>
+            <!--<input rhu-id="search" type="text" style="
+                width: 100%;
+            "/>-->
             <ol rhu-id="path" class="${style.path}"></ol>
+            <div style="
+                width: 100%;
+                height: 1px;
+                background-color: #eee;
+            "></div>
             <ol rhu-id="list"></ol>
         </div>
         `, {

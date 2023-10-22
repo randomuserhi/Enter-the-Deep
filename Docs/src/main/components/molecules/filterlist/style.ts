@@ -3,7 +3,9 @@ declare namespace RHU {
         "components/molecules/filterlist/style": {
             wrapper: Style.ClassName;
             content: Style.ClassName;
-            path: Style.ClassName;
+            path: Style.ClassName<{
+                item: Style.ClassName;
+            }>;
             filteritem: Style.ClassName<{
                 content: Style.ClassName;
                 children: Style.ClassName;
@@ -33,11 +35,16 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             top: var(--Navbar_height);
             width: 100%;
             height: calc(100vh - var(--Navbar_height));
-            background-color: #eee;
             overflow-y: auto;
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             `
 
-            const path = style.class`
+            const path = style.class<{
+                item: RHU.Style.ClassName;
+            }>`
             display: flex;
             `;
             style`
@@ -45,6 +52,14 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
                 content: "/";
                 padding: 3px; 0;
             }
+            `;
+
+            path.item = style.class`
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            color: inherit;
+            text-decoration: inherit;
             `;
             
             const filteritem = style.class<{
@@ -57,10 +72,12 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
+            color: inherit;
+            text-decoration: inherit;
             `;
 
             filteritem.active = style.class`
-            background-color: #ccc;
+            background-color: #eee;
             `;
 
             filteritem.nochildren = style.class``;
@@ -107,10 +124,10 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
 
             filteritem.expanded = style.class``;
             style`
-            ${filteritem.expanded} ${filteritem.children} {
+            ${filteritem.expanded}>${filteritem.children} {
                 display: block;
             }
-            ${filteritem.expanded} ${dropdown}::before {
+            ${filteritem.expanded}>${filteritem.content}>${dropdown}::before {
                 transform: rotate(90deg);
             }
             `;

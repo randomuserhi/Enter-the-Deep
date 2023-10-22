@@ -48,11 +48,12 @@ declare namespace Atoms {
 RHU.module(new Error(), "components/organisms/docpages", { 
     Macro: "rhu/macro", style: "components/organsisms/docpages/style",
     filterlist: "components/molecules/filterlist",
-    rhuDocuscript: "docuscript", docs: "docs", indices: "docs/indices",
+    rhuDocuscript: "docuscript", rhuDocuscriptStyle: "docuscript/style",
+    docs: "docs", indices: "docs/indices",
 }, function({ 
     Macro, style,
     filterlist,
-    rhuDocuscript,
+    rhuDocuscript, rhuDocuscriptStyle,
     docs, indices,
 }) {
     const DOCUSCRIPT_ROOT = indices.DOCUSCRIPT_ROOT;
@@ -397,6 +398,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                         e.preventDefault();
                     });
 
+                    item.classList.toggle(`${style.path.item}`);
                     const wrapper = document.createElement("li");
                     wrapper.append(item);
                     frag.append(wrapper);
@@ -412,13 +414,37 @@ RHU.module(new Error(), "components/organisms/docpages", {
             <rhu-macro rhu-id="filterlist" class="${style.sidebar}" rhu-type="${filterlist}"></rhu-macro>
             <div class="${style.page}">
                 <div class="${style.content}">
-                    <ol rhu-id="path" class="${style.path}">title?</ol>
-                    <div rhu-id="content"></div>
+                    <ol rhu-id="path" class="${style.path}"></ol>
+                    <div rhu-id="content" class="${rhuDocuscriptStyle.body}"></div>
                 </div>
                 <div class="${style.outline}">
                     <div class="${style.outline.content}">
-                        In this article
-                        <ol rhu-id="headerlist"></ol>
+                        <div style="
+                            width: 100%;
+                            border-radius: 5px;
+                            background-color: #eee;
+                        ">
+                            <div style="
+                                display: flex;
+                                gap: 5px;
+                                align-items: center;
+                                font-size: 1rem;
+                                background-color: #ccc;
+                                border-radius: 5px 5px 0 0;
+                                padding: 8px 16px;
+                            ">
+                                <span style="
+                                    font-family: docons;
+                                    -webkit-user-select: none;
+                                    user-select: none;
+                                ">ｧ</span>
+                                <span>In this article</span>
+                            </div>
+                            <ol rhu-id="headerlist" style="
+                                padding: 8px;
+                                user-select: none;
+                            "></ol>
+                        </div>
                     </div>
                 </div>
             </div>
