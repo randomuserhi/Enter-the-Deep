@@ -234,8 +234,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
                 this.view(version ? version : latest, page ? page : defaultPage, index, false, false);
                 if (e.state.scrollTop) {
+                    const scrollTop = e.state.scrollTop;
                     requestAnimationFrame(() => {
-                        document.documentElement.scrollTop = e.state.scrollTop;
+                        document.documentElement.scrollTop = scrollTop;
                     })
                 }
             });
@@ -266,12 +267,27 @@ RHU.module(new Error(), "components/organisms/docpages", {
                         const parent = stack.length === 0 ? undefined : stack[stack.length - 1];
                         
                         const item = document.createMacro(headeritem);
+                        const _i = i.toString();
                         item.addEventListener("view", (e) => {
                             const node = e.detail.target as HTMLElement;
                             node.scrollIntoView(true);
+
+                            const url = new URL(window.location.origin + window.location.pathname);
+                            url.searchParams.set("version", this.currentVersion);
+                            url.searchParams.set("page", this.currentPath);
+                            url.searchParams.set("index", _i);
+
+                            if (index != _i) {
+                                index = _i;
+                                const data = { 
+                                    scrollTop: document.documentElement.scrollTop 
+                                };
+                                window.history.replaceState(data, "", window.location.href);
+                                window.history.pushState(undefined, "", url.toString());
+                            }
                         });
                         item.target = dom;
-                        if (index === i.toString()) {
+                        if (index === _i) {
                             scrollTarget = dom as HTMLElement;
                         }
                         item.set(h.label, i++, directory);
@@ -310,6 +326,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 
                 url.searchParams.set("version", this.currentVersion);
                 url.searchParams.set("page", this.currentPath);
+                if (index) {
+                    url.searchParams.set("index", index);
+                }
 
                 const data = { 
                     scrollTop: document.documentElement.scrollTop 
@@ -324,6 +343,9 @@ RHU.module(new Error(), "components/organisms/docpages", {
             } else {
                 url.searchParams.set("version", this.currentVersion);
                 url.searchParams.set("page", this.currentPath);
+                if (index) {
+                    url.searchParams.set("index", index);
+                }
                 window.history.replaceState(undefined, "", url.toString());
             }
 
