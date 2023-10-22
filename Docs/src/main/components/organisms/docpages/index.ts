@@ -18,7 +18,7 @@ declare namespace RHU {
 
 declare namespace Organisms {
     interface Docpages extends HTMLDivElement {
-        view(version: string, page: string, index?: string | null, seek?: boolean, updateURL?: boolean): void;
+        view(version: string, page: string, index?: string | null, seek?: boolean, updateURL?: boolean, _data?: { scrollTop: number }): void;
         render(page: RHUDocuscript.Page, index?: string | null, directory?: Page, scrollTop?: boolean): void;
         setPath(path?: string): void;
 
@@ -226,18 +226,27 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
             this.view(this.currentVersion, this.currentPath, index, true);
 
+            window.addEventListener("scrollend", (e) => {
+                const data = { 
+                    scrollTop: document.documentElement.scrollTop 
+                };
+                window.history.replaceState(data, "", window.location.href);
+            });
+
             window.addEventListener("popstate", (e) => {
                 const urlParams = new URLSearchParams(window.location.search);
                 const page = urlParams.get("page");
                 const version = urlParams.get("version");
                 const index = urlParams.get("index");
 
-                this.view(version ? version : latest, page ? page : defaultPage, index, false, false);
-                if (e.state.scrollTop) {
+                if (e.state && e.state.scrollTop) {
                     const scrollTop = e.state.scrollTop;
+                    this.view(version ? version : latest, page ? page : defaultPage, index, false, false, e.state);
                     requestAnimationFrame(() => {
                         document.documentElement.scrollTop = scrollTop;
                     })
+                } else {
+                    this.view(version ? version : latest, page ? page : defaultPage, index, false, false, { scrollTop: 0 });
                 }
             });
 
@@ -269,9 +278,6 @@ RHU.module(new Error(), "components/organisms/docpages", {
                         const item = document.createMacro(headeritem);
                         const _i = i.toString();
                         item.addEventListener("view", (e) => {
-                            const node = e.detail.target as HTMLElement;
-                            node.scrollIntoView(true);
-
                             const url = new URL(window.location.origin + window.location.pathname);
                             url.searchParams.set("version", this.currentVersion);
                             url.searchParams.set("page", this.currentPath);
@@ -279,12 +285,12 @@ RHU.module(new Error(), "components/organisms/docpages", {
 
                             if (index != _i) {
                                 index = _i;
-                                const data = { 
-                                    scrollTop: document.documentElement.scrollTop 
-                                };
-                                window.history.replaceState(data, "", window.location.href);
+
                                 window.history.pushState(undefined, "", url.toString());
                             }
+
+                            const node = e.detail.target as HTMLElement;
+                            node.scrollIntoView(true);
                         });
                         item.target = dom;
                         if (index === _i) {
@@ -303,20 +309,18 @@ RHU.module(new Error(), "components/organisms/docpages", {
                     }
                 }
             });
-            const top = document.createElement("div");
-            pageDom.prepend(top);
             this.content.replaceChildren(pageDom);
             this.headerlist.replaceChildren(frag);
             requestAnimationFrame(() => { 
                 if (scrollTarget) {
                     scrollTarget.scrollIntoView(true);
                 } else if (scrollTop) {
-                    top.scrollIntoView(true);
+                    document.documentElement.scrollTop = 0;
                 }
             });
         }
 
-        docpages.prototype.view = function(versionStr, pageStr, index, seek, updateURL = true) {
+        docpages.prototype.view = function(versionStr, pageStr, index, seek, updateURL = true, _data) {
             let rerender = this.currentVersion === versionStr && this.currentPath === pageStr;
 
             const url = new URL(window.location.origin + window.location.pathname);
@@ -330,15 +334,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                     url.searchParams.set("index", index);
                 }
 
-                const data = { 
-                    scrollTop: document.documentElement.scrollTop 
-                };
-                window.history.replaceState(data, "", window.location.href);
-
                 if (updateURL) {
                     window.history.pushState(undefined, "", url.toString());
                 } else {
-                    window.history.replaceState(undefined, "", url.toString());
+                    window.history.replaceState(_data, "", url.toString());
                 }
             } else {
                 url.searchParams.set("version", this.currentVersion);
@@ -346,7 +345,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 if (index) {
                     url.searchParams.set("index", index);
                 }
-                window.history.replaceState(undefined, "", url.toString());
+                window.history.replaceState(_data, "", url.toString());
             }
 
             const version = docs.get(this.currentVersion);
