@@ -24,8 +24,8 @@ declare namespace RHU {
     }) {
         
         ((docs: Docs) => {
-            docs.set("Deep Engine", "Deep Engine.js");
-        })(docs.create("1.0.0", "Deep Engine"));
+            docs.set("Random HTML Utility", "RHU.js");
+        })(docs.create("1.0.0", "Random HTML Utility"));
 
         return {
             DOCUSCRIPT_ROOT

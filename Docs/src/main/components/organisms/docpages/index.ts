@@ -442,7 +442,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
                     <h1 rhu-id="pageTitle" style="
                         font-size: 2.5rem;
                         font-weight: 700;
-                        padding-bottom: 8px;
+                        padding-bottom: 16px;
                     "></h1>
                     <div rhu-id="content" class="${rhuDocuscriptStyle.body}"></div>
                 </div>

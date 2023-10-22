@@ -4,13 +4,15 @@ RHU.require(new Error(), {
     docs, rhuDocuscript,
 }) {
     const version = "1.0.0";
-    const path = "Deep Engine";
+    const path = "Random HTML Utility";
     
     const page = docuscript<RHUDocuscript.Language, RHUDocuscript.FuncMap>(({
         h, p,
     }) => {
-        p("Physics Engine");
-        h(1, "Crazy");
+        h(1, "About");
+        p(
+            "Random HTML Utility is a pure JS library (with TypeScript) support for developing webpages."
+        );
     }, rhuDocuscript);
     docs.get(version)!.setCache(path, page);
     return page;
