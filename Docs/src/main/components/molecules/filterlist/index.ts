@@ -161,22 +161,32 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         // TODO(randomuserhi): Path functionality is the exact same as the path displayed above page title, only difference is styles
         //                     - move into an Atom and use rhu-macro here instead
         filterlist.prototype.setPath = function(path) {
-            if (!path) {
+            const version = docs.get(this.currentVersion);
+
+            if (!path || !version) {
                 this.path.replaceChildren();
             } else {
+                
                 let frag = new DocumentFragment();
                 if (path) {
-                    const item = document.createElement("span");
+                    const item = document.createElement("a");
                     item.innerHTML = "~";
                     item.addEventListener("click", (e) => {
                         this.setPath();
+                        e.preventDefault();
                     });
-                    frag.append(item);
+
+                    const url = new URL(window.location.origin + window.location.pathname);
+                    url.searchParams.set("version", this.currentVersion);
+                    item.setAttribute("href", url.toString());
+
+                    const wrapper = document.createElement("li");
+                    wrapper.append(item);
+                    frag.append(wrapper);
                 }
                 let builtPath: string[] = [];
                 for (const directory of docs.split(path)) {
                     const item = document.createElement("a");
-                    item.href = "file:///E:/Git/Enter-the-Deep/Docs/build/main/main.html?10";
                     item.innerHTML = directory;
                     
                     builtPath.push(directory);
@@ -185,6 +195,13 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                         this.setPath(p);
                         e.preventDefault();
                     });
+                    const page = version.get(p);
+                    if (page) {
+                        const url = new URL(window.location.origin + window.location.pathname);
+                        url.searchParams.set("version", page.version);
+                        url.searchParams.set("page", p);
+                        item.setAttribute("href", url.toString());
+                    }
 
                     const wrapper = document.createElement("li");
                     wrapper.append(item);

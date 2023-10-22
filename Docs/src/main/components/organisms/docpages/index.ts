@@ -18,8 +18,8 @@ declare namespace RHU {
 
 declare namespace Organisms {
     interface Docpages extends HTMLDivElement {
-        view(version: string, page: string, index?: string | null): void;
-        render(page: RHUDocuscript.Page, index?: string | null, directory?: Page): void;
+        view(version: string, page: string, index?: string | null, seek?: boolean, updateURL?: boolean): void;
+        render(page: RHUDocuscript.Page, index?: string | null, directory?: Page, scrollTop?: boolean): void;
         setPath(path?: string): void;
 
         content: HTMLDivElement;
@@ -208,8 +208,10 @@ RHU.module(new Error(), "components/organisms/docpages", {
                 this.view(this.currentVersion, page.fullPath());
             });
 
+            const latest = this.filterlist.version.value;
+            const defaultPage = "home"; // TODO(randomuserhi): better default page -> maybe get it from version (store default page in version so when people write docs they can declare the default page)
             this.currentVersion = this.filterlist.version.value;
-            this.currentPath = "home"; // TODO(randomuserhi): better default page -> maybe get it from version (store default page in version so when people write docs they can declare the default page)
+            this.currentPath = defaultPage;
             
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
@@ -222,11 +224,25 @@ RHU.module(new Error(), "components/organisms/docpages", {
             }
             const index = urlParams.get("index");
 
-            this.view(this.currentVersion, this.currentPath, index);
+            this.view(this.currentVersion, this.currentPath, index, true);
+
+            window.addEventListener("popstate", (e) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const page = urlParams.get("page");
+                const version = urlParams.get("version");
+                const index = urlParams.get("index");
+
+                this.view(version ? version : latest, page ? page : defaultPage, index, false, false);
+                if (e.state.scrollTop) {
+                    requestAnimationFrame(() => {
+                        document.documentElement.scrollTop = e.state.scrollTop;
+                    })
+                }
+            });
 
         } as RHU.Macro.Constructor<Organisms.Docpages>;
 
-        docpages.prototype.render = function(page, index, directory) {
+        docpages.prototype.render = function(page, index, directory, scrollTop = true) {
             // TODO(randomuserhi): generate a label -> node map so that after page render we can seek to a header node via its label
             //                     - used when loading URL query params for a page if a link to a specific title is provided
 
@@ -235,7 +251,7 @@ RHU.module(new Error(), "components/organisms/docpages", {
             const depths: number[] = [];
             let i = 0;
             let scrollTarget: HTMLElement | undefined;
-            this.content.replaceChildren(docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, { 
+            let pageDom = docuscript.render<RHUDocuscript.Language, RHUDocuscript.FuncMap>(page, { 
                 post: (node, dom) => {
                     if (node.__type__ === "h") {
                         const h = node as RHUDocuscript.Node<"h">;
@@ -270,32 +286,61 @@ RHU.module(new Error(), "components/organisms/docpages", {
                         }
                     }
                 }
-            }));
+            });
+            const top = document.createElement("div");
+            pageDom.prepend(top);
+            this.content.replaceChildren(pageDom);
             this.headerlist.replaceChildren(frag);
             requestAnimationFrame(() => { 
                 if (scrollTarget) {
                     scrollTarget.scrollIntoView(true);
+                } else if (scrollTop) {
+                    top.scrollIntoView(true);
                 }
             });
         }
 
-        docpages.prototype.view = function(versionStr, pageStr, index) {
-            this.currentVersion = versionStr;
-            this.currentPath = pageStr;
+        docpages.prototype.view = function(versionStr, pageStr, index, seek, updateURL = true) {
+            let rerender = this.currentVersion === versionStr && this.currentPath === pageStr;
+
+            const url = new URL(window.location.origin + window.location.pathname);
+            if (this.currentVersion !== versionStr || this.currentPath !== pageStr) {
+                this.currentVersion = versionStr;
+                this.currentPath = pageStr;
+                
+                url.searchParams.set("version", this.currentVersion);
+                url.searchParams.set("page", this.currentPath);
+
+                const data = { 
+                    scrollTop: document.documentElement.scrollTop 
+                };
+                window.history.replaceState(data, "", window.location.href);
+
+                if (updateURL) {
+                    window.history.pushState(undefined, "", url.toString());
+                } else {
+                    window.history.replaceState(undefined, "", url.toString());
+                }
+            } else {
+                url.searchParams.set("version", this.currentVersion);
+                url.searchParams.set("page", this.currentPath);
+                window.history.replaceState(undefined, "", url.toString());
+            }
+
             const version = docs.get(this.currentVersion);
             if (RHU.exists(version)) {
                 const directory = version.get(this.currentPath);
                 if (RHU.exists(directory)) {
                     if (RHU.exists(directory.page)) {
                         this.setPath(this.currentPath);
-                        this.filterlist.setActive(this.currentPath);
+                        this.filterlist.setActive(this.currentPath, seek);
                         if (RHU.exists(directory.page.cache)) {
-                            this.render(directory.page.cache);
+                            this.render(directory.page.cache, index, directory, !rerender);
                         } else {
                             this.render(LoadingPage);
                             loadPage(this.currentVersion, directory.page, {
                                 onload: () => {
-                                    this.render(directory.page!.cache!, index, directory);
+                                    this.render(directory.page!.cache!, index, directory, !rerender);
                                 }, 
                                 onerror: () => {
                                     this.render(FailedLoadingPage);
