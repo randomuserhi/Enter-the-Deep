@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "docuscript/components/molecules/codeblock": "docuscript/molecules/codeblock";
+        "docuscript/components/molecules/codeblock": Macro.Template<"docuscript/molecules/codeblock">;
     }
 
     namespace Macro {
@@ -13,7 +13,9 @@ declare namespace RHU {
 declare namespace RHUDocuscript {
     namespace Molecules {
         interface Codeblock extends HTMLDivElement {
-            code: HTMLDivElement;
+            setLanguage(language?: string): void;
+            
+            code: HTMLElement;
         }
     }
 }
@@ -26,15 +28,23 @@ RHU.module(new Error(), "docuscript/components/molecules/codeblock", {
     const codeblock = Macro((() => {
         const codeblock = function(this: RHUDocuscript.Molecules.Codeblock) {
         } as RHU.Macro.Constructor<RHUDocuscript.Molecules.Codeblock>;
+        codeblock.prototype.setLanguage = function(language) {
+            if (language) {
+                this.code.classList.toggle(language, true);
+            } else {
+                this.code.classList.toggle("language-plaintext", true);
+            }
+            hljs.highlightElement(this.code);
+        };
 
-        codeblock.prototype.appendChild = function(...args) {
-            return HTMLElement.prototype.appendChild.call(this.code, ...args);
+        codeblock.prototype.append = function(...args) {
+            return HTMLElement.prototype.append.call(this.code, ...args);
         }
 
         return codeblock;
     })(), "docuscript/molecules/codeblock", //html
         `
-        <div rhu-id="code"></div>
+        <pre><code rhu-id="code"></code></pre>
         `, {
             element: //html
             `<div></div>`

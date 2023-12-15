@@ -16,6 +16,7 @@ declare namespace RHU {
                 children: Style.ClassName;
                 nochildren: Style.ClassName;
                 expanded: Style.ClassName;
+                align: Style.ClassName;
             }>;
             path: Style.ClassName<{
                 item: Style.ClassName;
@@ -104,6 +105,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
                 children: RHU.Style.ClassName;
                 nochildren: RHU.Style.ClassName;
                 expanded: RHU.Style.ClassName;
+                align: RHU.Style.ClassName;
             }>`
             cursor: pointer;
             -webkit-user-select: none;
@@ -114,6 +116,12 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             ${headeritem}:hover {
                 text-decoration: underline;
             }`;
+
+            headeritem.align = style.class`
+            align-self: stretch;
+            flex-shrink: 0;
+            display: flex;
+            `;
 
             headeritem.children = style.class`
             display: none;
@@ -130,11 +138,11 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             // https://docsstyleguide.z13.web.core.windows.net/icon-font.html#docons
             headeritem.dropdown = style.class`
             display: flex;
-            justify-content: center;
-            align-items: center;
+            align-items: start;
             `;
             style`
             ${headeritem.dropdown}::before {
+                margin-top: 0.4rem;
                 font-family: docons;
                 font-size: .55rem;
                 font-weight: 600;
@@ -162,7 +170,7 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             ${headeritem.expanded}>${headeritem.children} {
                 display: block;
             }
-            ${headeritem.expanded}>${headeritem.content}>${headeritem.dropdown}::before {
+            ${headeritem.expanded}>${headeritem.content}>${headeritem.align}>${headeritem.dropdown}::before {
                 transform: rotate(90deg);
             }
             `;
@@ -174,6 +182,10 @@ RHU.module(new Error(), "components/organsisms/docpages/style",
             padding: 8px 0;
             `;
             style`
+            ${path} li {
+                flex-shrink: 0;
+                text-wrap: nowrap;
+            }
             ${path} > li::after {
                 content: "/";
                 padding: 3px; 0;

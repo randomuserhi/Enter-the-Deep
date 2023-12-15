@@ -48,7 +48,7 @@ RHU.module(new Error(), "docuscript/pages", {
         }) => {
             for (const subDir of directory.sortedKeys()) {
                 const dir = directory.subDirectories.get(subDir)!;
-                pl(dir.fullPath(), undefined, 
+                pl([dir.fullPath()], 
                     subDir
                 );
                 br();

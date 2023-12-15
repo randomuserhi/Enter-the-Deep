@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "components/atoms/dropdown": "atoms/dropdown";
+        "components/atoms/dropdown": Macro.Template<"atoms/dropdown">;
     }
 
     namespace Macro {

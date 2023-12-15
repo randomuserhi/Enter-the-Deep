@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "components/molecules/filterlist": "molecules/filterlist";
+        "components/molecules/filterlist": Macro.Template<"molecules/filterlist">;
     }
 
     namespace Macro {
@@ -16,6 +16,11 @@ declare namespace Atoms {
         set(page: Page): void;
     
         page?: Page;
+        path: string;
+        name: string;
+        items: Atoms.Filteritem[];
+        fuse: any; // Fuse object but no typing for Fuse kekw
+        owner: Molecules.Filterlist;
 
         body: HTMLDivElement;
         label: HTMLDivElement;
@@ -30,6 +35,10 @@ declare namespace Molecules {
         setPath(path?: string): void;
         setActive(path: string, seek?: boolean): void;
         
+        items: Atoms.Filteritem[];
+        fuse: any; // Fuse object but no typing for Fuse kekw
+        fuseall: any; // Fuse object but no typing for Fuse kekw
+        fuseallname: any; // Fuse object but no typing for Fuse kekw
         activePath?: string;
         lastActive?: Atoms.Filteritem;
         root?: string;
@@ -39,6 +48,7 @@ declare namespace Molecules {
         search: HTMLInputElement;
         path: HTMLDivElement;
         list: HTMLDivElement;
+        body: HTMLDivElement;
     }
 }
 
@@ -57,6 +67,8 @@ RHU.module(new Error(), "components/molecules/filterlist", {
 }) {
     const filteritem = Macro((() => {
         const filteritem = function(this: Atoms.Filteritem) {
+            this.classList.toggle(`${style.filteritem.expanded}`, true);
+
             this.label.addEventListener("click", (e) => {
                 this.dispatchEvent(RHU.CustomEvent("view", { target: this.page }));
                 e.preventDefault(); // stop redirect
@@ -74,10 +86,16 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             this.label.setAttribute("href", url.toString());
 
             this.page = page;
+            this.path = this.page.fullPath();
+            this.name = this.page.name;
+            this.items = [];
 
             const fragment = new DocumentFragment();
             for (const p of page.sortedKeys()) {
                 const item = document.createMacro("atoms/filteritem");
+                item.owner = this.owner;
+                this.owner.items.push(item);
+                this.items.push(item);
                 item.set(page.subDirectories.get(p)!);
                 item.addEventListener("view", (e) => {
                     this.dispatchEvent(RHU.CustomEvent("view", e.detail));
@@ -91,13 +109,21 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 this.dropdown.classList.toggle(`${style.filteritem.nochildren}`, true);
             }
             this.list.replaceChildren(fragment);
+
+            const Fuse = (window as any).Fuse;
+            this.fuse = new Fuse(this.items, {
+                keys: ["name"],
+                threshold: 0.4,
+            });
         };
 
         return filteritem;
     })(), "atoms/filteritem", //html
         `
             <div rhu-id="body" class="${style.filteritem.content}">
-                <span rhu-id="dropdown" class="${style.filteritem.nochildren} ${style.dropdown}"></span>
+                <div class="${style.filteritem.align}">
+                    <span rhu-id="dropdown" class="${style.filteritem.nochildren} ${style.dropdown}"></span>
+                </div>
                 <a class="${style.filteritem}" rhu-id="label"></a>
             </div>
             <ol rhu-id="list" class="${style.filteritem.children}">
@@ -120,6 +146,63 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                 this.load(this.version.value);
             });
 
+            this.search.addEventListener("input", () => {
+                const clean = this.search.value.trim();
+                if (clean === "") {
+                    for (const item of this.items) {
+                        item.classList.toggle(`${style.hide}`, false);
+                    }
+                    return;
+                }
+                const matches = clean.split("/");
+                for (const item of this.items) {
+                    item.classList.toggle(`${style.hide}`, true);
+                }
+                if (matches.length === 1) {
+                    for (const result of this.fuseall.search(matches[0])) {
+                        const item: Atoms.Filteritem = result.item;
+                        item.classList.toggle(`${style.hide}`, false);
+                        let page = item.page!.parent as Page;
+                        while (page) {
+                            if (page!.dom) {
+                                page.dom.classList.toggle(`${style.hide}`, false);
+                                page.dom.classList.toggle(`${style.filteritem.expanded}`, true);
+                            }
+                            page = page.parent as Page;
+                        }
+                    }
+                } else {
+                    const recursive = (item: Atoms.Filteritem, index: number) => {
+                        if (!matches[index]) {
+                            for (const i of item.items) {
+                                i.classList.toggle(`${style.hide}`, false);
+                            }
+                            return;
+                        }
+                        for (const result of item.fuse.search(matches[index])) {
+                            const item: Atoms.Filteritem = result.item;
+                            item.classList.toggle(`${style.hide}`, false);
+                            recursive(item, index + 1);
+                        }
+                    }
+
+                    for (const result of this.fuseallname.search(matches[0])) {
+                        const item: Atoms.Filteritem = result.item;
+                        item.classList.toggle(`${style.hide}`, false);
+                        let page = item.page!.parent as Page;
+                        while (page) {
+                            if (page!.dom) {
+                                page.dom.classList.toggle(`${style.hide}`, false);
+                                page.dom.classList.toggle(`${style.filteritem.expanded}`, true);
+                            }
+                            page = page.parent as Page;
+                        }
+
+                        recursive(item, 1);
+                    }
+                }
+            })
+
             this.lastActive = undefined;
             this.root = undefined;
             this.setPath(this.root);
@@ -128,6 +211,8 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         } as RHU.Macro.Constructor<Molecules.Filterlist>;
 
         filterlist.prototype.load = function(versionStr) {
+            this.items = [];
+            const subitems = [];
             this.currentVersion = versionStr;
             const version = docs.get(versionStr);
             if (!RHU.exists(version)) {
@@ -142,6 +227,9 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             }
             for (const page of root.sortedKeys()) {
                 const item = document.createMacro(filteritem);
+                item.owner = this;
+                this.items.push(item);
+                subitems.push(item);
                 const view = root.subDirectories.get(page)!;
                 item.addEventListener("view", (e) => {
                     //this.setPath(e.detail.page.fullPath()); // -> TODO(randomuserhi): Add a button (similar to dropdown button) on right side that sets path instead of every click.
@@ -156,6 +244,20 @@ RHU.module(new Error(), "components/molecules/filterlist", {
             if (this.activePath) {
                 this.setActive(this.activePath);
             }
+
+            const Fuse = (window as any).Fuse;
+            this.fuseall = new Fuse(this.items, {
+                keys: ["path", "name"],
+                threshold: 0.4,
+            });
+            this.fuseallname = new Fuse(this.items, {
+                keys: ["name"],
+                threshold: 0.4,
+            });
+            this.fuse = new Fuse(subitems, {
+                keys: ["name"],
+                threshold: 0.4,
+            });
         };
 
         // TODO(randomuserhi): Path functionality is the exact same as the path displayed above page title, only difference is styles
@@ -219,14 +321,15 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         filterlist.prototype.setActive = function(path, seek) {
             this.activePath = path;
 
-            if (seek) {
+            // Sets filterlist path to seeked location => deprecated behaviour
+            /*if (seek) {
                 const parts = docs.split(path);
                 if (parts.length > 1) {
                     this.setPath(parts.slice(0, parts.length - 1).join("/"));
                 } else {
                     this.setPath();
                 }
-            }
+            }*/
 
             if (this.lastActive) {
                 this.lastActive.body.classList.toggle(`${style.filteritem.active}`, false); // TODO(randomuserhi): Make into a filteritem function called "toggleActive" or something
@@ -245,6 +348,23 @@ RHU.module(new Error(), "components/molecules/filterlist", {
                         }
                         page = page.parent as Page;
                     }
+                    if (seek) {
+                        setTimeout(() => {
+                            let scroll: boolean = false;
+                            if (this.body.scrollTop > 0) {
+                                scroll = true;
+                            } else {
+                                this.body.scrollTop = 1;
+                                if (this.body.scrollTop > 0) {
+                                    scroll = true;
+                                    this.body.scrollTop = 0;
+                                }
+                            }
+                            if (scroll) {
+                                this.body.scroll(0, directory.dom!.offsetTop - this.body.offsetTop);
+                            }
+                        }, 100);
+                    }
                 }
             }
         };
@@ -252,15 +372,24 @@ RHU.module(new Error(), "components/molecules/filterlist", {
         return filterlist;
     })(), "molecules/filterlist", //html
         `
-        <div class="${style.content}">
+        <div rhu-id="body" class="${style.content}">
             <div style="font-weight: 800; font-size: 1.125rem;">Version</div>
-            <rhu-macro rhu-id="version" rhu-type="${dropdown}" style="
+            ${dropdown`rhu-id="version" style="
                 width: 100%;
-            "></rhu-macro>
-            <!--<input rhu-id="search" type="text" style="
+                border: solid 1px #eee;
+                padding: 0.125rem 0.3rem;
+            "`}
+            <input spellcheck="false" rhu-id="search" type="text" style="
                 width: 100%;
-            "/>-->
-            <ol rhu-id="path" class="${style.path}"></ol>
+                border: solid 1px #eee;
+                padding: 0.125rem 0.3rem;
+            "/>
+            <div style="
+                width: 100%;
+                overflow-x: auto;
+            ">
+                <ol rhu-id="path" class="${style.path}"></ol>
+            </div>
             <div style="
                 width: 100%;
                 height: 1px;

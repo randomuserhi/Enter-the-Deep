@@ -12,8 +12,10 @@ declare namespace RHU {
                 nochildren: Style.ClassName;
                 expanded: Style.ClassName;
                 active: Style.ClassName;
+                align: Style.ClassName;
             }>;
             dropdown: Style.ClassName;
+            hide: Style.ClassName;
         };
     }
 }
@@ -41,13 +43,23 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             flex-direction: column;
             gap: 8px;
             `
+            style`
+            ${content} > * {
+                flex-shrink: 0;
+            }
+            `;
 
             const path = style.class<{
                 item: RHU.Style.ClassName;
             }>`
             display: flex;
+            padding: 8px;
             `;
             style`
+            ${path} li {
+                flex-shrink: 0;
+                text-wrap: nowrap;
+            }
             ${path} > li::after {
                 content: "/";
                 padding: 3px; 0;
@@ -68,12 +80,19 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
                 nochildren: RHU.Style.ClassName;
                 expanded: RHU.Style.ClassName;
                 active: RHU.Style.ClassName;
+                align: RHU.Style.ClassName;
             }>`
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
             color: inherit;
             text-decoration: inherit;
+            `;
+
+            filteritem.align = style.class`
+            align-self: stretch;
+            flex-shrink: 0;
+            display: flex;
             `;
 
             filteritem.active = style.class`
@@ -95,11 +114,11 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             // https://docsstyleguide.z13.web.core.windows.net/icon-font.html#docons
             const dropdown = style.class`
             display: flex;
-            justify-content: center;
-            align-items: center;
+            align-items: start;
             `;
             style`
             ${dropdown}::before {
+                margin-top: 0.4rem;
                 font-family: docons;
                 font-size: .55rem;
                 font-weight: 600;
@@ -127,10 +146,14 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
             ${filteritem.expanded}>${filteritem.children} {
                 display: block;
             }
-            ${filteritem.expanded}>${filteritem.content}>${dropdown}::before {
+            ${filteritem.expanded}>${filteritem.content}>${filteritem.align}>${dropdown}::before {
                 transform: rotate(90deg);
             }
             `;
+
+            const hide = style.class`
+            display: none !important;
+            `
 
             return {
                 wrapper,
@@ -138,6 +161,7 @@ RHU.module(new Error(), "components/molecules/filterlist/style",
                 path,
                 filteritem,
                 dropdown,
+                hide
             };
         });
 

@@ -3,12 +3,12 @@ interface Docuscript {
     <T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(generator: (nodes: Docuscript.ParserNodes<T, FuncMap>) => void, parser: Docuscript.Parser<T, FuncMap>): Docuscript.Page<T, FuncMap>;
     parse(page: Docuscript.Page<any, any>): Docuscript.Node<any>[];
     defaultParser: Docuscript.docuscript.Parser;
-    render(page: Docuscript.Page<any, any>): DocumentFragment;
+    render(page: Docuscript.Page<any, any>): [DocumentFragment, () => void];
     render<T extends string, FuncMap extends Docuscript.NodeFuncMap<T>>(page: Docuscript.Page<T, FuncMap>, 
         patch?: { 
             pre?: (node: Docuscript.NodeDef<FuncMap, undefined>) => void;
             post?: (node: Docuscript.NodeDef<FuncMap, undefined>, dom: Node) => void;
-        }): DocumentFragment;
+        }): [DocumentFragment, () => void];
 }
 
 declare var docuscript: Docuscript;
@@ -21,12 +21,13 @@ declare namespace Docuscript {
         __type__: PropertyKey,
         __children__?: AnyNode[],
         __parent__?: AnyNode,
+        __destructor__?: any,
         [x: string]: any,
     };
     type NodeFuncMap<T extends string> = { [K in T]: (...args: any[]) => any; };
     interface NodeDefinition<T extends (...args: any[]) => any = (...args: any[]) => any> {
         create: T;
-        parse: (node: AnyNode) => globalThis.Node;
+        parse?: (node: AnyNode) => globalThis.Node;
     }
     type ToNodeMap<T extends { [k in string]: (...args: any[]) => any }> = {
         [K in keyof T]: NodeDefinition<T[K]>;
@@ -42,7 +43,8 @@ declare namespace Docuscript {
     type Parser<T extends string, FuncMap extends NodeFuncMap<T>> = {
         [P in T]: {
             create: ToNodeMap<FuncMap>[P]["create"];
-            parse: (node: ReturnType<ToNodeMap<FuncMap>[P]["create"]>) => globalThis.Node; 
+            parse?: (children: globalThis.Node[], node: ReturnType<ToNodeMap<FuncMap>[P]["create"]>) => globalThis.Node | [globalThis.Node, ReturnType<ToNodeMap<FuncMap>[P]["create"]>["__destructor__"]];
+            destructor?: (data: ReturnType<ToNodeMap<FuncMap>[P]["create"]>["__destructor__"]) => void;
         }
     };
     type ParserNodes<T extends string, FuncMap extends NodeFuncMap<T>> = {

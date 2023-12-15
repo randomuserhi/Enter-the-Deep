@@ -35,29 +35,31 @@
             throw new ReferenceError("Node.prototype.parentNode is null or undefined.");
         Node_parentNode = Function.call.bind(Descriptor_parentNode.get);
         Document.prototype.createMacro = function (type) {
-            let definition = templates.get(type);
+            let T = type.toString();
+            let definition = templates.get(T);
             if (!RHU.exists(definition))
                 definition = defaultTemplate;
             let options = definition.options;
             let doc = Macro.parseDomString(options.element);
             let el = doc.children[0];
             if (!RHU.exists(el))
-                throw SyntaxError(`No valid container element to convert into macro was found for '${type}'.`);
+                throw SyntaxError(`No valid container element to convert into macro was found for '${T}'.`);
             el.remove();
-            Element_setAttribute(el, "rhu-macro", type);
-            Macro.parse(el, type);
+            Element_setAttribute(el, "rhu-macro", T);
+            Macro.parse(el, T);
             return el[symbols.macro];
         };
         Document.prototype.Macro = function (type, attributes) {
-            let definition = templates.get(type);
+            let T = type.toString();
+            let definition = templates.get(T);
             if (!RHU.exists(definition))
                 definition = defaultTemplate;
             let options = definition.options;
             let doc = Macro.parseDomString(options.element);
             let el = doc.children[0];
             if (!RHU.exists(el))
-                throw SyntaxError(`No valid container element to convert into macro was found for '${type}'.`);
-            Element_setAttribute(el, "rhu-macro", type);
+                throw SyntaxError(`No valid container element to convert into macro was found for '${T}'.`);
+            Element_setAttribute(el, "rhu-macro", T);
             for (let key in attributes)
                 el.setAttribute(key, attributes[key]);
             el.remove();
@@ -80,6 +82,22 @@
                 Macro.parse(this, value);
             }
         });
+        const Template = function (type) {
+            let template = function (first, ...interpolations) {
+                let generatedCode = `<rhu-macro rhu-type="${type}" ${first[0]}`;
+                for (let i = 0; i < interpolations.length; ++i) {
+                    const interpolation = interpolations[i];
+                    generatedCode += interpolation;
+                    generatedCode += first[i + 1];
+                }
+                generatedCode += `></rhu-macro>`;
+                return generatedCode;
+            };
+            template.type = type;
+            template.toString = () => type,
+                template[Symbol.toPrimitive] = () => `<rhu-macro rhu-type="${type}"></rhu-macro>`;
+            return template;
+        };
         const Macro = function (constructor, type, source = "", options) {
             if (type == "")
                 throw new SyntaxError("'type' cannot be blank.");
@@ -116,7 +134,7 @@
             if (RHU.exists(update))
                 for (let el of update)
                     Macro.parse(el, type, true);
-            return type;
+            return Template(type);
         };
         let templates = new Map();
         let defaultTemplate = {
@@ -360,14 +378,22 @@
                 }
             }
             let macros = document.querySelectorAll("[rhu-macro]");
-            for (let el of macros)
+            for (let el of macros) {
                 Macro.parse(el, Element_getAttribute(el, "rhu-macro"));
+                recursiveDispatch(el);
+            }
             Macro.observe(document);
+        };
+        let recursiveDispatch = function (node) {
+            if (isElement(node) && Element_hasAttribute(node, "rhu-macro"))
+                node.dispatchEvent(RHU.CustomEvent("mount", {}));
+            for (let child of node.childNodes)
+                recursiveDispatch(child);
         };
         let recursiveParse = function (node) {
             if (isElement(node) && Element_hasAttribute(node, "rhu-macro")) {
                 Macro.parse(node, Element_getAttribute(node, "rhu-macro"));
-                node.dispatchEvent(RHU.CustomEvent("mount", {}));
+                recursiveDispatch(node);
                 return;
             }
             for (let child of node.childNodes)

@@ -1,6 +1,6 @@
 declare namespace RHU {
     interface Modules {
-        "components/atoms/icons/arrowDown": "atoms/icons/arrowDown";
+        "components/atoms/icons/arrowDown": Macro.Template<"atoms/icons/arrowDown">;
     }
 
     namespace Macro {
