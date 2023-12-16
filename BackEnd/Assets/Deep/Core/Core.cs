@@ -37,7 +37,7 @@ namespace Deep.Core3D {
                 }
             }
             if (scriptRunBehaviourFixedUpdate == null) {
-                Debug.LogError("Unable to find 'FixedUpdate.ScriptRunBehaviourFixedUpdate' in player loop!");
+                Debug.LogError("Unable to find 'FixedUpdate.ScriptRunBehaviourFixedUpdate' in player loop! Leaving player loop as default.");
             } else {
                 bool found = false;
                 for (; i < fixedUpdate.subSystemList.Length - 1; ++i) {
@@ -79,7 +79,6 @@ namespace Deep.Core3D {
             _DebugPlayerLoop(playerLoop, sb, 0);
             Debug.Log(sb.ToString());
         }
-
         private static void _DebugPlayerLoop(PlayerLoopSystem playerLoop, StringBuilder sb, int depth) {
             if (depth == 0) {
                 sb.AppendLine("ROOT NODE");
