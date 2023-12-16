@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Deep.Math {
-    // TODO(randomuserhi): Re-write => inconsistent behaviour etc...
+    // TODO(randomuserhi): Re-write => inconsistent behaviour between classes etc...
     public class SecondOrderDynamics {
         private float xp;
         private float k1, k2, k3;

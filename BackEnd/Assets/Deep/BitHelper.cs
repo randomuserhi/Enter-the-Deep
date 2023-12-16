@@ -330,50 +330,50 @@ namespace Deep {
 
             WriteBytes(i, destination, ref index);
             switch (i) {
-                case 0:
-                    if (value.x >= 0) {
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 1:
-                    if (value.y >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 2:
-                    if (value.z >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 3:
-                    if (value.w >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                    }
-                    break;
+            case 0:
+                if (value.x >= 0) {
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 1:
+                if (value.y >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 2:
+                if (value.z >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 3:
+                if (value.w >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                }
+                break;
             }
         }
 
@@ -385,30 +385,30 @@ namespace Deep {
             byte i = ReadByte(source, ref index);
             float x = 0, y = 0, z = 0, w = 0;
             switch (i) {
-                case 0:
-                    y = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    x = Mathf.Sqrt(1f - y * y - z * z - w * w);
-                    break;
-                case 1:
-                    x = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    y = Mathf.Sqrt(1f - x * x - z * z - w * w);
-                    break;
-                case 2:
-                    x = ReadFloat(source, ref index);
-                    y = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    z = Mathf.Sqrt(1f - x * x - y * y - w * w);
-                    break;
-                case 3:
-                    x = ReadFloat(source, ref index);
-                    y = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = Mathf.Sqrt(1f - x * x - y * y - z * z);
-                    break;
+            case 0:
+                y = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                x = Mathf.Sqrt(1f - y * y - z * z - w * w);
+                break;
+            case 1:
+                x = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                y = Mathf.Sqrt(1f - x * x - z * z - w * w);
+                break;
+            case 2:
+                x = ReadFloat(source, ref index);
+                y = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                z = Mathf.Sqrt(1f - x * x - y * y - w * w);
+                break;
+            case 3:
+                x = ReadFloat(source, ref index);
+                y = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = Mathf.Sqrt(1f - x * x - y * y - z * z);
+                break;
             }
             return new Quaternion(x, y, z, w);
         }
@@ -440,50 +440,50 @@ namespace Deep {
 
             WriteBytes(i, destination, ref index);
             switch (i) {
-                case 0:
-                    if (value.x >= 0) {
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 1:
-                    if (value.y >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 2:
-                    if (value.z >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 3:
-                    if (value.w >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                    }
-                    break;
+            case 0:
+                if (value.x >= 0) {
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 1:
+                if (value.y >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 2:
+                if (value.z >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 3:
+                if (value.w >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                }
+                break;
             }
         }
 
@@ -496,30 +496,30 @@ namespace Deep {
             byte i = ReadByte(source, ref index);
             float x = 0, y = 0, z = 0, w = 0;
             switch (i) {
-                case 0:
-                    y = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    x = Mathf.Sqrt(1f - y * y - z * z - w * w);
-                    break;
-                case 1:
-                    x = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    y = Mathf.Sqrt(1f - x * x - z * z - w * w);
-                    break;
-                case 2:
-                    x = ReadHalf(source, ref index);
-                    y = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    z = Mathf.Sqrt(1f - x * x - y * y - w * w);
-                    break;
-                case 3:
-                    x = ReadHalf(source, ref index);
-                    y = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = Mathf.Sqrt(1f - x * x - y * y - z * z);
-                    break;
+            case 0:
+                y = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                x = Mathf.Sqrt(1f - y * y - z * z - w * w);
+                break;
+            case 1:
+                x = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                y = Mathf.Sqrt(1f - x * x - z * z - w * w);
+                break;
+            case 2:
+                x = ReadHalf(source, ref index);
+                y = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                z = Mathf.Sqrt(1f - x * x - y * y - w * w);
+                break;
+            case 3:
+                x = ReadHalf(source, ref index);
+                y = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = Mathf.Sqrt(1f - x * x - y * y - z * z);
+                break;
             }
             return new Quaternion(x, y, z, w);
         }
