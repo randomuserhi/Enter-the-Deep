@@ -21,6 +21,12 @@ declare namespace RHUDocuscript {
             link?: string;
             onclick?: () => void;
         };
+        h1: {};
+        h2: {};
+        h3: {};
+        h4: {};
+        h5: {};
+        h6: {};
         div: {};
         frag: {};
         pl: {
@@ -66,6 +72,12 @@ declare namespace RHUDocuscript {
         p: (...children: (string | Node)[]) => Node<"p">;
         
         h: (heading: number, label: string, ...children: (string | Node)[]) => Node<"h">;
+        h1: (label: string, ...children: (string | Node)[]) => Node<"h">;
+        h2: (label: string, ...children: (string | Node)[]) => Node<"h">;
+        h3: (label: string, ...children: (string | Node)[]) => Node<"h">;
+        h4: (label: string, ...children: (string | Node)[]) => Node<"h">;
+        h5: (label: string, ...children: (string | Node)[]) => Node<"h">;
+        h6: (label: string, ...children: (string | Node)[]) => Node<"h">;
     
         div: (...children: (string | Node)[]) => Node<"div">;
         frag: (...children: (string | Node)[]) => Node<"frag">;
@@ -512,6 +524,36 @@ RHU.module(new Error(), "docuscript", {
                 dom.append(...children);
                 return dom;
             }
+        },
+        h1: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
+        },
+        h2: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
+        },
+        h3: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
+        },
+        h4: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
+        },
+        h5: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
+        },
+        h6: {
+            create: function(this: context, label, ...children) {
+                return this.nodes.h(1, label, ...children);
+            },
         },
         h: {
             create: function(this: context, heading, label, ...children) {
