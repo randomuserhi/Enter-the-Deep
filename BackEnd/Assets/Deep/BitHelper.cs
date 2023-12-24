@@ -129,14 +129,14 @@ namespace Deep {
         public static unsafe void WriteBytes(string value, ArraySegment<byte> destination, ref int index) {
             byte[] temp = Encoding.UTF8.GetBytes(value);
             WriteBytes((ushort)temp.Length, destination, ref index);
-            Array.Copy(temp, 0, destination.Array, index, temp.Length);
+            Array.Copy(temp, 0, destination.Array!, destination.Offset + index, temp.Length);
             index += temp.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void WriteBytes(byte[] buffer, ArraySegment<byte> destination, ref int index) {
             WriteBytes((ushort)buffer.Length, destination, ref index);
-            Array.Copy(buffer, 0, destination.Array, index, buffer.Length);
+            Array.Copy(buffer, 0, destination.Array!, destination.Offset + index, buffer.Length);
             index += buffer.Length;
         }
 
