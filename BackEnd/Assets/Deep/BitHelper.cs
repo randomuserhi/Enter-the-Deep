@@ -71,79 +71,79 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe void _WriteBytes(byte* source, int size, byte[] destination, ref int index) {
+        private static unsafe void _WriteBytes(byte* source, int size, ArraySegment<byte> destination, ref int index) {
             for (int i = 0; i < size;) {
                 destination[index++] = source[i++];
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(byte value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(byte value, ArraySegment<byte> destination, ref int index) {
             destination[index++] = value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(ulong value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(ulong value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(ulong), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(uint value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(uint value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(uint), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(ushort value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(ushort value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(ushort), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(long value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(long value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(long), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(int value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(int value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(int), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(short value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(short value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(short), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(float value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(float value, ArraySegment<byte> destination, ref int index) {
             int to32 = *((int*)&value);
             if (!BitConverter.IsLittleEndian) to32 = ReverseEndianness(to32);
             _WriteBytes((byte*)&to32, sizeof(int), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(string value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(string value, ArraySegment<byte> destination, ref int index) {
             byte[] temp = Encoding.UTF8.GetBytes(value);
             WriteBytes((ushort)temp.Length, destination, ref index);
-            Array.Copy(temp, 0, destination, index, temp.Length);
+            Array.Copy(temp, 0, destination.Array, index, temp.Length);
             index += temp.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(byte[] buffer, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(byte[] buffer, ArraySegment<byte> destination, ref int index) {
             WriteBytes((ushort)buffer.Length, destination, ref index);
-            Array.Copy(buffer, 0, destination, index, buffer.Length);
+            Array.Copy(buffer, 0, destination.Array, index, buffer.Length);
             index += buffer.Length;
         }
 
         public const int SizeOfHalf = sizeof(ushort);
         // Special function to halve precision of float
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteHalf(float value, byte[] destination, ref int index) {
+        public static void WriteHalf(float value, ArraySegment<byte> destination, ref int index) {
             WriteBytes(FloatToHalf(value), destination, ref index);
         }
 
@@ -305,14 +305,14 @@ namespace Deep {
 
         public const int SizeOfVector3 = sizeof(float) * 3;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteBytes(Vector3 value, byte[] destination, ref int index) {
+        public static void WriteBytes(Vector3 value, ArraySegment<byte> destination, ref int index) {
             WriteBytes(value.x, destination, ref index);
             WriteBytes(value.y, destination, ref index);
             WriteBytes(value.z, destination, ref index);
         }
 
         public const int SizeOfQuaternion = 1 + sizeof(float) * 3;
-        public static void WriteBytes(Quaternion value, byte[] destination, ref int index) {
+        public static void WriteBytes(Quaternion value, ArraySegment<byte> destination, ref int index) {
             float largest = value.x;
             byte i = 0;
             if (value.y > largest) {
@@ -414,7 +414,7 @@ namespace Deep {
         }
 
         public const int SizeOfHalfVector3 = SizeOfHalf * 3;
-        public static void WriteHalf(Vector3 value, byte[] destination, ref int index) {
+        public static void WriteHalf(Vector3 value, ArraySegment<byte> destination, ref int index) {
             WriteHalf(value.x, destination, ref index);
             WriteHalf(value.y, destination, ref index);
             WriteHalf(value.z, destination, ref index);
@@ -422,7 +422,7 @@ namespace Deep {
 
         public const int SizeOfHalfQuaternion = 1 + SizeOfHalf * 3;
         // TODO:: This is using a byte + 3 16-Float, but I should use 3 bits + 3 15-Float
-        public static void WriteHalf(Quaternion value, byte[] destination, ref int index) {
+        public static void WriteHalf(Quaternion value, ArraySegment<byte> destination, ref int index) {
             float largest = value.x;
             byte i = 0;
             if (value.y > largest) {

@@ -9,17 +9,30 @@ using System.Threading.Tasks;
 namespace Deep.Net {
 
     public class TCPServer {
-        private ArraySegment<byte> buffer;
+        private int bufferSize;
         private Socket? socket;
 
         public Net.onAccept? onAccept;
         public Net.onReceive? onReceive;
         public Net.onDisconnect? onDisconnect;
 
-        private ConcurrentDictionary<EndPoint, Socket> acceptedConnections = new ConcurrentDictionary<EndPoint, Socket>();
+        private class Connection : IDisposable {
+            public Socket socket;
+            public ArraySegment<byte> buffer;
 
-        public TCPServer(ArraySegment<byte> buffer) {
-            this.buffer = buffer;
+            public Connection(Socket socket, ArraySegment<byte> buffer) {
+                this.socket = socket;
+                this.buffer = buffer;
+            }
+
+            public void Dispose() {
+                socket.Dispose();
+            }
+        }
+        private ConcurrentDictionary<EndPoint, Connection> acceptedConnections = new ConcurrentDictionary<EndPoint, Connection>();
+
+        public TCPServer(int bufferSize) {
+            this.bufferSize = bufferSize;
         }
 
         private void Open() {
@@ -38,43 +51,45 @@ namespace Deep.Net {
 
         private async Task Listen() {
             if (socket == null) return;
-            Socket incomingConnection = await socket.AcceptAsync().ConfigureAwait(false);
+            Socket incoming = await socket.AcceptAsync().ConfigureAwait(false);
 
-            EndPoint? remoteEndPoint = incomingConnection.RemoteEndPoint;
+            EndPoint? remoteEndPoint = incoming.RemoteEndPoint;
             if (remoteEndPoint != null) {
-                acceptedConnections.AddOrUpdate(remoteEndPoint, incomingConnection, (key, old) => { incomingConnection.Dispose(); return old; });
+                Connection connection = new Connection(incoming, new byte[bufferSize]);
+                acceptedConnections.AddOrUpdate(remoteEndPoint, connection, (key, old) => { connection.Dispose(); return old; });
                 onAccept?.Invoke(remoteEndPoint);
-                _ = ListenTo(incomingConnection);
+                _ = ListenTo(connection);
             } else {
-                incomingConnection.Dispose();
+                incoming.Dispose();
             }
 
             _ = Listen(); // Start new listen task => async loop
         }
 
-        private async Task ListenTo(Socket socket) {
+        private async Task ListenTo(Connection connection) {
             try {
-                int receivedBytes = await socket.ReceiveAsync(buffer, SocketFlags.None).ConfigureAwait(false);
+                Socket socket = connection.socket;
+                int receivedBytes = await socket.ReceiveAsync(connection.buffer, SocketFlags.None).ConfigureAwait(false);
                 EndPoint remoteEP = socket.RemoteEndPoint!;
                 if (receivedBytes > 0) {
                     onReceive?.Invoke(receivedBytes, remoteEP);
-                    _ = ListenTo(socket); // Start new listen task => async loop
+                    _ = ListenTo(connection); // Start new listen task => async loop
                 } else {
-                    Dispose(socket);
+                    Dispose(connection);
                     onDisconnect?.Invoke(remoteEP);
                 }
             } catch (ObjectDisposedException) {
                 // NOTE(randomuserhi): Socket was disposed during ReceiveAsync
-                Dispose(socket);
+                Dispose(connection);
             }
         }
 
-        private void Dispose(Socket socket) {
-            socket.Dispose();
-            acceptedConnections.Remove(socket.RemoteEndPoint!, out _);
+        private void Dispose(Connection connection) {
+            acceptedConnections.Remove(connection.socket.RemoteEndPoint!, out _);
+            connection.Dispose();
         }
 
-        public async Task Send(byte[] data) {
+        public async Task Send(ArraySegment<byte> data) {
             List<Task> tasks = new List<Task>();
             foreach (EndPoint remoteEP in acceptedConnections.Keys) {
                 tasks.Add(SendTo(data, remoteEP));
@@ -82,10 +97,10 @@ namespace Deep.Net {
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        public async Task<int> SendTo(byte[] data, EndPoint remoteEP) {
-            if (acceptedConnections.TryGetValue(remoteEP, out Socket? socket)) {
+        public async Task<int> SendTo(ArraySegment<byte> data, EndPoint remoteEP) {
+            if (acceptedConnections.TryGetValue(remoteEP, out Connection? connection)) {
                 try {
-                    return await socket.SendAsync(data, SocketFlags.None).ConfigureAwait(false);
+                    return await connection.socket.SendAsync(data, SocketFlags.None).ConfigureAwait(false);
                 } catch (SocketException) {
                     return 0;
                 }
@@ -103,7 +118,7 @@ namespace Deep.Net {
             socket.Dispose();
             socket = null;
 
-            foreach (Socket? connection in acceptedConnections.Values) {
+            foreach (Connection? connection in acceptedConnections.Values) {
                 connection.Dispose();
             }
             acceptedConnections.Clear();

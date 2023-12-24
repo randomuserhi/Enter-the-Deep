@@ -61,5 +61,25 @@ namespace Deep {
             rb = GetComponent<Rigidbody>();
             collider = GetComponent<CapsuleCollider>();
         }
+
+        /*private bool StickyHit(out RaycastHit2D hit, out bool willBeSticky) {
+            // Will we be sticky in the future?
+            Vector2 dir = Vector2.down;
+            if (rb.velocity.x != 0 && rb.velocity.y < 0) {
+                dir = rb.velocity.normalized;
+            }
+            RaycastHit2D willBeStickyHit = Physics2D.BoxCast(rb.position, new Vector2(size.x, 0.01f), 0, dir, Mathf.Infinity, surfaceLayerMask);
+            willBeSticky = false;
+            if (willBeStickyHit.collider != null) {
+                willBeStickyHit.distance = Mathf.Abs(rb.position.y - willBeStickyHit.point.y);
+                if (willBeStickyHit.distance < stickyHeight && Vector3.Dot(Vector2.down, willBeStickyHit.normal) < 0) {
+                    if (Vector3.Dot(Vector2.up, willBeStickyHit.normal) >= maxSlopeCosAngle) {
+                        willBeSticky = true;
+                    }
+                }
+            }
+
+            // Are we sticky now?
+        }*/
     }
 }

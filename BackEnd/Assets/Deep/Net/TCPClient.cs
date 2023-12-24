@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Deep.Net {
 
-    public class TCPClient {
+    public class TCPClient : IDisposable {
         private ArraySegment<byte> buffer;
         private Socket? socket;
 
