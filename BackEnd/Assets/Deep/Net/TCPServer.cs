@@ -30,6 +30,9 @@ namespace Deep.Net {
             }
         }
         private ConcurrentDictionary<EndPoint, Connection> acceptedConnections = new ConcurrentDictionary<EndPoint, Connection>();
+        public ICollection<EndPoint> Connections {
+            get => acceptedConnections.Keys;
+        }
 
         public TCPServer(int bufferSize) {
             this.bufferSize = bufferSize;
@@ -72,7 +75,7 @@ namespace Deep.Net {
                 int receivedBytes = await socket.ReceiveAsync(connection.buffer, SocketFlags.None).ConfigureAwait(false);
                 EndPoint remoteEP = socket.RemoteEndPoint!;
                 if (receivedBytes > 0) {
-                    onReceive?.Invoke(receivedBytes, remoteEP);
+                    onReceive?.Invoke(new ArraySegment<byte>(connection.buffer.Array!, connection.buffer.Offset, receivedBytes), remoteEP);
                     _ = ListenTo(connection); // Start new listen task => async loop
                 } else {
                     Dispose(connection);
