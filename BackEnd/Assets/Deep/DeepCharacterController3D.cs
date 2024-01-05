@@ -49,6 +49,7 @@ namespace Deep {
 
         private LayerMask surfaceLayerMask = Physics.AllLayers;
 
+        private float hoverSkinWidth = 0.05f;
         private float hoverHeight = 0.25f;
         private float stickyHeight = 1f;
         private float maxSlopeCosAngle = 0.5f;
@@ -153,7 +154,7 @@ namespace Deep {
 
             // Update grounded state
             if (sticky) {
-                if (hit.distance <= hoverHeight + 0.05f && Vector3.Dot(rb.velocity, hit.normal) <= 0) {
+                if (hit.distance <= hoverHeight + hoverSkinWidth && Vector3.Dot(rb.velocity, hit.normal) <= 0) {
                     switch (type) {
                     case StickyHitType.Slip:
                         groundedState = GroundedState.Slip;
@@ -191,7 +192,7 @@ namespace Deep {
 
             // Only stick to surface if player will remain sticky
             if (WillBeStickyHit(out _) != StickyHitType.None && sticky && groundedState != GroundedState.Airborne) {
-                rb.velocity += new Vector3(0, hoverSpring.Solve(dt, hit.distance, rb.velocity.y, hoverHeight - 0.05f));
+                rb.velocity += new Vector3(0, hoverSpring.Solve(dt, hit.distance, rb.velocity.y, hoverHeight - hoverSkinWidth));
             }
         }
 
