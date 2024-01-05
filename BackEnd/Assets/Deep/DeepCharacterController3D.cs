@@ -17,6 +17,12 @@ namespace Deep {
         public bool GroundedTransition {
             get => groundedTransition;
         }
+        public bool Slip {
+            get => groundedState == GroundedState.Slip;
+        }
+        public bool SlipTransition {
+            get => slipTransition;
+        }
         public bool Airborne {
             get => groundedState == GroundedState.Airborne;
             set {
@@ -27,6 +33,10 @@ namespace Deep {
                 }
             }
         }
+        public bool AirborneTransition {
+            get => airborneTransition;
+        }
+
         public Vector3 SurfaceNormal {
             get => surfaceNormal;
         }
@@ -52,6 +62,10 @@ namespace Deep {
         private GroundedState groundedState = GroundedState.Airborne;
         private bool prevGrounded = false;
         private bool groundedTransition = false;
+        private bool prevSlip = false;
+        private bool slipTransition = false;
+        private bool prevAirborne = false;
+        private bool airborneTransition = false;
 
         private RaycastHit hit;
         private bool sticky = false;
@@ -157,6 +171,12 @@ namespace Deep {
             bool grounded = groundedState == GroundedState.Grounded;
             groundedTransition = prevGrounded != grounded;
             prevGrounded = grounded;
+            bool slip = groundedState == GroundedState.Slip;
+            slipTransition = prevSlip != slip;
+            prevSlip = slip;
+            bool airborne = groundedState == GroundedState.Airborne;
+            airborneTransition = prevAirborne != airborne;
+            prevAirborne = airborne;
 
             // Update surface normal
             if (groundedState != GroundedState.Airborne) {

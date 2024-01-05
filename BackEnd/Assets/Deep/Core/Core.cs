@@ -93,7 +93,6 @@ namespace Deep.Core3D {
                 foreach (var s in playerLoop.subSystemList) {
                     _DebugPlayerLoop(s, sb, depth);
                 }
-                depth--;
             }
         }
 
