@@ -1,12 +1,11 @@
 #if UNITY_EDITOR
 
-using System.Collections.Generic;
 using UnityEditor;
 
 namespace Deep.Editor {
     [CustomEditor(typeof(DeepCharacterController3D))]
     public class DeepCharacterController3DEditor : UnityEditor.Editor {
-        private readonly List<SerializedProperty> _propertiesToDraw = new List<SerializedProperty>();
+        /*private readonly List<SerializedProperty> _propertiesToDraw = new List<SerializedProperty>();
 
         private void OnEnable() {
             AddCustomProperty("height");
@@ -31,7 +30,7 @@ namespace Deep.Editor {
                 EditorGUILayout.Separator();
                 EditorGUILayout.PropertyField(property);
             }
-        }
+        }*/
     }
 }
 

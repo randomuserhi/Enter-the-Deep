@@ -2,6 +2,8 @@ using Deep.Math;
 using UnityEngine;
 
 // TODO(randomuserhi) => Manage flipping of gravity properly
+// TODO(randomuserhi) => This character controller sucks -> not stable on slopes (good everywhere else)
+//                    => probably migrate to a slide-based controller instead of a hover-based one
 
 namespace Deep {
     [RequireComponent(typeof(CapsuleCollider))]
@@ -41,6 +43,11 @@ namespace Deep {
             get => surfaceNormal;
         }
 
+        public Vector3 velocity {
+            get => rb.velocity;
+            set => rb.velocity = value;
+        }
+
         // Settings
         public float height = 2f;
         public float radius = 0.5f;
@@ -60,7 +67,7 @@ namespace Deep {
         // State
         private Vector3 surfaceNormal = Vector3.up;
 
-        private GroundedState groundedState = GroundedState.Airborne;
+        [SerializeField] private GroundedState groundedState = GroundedState.Airborne;
         private bool prevGrounded = false;
         private bool groundedTransition = false;
         private bool prevSlip = false;
@@ -69,7 +76,7 @@ namespace Deep {
         private bool airborneTransition = false;
 
         private RaycastHit hit;
-        private bool sticky = false;
+        [SerializeField] private bool sticky = false;
         private bool prevSticky = false;
         private bool stickyTransition = false;
 
@@ -124,6 +131,14 @@ namespace Deep {
         private StickyHitType StickyHit(out RaycastHit hit) {
             Vector3 halfExtents = new Vector3(radius, 0.01f / 2f, radius);
             if (Physics.BoxCast(rb.position, halfExtents, Vector3.down, out hit, rb.rotation, stickyHeight, surfaceLayerMask)) {
+                return StickySlipCheck(hit);
+            }
+            return StickyHitType.None;
+        }
+
+        private StickyHitType StickyHit(Vector3 position, out RaycastHit hit) {
+            Vector3 halfExtents = new Vector3(radius, 0.01f / 2f, radius);
+            if (Physics.BoxCast(position, halfExtents, Vector3.down, out hit, rb.rotation, stickyHeight, surfaceLayerMask)) {
                 return StickySlipCheck(hit);
             }
             return StickyHitType.None;
@@ -192,10 +207,15 @@ namespace Deep {
 
             // Only stick to surface if player will remain sticky
             if (WillBeStickyHit(out _) != StickyHitType.None && sticky && groundedState != GroundedState.Airborne) {
-                rb.velocity += new Vector3(0, hoverSpring.Solve(dt, hit.distance, rb.velocity.y, hoverHeight - hoverSkinWidth));
+                if (StickyHit(rb.position + rb.velocity * dt, out RaycastHit futureHit) != StickyHitType.None) {
+                    rb.velocity += new Vector3(0, hoverSpring.Solve(dt, futureHit.distance, rb.velocity.y, hoverHeight - hoverSkinWidth));
+                } else {
+                    rb.velocity += new Vector3(0, hoverSpring.Solve(dt, hit.distance, rb.velocity.y, hoverHeight - hoverSkinWidth));
+                }
             }
         }
 
+        [SerializeField] private float speed = 0;
         private float dt;
         private void FixedUpdate() {
             dt = Time.fixedDeltaTime;
@@ -221,6 +241,8 @@ namespace Deep {
             if (groundedState != GroundedState.Grounded) {
                 rb.velocity += Vector3.down * gravity * dt;
             }
+
+            speed = rb.velocity.magnitude;
         }
     }
 }
