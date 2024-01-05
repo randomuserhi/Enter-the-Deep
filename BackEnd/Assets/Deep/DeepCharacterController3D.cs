@@ -168,12 +168,16 @@ namespace Deep {
             } else {
                 groundedState = GroundedState.Airborne;
             }
+
+            // Update transition states
             bool grounded = groundedState == GroundedState.Grounded;
             groundedTransition = prevGrounded != grounded;
             prevGrounded = grounded;
+
             bool slip = groundedState == GroundedState.Slip;
             slipTransition = prevSlip != slip;
             prevSlip = slip;
+
             bool airborne = groundedState == GroundedState.Airborne;
             airborneTransition = prevAirborne != airborne;
             prevAirborne = airborne;
