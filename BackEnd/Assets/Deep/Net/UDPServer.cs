@@ -55,7 +55,7 @@ namespace Deep.Net {
             // NOTE(randomuserhi): remote end point passed in here is the endpoint we expect data to be from.
             //                     by default we expect any, hence `remoteEndPoint = new IPEndPoint(IPAddress.Any, 0)`
             SocketReceiveFromResult result = await socket!.ReceiveFromAsync(buffer, SocketFlags.None, remoteEndPoint).ConfigureAwait(false);
-            onReceive?.Invoke(result.ReceivedBytes, result.RemoteEndPoint);
+            onReceive?.Invoke(new ArraySegment<byte>(buffer.Array, buffer.Offset, result.ReceivedBytes), result.RemoteEndPoint);
 
             _ = Listen(); // Start new listen task => async loop
         }

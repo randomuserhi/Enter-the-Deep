@@ -58,7 +58,7 @@ namespace Deep.Net {
             //                     by default we expect to only receive data from the connected endpoint, thus
             //                     `remoteEndPoint = remoteEP` from `this.Connect`
             SocketReceiveFromResult result = await socket.ReceiveFromAsync(buffer, SocketFlags.None, remoteEndPoint).ConfigureAwait(false);
-            onReceive?.Invoke(result.ReceivedBytes, result.RemoteEndPoint);
+            onReceive?.Invoke(new ArraySegment<byte>(buffer.Array, buffer.Offset, result.ReceivedBytes), result.RemoteEndPoint);
 
             _ = Listen(); // Start new listen task => async loop
         }
