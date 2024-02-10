@@ -71,79 +71,79 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe void _WriteBytes(byte* source, int size, byte[] destination, ref int index) {
+        private static unsafe void _WriteBytes(byte* source, int size, ArraySegment<byte> destination, ref int index) {
             for (int i = 0; i < size;) {
                 destination[index++] = source[i++];
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(byte value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(byte value, ArraySegment<byte> destination, ref int index) {
             destination[index++] = value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(ulong value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(ulong value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(ulong), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(uint value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(uint value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(uint), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(ushort value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(ushort value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(ushort), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(long value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(long value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(long), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(int value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(int value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(int), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(short value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(short value, ArraySegment<byte> destination, ref int index) {
             if (!BitConverter.IsLittleEndian) value = ReverseEndianness(value);
             _WriteBytes((byte*)&value, sizeof(short), destination, ref index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(float value, byte[] destination, ref int index) {
+        public static unsafe void WriteBytes(float value, ArraySegment<byte> destination, ref int index) {
             int to32 = *((int*)&value);
             if (!BitConverter.IsLittleEndian) to32 = ReverseEndianness(to32);
             _WriteBytes((byte*)&to32, sizeof(int), destination, ref index);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(string value, byte[] destination, ref int index) {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // NOTE(randomuserhi): UTF8 encoding
+        public static unsafe void WriteBytes(string value, ArraySegment<byte> destination, ref int index) {
             byte[] temp = Encoding.UTF8.GetBytes(value);
-            WriteBytes((ushort)temp.Length, destination, ref index);
-            Array.Copy(temp, 0, destination, index, temp.Length);
+            WriteBytes(temp.Length, destination, ref index);
+            Array.Copy(temp, 0, destination.Array!, destination.Offset + index, temp.Length);
             index += temp.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBytes(byte[] buffer, byte[] destination, ref int index) {
-            WriteBytes((ushort)buffer.Length, destination, ref index);
-            Array.Copy(buffer, 0, destination, index, buffer.Length);
-            index += buffer.Length;
+        public static unsafe void WriteBytes(ArraySegment<byte> buffer, ArraySegment<byte> destination, ref int index) {
+            WriteBytes(buffer.Count, destination, ref index);
+            Array.Copy(buffer.Array!, buffer.Offset, destination.Array!, destination.Offset + index, buffer.Count);
+            index += buffer.Count;
         }
 
         public const int SizeOfHalf = sizeof(ushort);
         // Special function to halve precision of float
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteHalf(float value, byte[] destination, ref int index) {
+        public static void WriteHalf(float value, ArraySegment<byte> destination, ref int index) {
             WriteBytes(FloatToHalf(value), destination, ref index);
         }
 
@@ -178,14 +178,14 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static byte ReadByte(byte[] source, ref int index) {
+        public static byte ReadByte(ArraySegment<byte> source, ref int index) {
             return source[index++];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ulong ReadULong(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe ulong ReadULong(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(ulong);
 
                 ulong result = *(ulong*)ptr;
@@ -197,9 +197,9 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe long ReadLong(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe long ReadLong(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(long);
 
                 long result = *(long*)ptr;
@@ -211,9 +211,9 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe uint ReadUInt(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe uint ReadUInt(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(uint);
 
                 uint result = *(uint*)ptr;
@@ -225,9 +225,9 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int ReadInt(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe int ReadInt(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(int);
 
                 int result = *(int*)ptr;
@@ -239,9 +239,9 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ushort ReadUShort(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe ushort ReadUShort(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(ushort);
 
                 ushort result = *(ushort*)ptr;
@@ -253,9 +253,9 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe short ReadShort(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe short ReadShort(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(short);
 
                 short result = *(short*)(ptr);
@@ -267,14 +267,14 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ReadHalf(byte[] source, ref int index) {
+        public static float ReadHalf(ArraySegment<byte> source, ref int index) {
             return HalfToFloat(ReadUShort(source, ref index));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe float ReadFloat(byte[] source, ref int index) {
-            fixed (byte* converted = source) {
-                byte* ptr = converted + index;
+        public static unsafe float ReadFloat(ArraySegment<byte> source, ref int index) {
+            fixed (byte* converted = source.Array!) {
+                byte* ptr = converted + source.Offset + index;
                 index += sizeof(float);
 
                 if (!BitConverter.IsLittleEndian) {
@@ -286,17 +286,17 @@ namespace Deep {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ReadUTF8String(byte[] source, ref int index) {
-            int length = ReadUShort(source, ref index);
-            string temp = Encoding.UTF8.GetString(source, index, length);
+        public static string ReadUTF8String(ArraySegment<byte> source, ref int index) {
+            int length = ReadInt(source, ref index);
+            string temp = Encoding.UTF8.GetString(source.Array!, source.Offset + index, length);
             index += length;
             return temp;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ReadASCIIString(byte[] source, ref int index) {
-            int length = ReadUShort(source, ref index);
-            string temp = Encoding.ASCII.GetString(source, index, length);
+        public static string ReadASCIIString(ArraySegment<byte> source, ref int index) {
+            int length = ReadInt(source, ref index);
+            string temp = Encoding.ASCII.GetString(source.Array!, source.Offset + index, length);
             index += length;
             return temp;
         }
@@ -305,14 +305,14 @@ namespace Deep {
 
         public const int SizeOfVector3 = sizeof(float) * 3;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteBytes(Vector3 value, byte[] destination, ref int index) {
+        public static void WriteBytes(Vector3 value, ArraySegment<byte> destination, ref int index) {
             WriteBytes(value.x, destination, ref index);
             WriteBytes(value.y, destination, ref index);
             WriteBytes(value.z, destination, ref index);
         }
 
         public const int SizeOfQuaternion = 1 + sizeof(float) * 3;
-        public static void WriteBytes(Quaternion value, byte[] destination, ref int index) {
+        public static void WriteBytes(Quaternion value, ArraySegment<byte> destination, ref int index) {
             float largest = value.x;
             byte i = 0;
             if (value.y > largest) {
@@ -330,91 +330,91 @@ namespace Deep {
 
             WriteBytes(i, destination, ref index);
             switch (i) {
-                case 0:
-                    if (value.x >= 0) {
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 1:
-                    if (value.y >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 2:
-                    if (value.z >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.w, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.w, destination, ref index);
-                    }
-                    break;
-                case 3:
-                    if (value.w >= 0) {
-                        WriteBytes(value.x, destination, ref index);
-                        WriteBytes(value.y, destination, ref index);
-                        WriteBytes(value.z, destination, ref index);
-                    } else {
-                        WriteBytes(-value.x, destination, ref index);
-                        WriteBytes(-value.y, destination, ref index);
-                        WriteBytes(-value.z, destination, ref index);
-                    }
-                    break;
+            case 0:
+                if (value.x >= 0) {
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 1:
+                if (value.y >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 2:
+                if (value.z >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.w, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.w, destination, ref index);
+                }
+                break;
+            case 3:
+                if (value.w >= 0) {
+                    WriteBytes(value.x, destination, ref index);
+                    WriteBytes(value.y, destination, ref index);
+                    WriteBytes(value.z, destination, ref index);
+                } else {
+                    WriteBytes(-value.x, destination, ref index);
+                    WriteBytes(-value.y, destination, ref index);
+                    WriteBytes(-value.z, destination, ref index);
+                }
+                break;
             }
         }
 
-        public static Vector3 ReadVector3(byte[] source, ref int index) {
+        public static Vector3 ReadVector3(ArraySegment<byte> source, ref int index) {
             return new Vector3(ReadFloat(source, ref index), ReadFloat(source, ref index), ReadFloat(source, ref index));
         }
 
-        public static Quaternion ReadQuaternion(byte[] source, ref int index) {
+        public static Quaternion ReadQuaternion(ArraySegment<byte> source, ref int index) {
             byte i = ReadByte(source, ref index);
             float x = 0, y = 0, z = 0, w = 0;
             switch (i) {
-                case 0:
-                    y = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    x = Mathf.Sqrt(1f - y * y - z * z - w * w);
-                    break;
-                case 1:
-                    x = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    y = Mathf.Sqrt(1f - x * x - z * z - w * w);
-                    break;
-                case 2:
-                    x = ReadFloat(source, ref index);
-                    y = ReadFloat(source, ref index);
-                    w = ReadFloat(source, ref index);
-                    z = Mathf.Sqrt(1f - x * x - y * y - w * w);
-                    break;
-                case 3:
-                    x = ReadFloat(source, ref index);
-                    y = ReadFloat(source, ref index);
-                    z = ReadFloat(source, ref index);
-                    w = Mathf.Sqrt(1f - x * x - y * y - z * z);
-                    break;
+            case 0:
+                y = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                x = Mathf.Sqrt(Mathf.Clamp01(1f - y * y - z * z - w * w));
+                break;
+            case 1:
+                x = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                y = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - z * z - w * w));
+                break;
+            case 2:
+                x = ReadFloat(source, ref index);
+                y = ReadFloat(source, ref index);
+                w = ReadFloat(source, ref index);
+                z = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - w * w));
+                break;
+            case 3:
+                x = ReadFloat(source, ref index);
+                y = ReadFloat(source, ref index);
+                z = ReadFloat(source, ref index);
+                w = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - z * z));
+                break;
             }
             return new Quaternion(x, y, z, w);
         }
 
         public const int SizeOfHalfVector3 = SizeOfHalf * 3;
-        public static void WriteHalf(Vector3 value, byte[] destination, ref int index) {
+        public static void WriteHalf(Vector3 value, ArraySegment<byte> destination, ref int index) {
             WriteHalf(value.x, destination, ref index);
             WriteHalf(value.y, destination, ref index);
             WriteHalf(value.z, destination, ref index);
@@ -422,7 +422,7 @@ namespace Deep {
 
         public const int SizeOfHalfQuaternion = 1 + SizeOfHalf * 3;
         // TODO:: This is using a byte + 3 16-Float, but I should use 3 bits + 3 15-Float
-        public static void WriteHalf(Quaternion value, byte[] destination, ref int index) {
+        public static void WriteHalf(Quaternion value, ArraySegment<byte> destination, ref int index) {
             float largest = value.x;
             byte i = 0;
             if (value.y > largest) {
@@ -440,86 +440,86 @@ namespace Deep {
 
             WriteBytes(i, destination, ref index);
             switch (i) {
-                case 0:
-                    if (value.x >= 0) {
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 1:
-                    if (value.y >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 2:
-                    if (value.z >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.w, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.w, destination, ref index);
-                    }
-                    break;
-                case 3:
-                    if (value.w >= 0) {
-                        WriteHalf(value.x, destination, ref index);
-                        WriteHalf(value.y, destination, ref index);
-                        WriteHalf(value.z, destination, ref index);
-                    } else {
-                        WriteHalf(-value.x, destination, ref index);
-                        WriteHalf(-value.y, destination, ref index);
-                        WriteHalf(-value.z, destination, ref index);
-                    }
-                    break;
+            case 0:
+                if (value.x >= 0) {
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 1:
+                if (value.y >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 2:
+                if (value.z >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.w, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.w, destination, ref index);
+                }
+                break;
+            case 3:
+                if (value.w >= 0) {
+                    WriteHalf(value.x, destination, ref index);
+                    WriteHalf(value.y, destination, ref index);
+                    WriteHalf(value.z, destination, ref index);
+                } else {
+                    WriteHalf(-value.x, destination, ref index);
+                    WriteHalf(-value.y, destination, ref index);
+                    WriteHalf(-value.z, destination, ref index);
+                }
+                break;
             }
         }
 
-        public static Vector3 ReadHalfVector3(byte[] source, ref int index) {
+        public static Vector3 ReadHalfVector3(ArraySegment<byte> source, ref int index) {
             return new Vector3(ReadHalf(source, ref index), ReadHalf(source, ref index), ReadHalf(source, ref index));
         }
 
         // TODO:: This is using a byte + 3 16-Float, but I should use 3 bits + 3 15-Float
-        public static Quaternion ReadHalfQuaternion(byte[] source, ref int index) {
+        public static Quaternion ReadHalfQuaternion(ArraySegment<byte> source, ref int index) {
             byte i = ReadByte(source, ref index);
             float x = 0, y = 0, z = 0, w = 0;
             switch (i) {
-                case 0:
-                    y = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    x = Mathf.Sqrt(1f - y * y - z * z - w * w);
-                    break;
-                case 1:
-                    x = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    y = Mathf.Sqrt(1f - x * x - z * z - w * w);
-                    break;
-                case 2:
-                    x = ReadHalf(source, ref index);
-                    y = ReadHalf(source, ref index);
-                    w = ReadHalf(source, ref index);
-                    z = Mathf.Sqrt(1f - x * x - y * y - w * w);
-                    break;
-                case 3:
-                    x = ReadHalf(source, ref index);
-                    y = ReadHalf(source, ref index);
-                    z = ReadHalf(source, ref index);
-                    w = Mathf.Sqrt(1f - x * x - y * y - z * z);
-                    break;
+            case 0:
+                y = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                x = Mathf.Sqrt(Mathf.Clamp01(1f - y * y - z * z - w * w));
+                break;
+            case 1:
+                x = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                y = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - z * z - w * w));
+                break;
+            case 2:
+                x = ReadHalf(source, ref index);
+                y = ReadHalf(source, ref index);
+                w = ReadHalf(source, ref index);
+                z = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - w * w));
+                break;
+            case 3:
+                x = ReadHalf(source, ref index);
+                y = ReadHalf(source, ref index);
+                z = ReadHalf(source, ref index);
+                w = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - z * z));
+                break;
             }
             return new Quaternion(x, y, z, w);
         }

@@ -389,25 +389,25 @@ namespace Deep {
                 y = ReadFloat(source, ref index);
                 z = ReadFloat(source, ref index);
                 w = ReadFloat(source, ref index);
-                x = Mathf.Sqrt(1f - y * y - z * z - w * w);
+                x = Mathf.Sqrt(Mathf.Clamp01(1f - y * y - z * z - w * w));
                 break;
             case 1:
                 x = ReadFloat(source, ref index);
                 z = ReadFloat(source, ref index);
                 w = ReadFloat(source, ref index);
-                y = Mathf.Sqrt(1f - x * x - z * z - w * w);
+                y = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - z * z - w * w));
                 break;
             case 2:
                 x = ReadFloat(source, ref index);
                 y = ReadFloat(source, ref index);
                 w = ReadFloat(source, ref index);
-                z = Mathf.Sqrt(1f - x * x - y * y - w * w);
+                z = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - w * w));
                 break;
             case 3:
                 x = ReadFloat(source, ref index);
                 y = ReadFloat(source, ref index);
                 z = ReadFloat(source, ref index);
-                w = Mathf.Sqrt(1f - x * x - y * y - z * z);
+                w = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - z * z));
                 break;
             }
             return new Quaternion(x, y, z, w);
@@ -500,25 +500,25 @@ namespace Deep {
                 y = ReadHalf(source, ref index);
                 z = ReadHalf(source, ref index);
                 w = ReadHalf(source, ref index);
-                x = Mathf.Sqrt(1f - y * y - z * z - w * w);
+                x = Mathf.Sqrt(Mathf.Clamp01(1f - y * y - z * z - w * w));
                 break;
             case 1:
                 x = ReadHalf(source, ref index);
                 z = ReadHalf(source, ref index);
                 w = ReadHalf(source, ref index);
-                y = Mathf.Sqrt(1f - x * x - z * z - w * w);
+                y = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - z * z - w * w));
                 break;
             case 2:
                 x = ReadHalf(source, ref index);
                 y = ReadHalf(source, ref index);
                 w = ReadHalf(source, ref index);
-                z = Mathf.Sqrt(1f - x * x - y * y - w * w);
+                z = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - w * w));
                 break;
             case 3:
                 x = ReadHalf(source, ref index);
                 y = ReadHalf(source, ref index);
                 z = ReadHalf(source, ref index);
-                w = Mathf.Sqrt(1f - x * x - y * y - z * z);
+                w = Mathf.Sqrt(Mathf.Clamp01(1f - x * x - y * y - z * z));
                 break;
             }
             return new Quaternion(x, y, z, w);
